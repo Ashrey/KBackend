@@ -1,0 +1,27 @@
+<?php $mmodel = strtolower(get_class($model));?>
+<form action="" method="post" class="form-inline">
+<ul class="unstyled">
+<?php foreach($cond as $key => $val):?>
+    <li><i class="icon-filter"></i>
+    <strong><?php echo  $model->get_alias($val['col']);?></strong>
+    <?php echo $rel[$val['rel']]?>
+    <em><?php echo $val['val'];?></em>
+    <button type="submit" class="btn btn-danger btn-mini" value="<?php echo $key?>" name="remove">
+    <i class="icon-white icon-remove"></i></button></li>
+<?php endforeach;?>
+</ul>
+    <select name="filter[col]" data-update="salida" data-kumbia="remote" data-url="<?php echo PUBLIC_PATH?>admin/<?php echo Router::get('controller') ?>/update">
+        <option value="">Seleccione...</option>
+    <?php foreach($col as $item):?>
+        
+        <?php $key = $model->get_alias($item);?>
+        <option value="<?php echo $item ?>"><?php echo $key;?></option>
+    <?php endforeach;?>		
+</select>
+
+    <?php echo Form::select('filter.rel', $rel)?>
+
+<span id="salida"><input type="text" name="filter[val]"/></span>
+<button type="submit" class="btn btn-primary" value="add" name="add">Añadir Filtros</button>
+<button class="btn btn-danger" type="submit" value="clear" name="clear">Limpiar Filtros</button>
+</form>

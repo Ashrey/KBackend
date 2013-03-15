@@ -1,0 +1,22 @@
+<div class="page-header">
+    <h1><?php echo ucwords("$model") ?></h1>
+</div>
+<?php Scaffold::filter($model)?>
+
+<?php View::content() ?>
+<?php View::partial('backend/barra_superior_listas')?>
+<?php
+$dt = new DataTable($results);
+
+if(!empty($cols))
+    $dt->addFieldAuto($cols);
+
+$dt->addHeaders('Ver', 'Editar', 'Eliminar');
+$dt->link( Router::get('controller_path') . '/ver',
+        '<span class="btn btn-info"><i class=" icon-search icon-white"></i></span>');
+$dt->link( Router::get('controller_path') . '/editar',
+        '<span class="btn btn-warning"><i class="icon-pencil icon-white"></i></span>');
+$dt->linkConfirm(Router::get('controller_path') . '/borrar',
+        '<span class="btn btn-danger"><i class="icon-trash icon-white"></i></span>');
+echo $dt->render('class="table table-striped table-bordered"');
+?>
