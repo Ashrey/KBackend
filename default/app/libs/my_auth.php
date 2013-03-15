@@ -45,25 +45,10 @@ class MyAuth
                         'login: ' . $user,
                         'clave: ' . $pass,
                         "activo: 1");
-        if ($auth->authenticate()) {
-            if (Input::post('recordar')) {
-                self::setCookies($user, $pass);
-            } else {
-                self::deleteCookies();
-            }
-        }
-        return self::es_valido();
-    }
-
-    /**
-     * Verifica que un usuario haya iniciado sesion en la app.
-     * 
-     * @return boolean
-     */
-    public static function es_valido()
-    {
+        $auth->authenticate();
         return Auth::is_valid();
     }
+
 
     /**
      * Cierra la sesion de un usuario en la app.
@@ -72,7 +57,6 @@ class MyAuth
     public static function cerrar_sesion()
     {
         Auth::destroy_identity();
-        self::deleteCookies();
     }
 
     /**
@@ -86,53 +70,6 @@ class MyAuth
     public static function hash($pass)
     {
         return crypt($pass, self::$_clave_sesion);
-    }
-
-    /**
-     * Verfica si existen cookies para un usuario.
-     * 
-     * @return boolean
-     */
-    public static function cookiesActivas()
-    {
-        return isset($_COOKIE[md5(self::$_clave_sesion)]) && is_array(self::getCookies());
-    }
-
-    /**
-     * Establece las cookies para un user.
-     * 
-     * @param string $user 
-     * @param string $pass 
-     */     
-    public static function setCookies($user, $pass)
-    {
-        setcookie(md5(self::$_clave_sesion), serialize(array(
-                    'login' => $user,
-                    'clave' => $pass
-                )), time() + 60 * 60 * 24 * 30);
-    }
-
-    /**
-     * Obtiene las cookies de un usuario.
-     * 
-     * @return array|NULL
-     */
-    public static function getCookies()
-    {
-        if (isset($_COOKIE[md5(self::$_clave_sesion)])) {
-            return unserialize($_COOKIE[md5(self::$_clave_sesion)]);
-        } else {
-            return NULL;
-        }
-    }
-
-    /**
-     * Elimina los cookies que un usuario tenga guardadas.
-     */
-    public static function deleteCookies()
-    {
-        setcookie(md5(self::$_clave_sesion),'',time()- 1);
-        unset($_COOKIE[md5(self::$_clave_sesion)]);
     }
 
 }
