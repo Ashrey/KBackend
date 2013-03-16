@@ -8,7 +8,6 @@
     <div class="span8 span-derecho" >
         <div id="res-form-ajax"><?php View::content() ?></div>
         <?php echo Ajax::form('res-form-ajax', NULL, 'form-horizontal') ?>
-        <?php //echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
         <?php echo Form::hidden('usuario.id') ?>
         <div class="control-group">
             <label class="control-label" for="usuario_login">Nombre de Usuario (Login)* : </label>
@@ -41,14 +40,10 @@
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label" for="usuario_roles_id">Roles del Usuario* : </label><br/><br/>
+            <label class="control-label" for="usuario_roles_id">Roles del Usuario* : </label>
             <div class="controls">
-                <?php //echo Form::dbSelect('usuario.roles_id', 'rol','') ?>
-                <ul>
-                    <?php foreach ($roles as $e): ?>
-                        <li><?php echo Form::check("rolesUser.$e->id", $e->id), ' ', h($e->rol) ?></li>
-                    <?php endforeach; ?>
-                    </ul>
+				<?php echo Form::dbSelect('usuario.roles_id') ?>
+
                 </div>
             </div>
             <div class="form-actions">

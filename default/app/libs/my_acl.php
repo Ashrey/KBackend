@@ -57,6 +57,8 @@ class MyAcl
         $user = Load::model('admin/usuarios')->find_first(Auth::get('id'));
 
         $rol = Load::model('admin/roles')->find_first(Auth::get('roles_id'));
+        
+        
         $this->_establecerRecursos($rol->id, $rol->getRecursos()); //establecemos los recursos permitidos para el rol
 
         $this->_establecerTemplate($user->id, $rol->plantilla);

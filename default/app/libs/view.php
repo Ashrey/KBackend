@@ -17,7 +17,7 @@ class View extends KumbiaView {
      */
     public static function renderMenu($entorno) {
         if (Auth::is_valid()) {
-            echo Menu::render(Auth::get('id'), $entorno);
+            echo Menu::render(Auth::get('roles_id'), $entorno);
         }
     }
 

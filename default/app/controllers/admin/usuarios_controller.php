@@ -76,14 +76,13 @@ class UsuariosController extends AdminController {
         try {
             //obtenemos los usuarios activos para listarlos en el form
             //ya que al crear un user se deben especificar los roles que poseerá
-            $this->roles = Load::model('admin/roles')->find_all_by_activo(1);
 
             if (Input::hasPost('usuario')) {
                 //esto es para tener atributos que no son campos de la tabla
                 $usr = new Usuarios(Input::post('usuario')); 
                 //guarda los datos del usuario, y le asigna los roles 
                 //seleccionados en el formulario.
-                if ($usr->guardar(Input::post('usuario'), Input::post('rolesUser'))) {
+                if ($usr->save()) {
                     Flash::valid('El Usuario Ha Sido Agregado Exitosamente...!!!');
                     if (!Input::isAjax()) {
                         return Router::redirect();
@@ -106,7 +105,7 @@ class UsuariosController extends AdminController {
 
             $id = (int) $id;
 
-            $usr = new Usuarios();
+            $usr = new Usuarios(Input::post('usuario'));
 
             $this->usuario = $usr->find_first($id);
 
@@ -115,15 +114,12 @@ class UsuariosController extends AdminController {
                 //obtenemos los roles que tiene el usuario
                 //para mostrar los checks seleccionados para estos roles.
                 $this->rolesUser = $usr->rolesUserIds();
-
-                //obtenemos los roles con los que se crearán los checks.
-                $this->roles = Load::model('admin/roles')->find_all_by_activo(1);
-
+                
                 if (Input::hasPost('usuario')) {
 
                     //guarda los datos del usuario, y le asigna los roles 
                     //seleccionados en el formulario.
-                    if ($usr->guardar(Input::post('usuario'), Input::post('rolesUser'))) {
+                    if ($usr->save() ){
                         Flash::valid('El Usuario Ha Sido Actualizado Exitosamente...!!!');
                         if (!Input::isAjax()) {
                             return Router::redirect();

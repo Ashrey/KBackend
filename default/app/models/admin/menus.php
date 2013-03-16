@@ -23,7 +23,7 @@
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
 class Menus extends ActiveRecord {
-//    public $debug = true;
+   // public $debug = true;
 //    public $logger = true;
 
     /**
@@ -57,11 +57,11 @@ class Menus extends ActiveRecord {
      * @param  int $entorno 
      * @return array          
      */
-    public function obtener_menu_por_usuario($id_user, $entorno) {
+    public function obtener_menu_por_usuario($rol, $entorno) {
         $select = 'm.' . join(',m.', $this->fields) . ',re.recurso';
         $from = 'menus as m';
-        $joins = "INNER JOIN roles_recursos AS rr ON m.recursos_id = rr.recursos_id ";
-        $joins .= 'INNER JOIN recursos AS re ON re.activo = 1 AND re.id = rr.recursos_id ';
+        $joins = "INNER JOIN roles_recursos AS rr ON m.recursos_id = rr.recursos_id  AND rr.roles_id = '$rol' ";
+        $joins .= "INNER JOIN recursos AS re ON re.activo = 1 AND re.id = rr.recursos_id";
         $condiciones = " m.menus_id is NULL AND m.activo = 1 ";
         $condiciones .= " AND visible_en IN ('3','$entorno') ";
         $orden = 'm.posicion';
@@ -76,10 +76,10 @@ class Menus extends ActiveRecord {
      * @param  int $entorno 
      * @return array          
      */
-    public function get_sub_menus($id_user, $entorno) {
+    public function get_sub_menus($rol, $entorno) {
         $campos = 'menus.' . join(',menus.', $this->fields) . ',r.recurso';
         $join = 'INNER JOIN recursos as r ON r.id = menus.recursos_id AND r.activo = 1 ';
-        $join .= 'INNER JOIN roles_recursos as rr ON r.id = rr.recursos_id ';
+        $join .= "INNER JOIN roles_recursos as rr ON r.id = rr.recursos_id AND rr.roles_id = '$rol'";
         $condiciones = "menus.menus_id = '{$this->id}' AND menus.activo = 1 ";
         $condiciones .= " AND visible_en IN ('3','$entorno') ";
         $agrupar_por = 'menus.' . join(',menus.', $this->fields) . ',r.recurso';

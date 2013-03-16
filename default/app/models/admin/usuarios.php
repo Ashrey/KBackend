@@ -54,7 +54,7 @@ class Usuarios extends ActiveRecord
         if (isset($this->clave2) and $this->clave !== $this->clave2) {
             Flash::error('Las <b>CLaves</b> no Coinciden...!!!');
             return 'cancel';
-        } elseif (isset($this->clave2)) {
+        } else {
             $this->clave = MyAuth::hash($this->clave);
         }
     }
@@ -78,10 +78,6 @@ class Usuarios extends ActiveRecord
         $group = 'usuarios.' . join(',usuarios.', $this->fields);
         $sql = "SELECT $cols FROM $this->source $join GROUP BY $group";
         return $this->paginate_by_sql($sql, "page: $pagina");
-        //comentada la siguiente linea debido a que el active record lanzaba
-        //una advertencia de que el count esta devolviendo mas de 1 registro,
-        //esto es por el group by
-        //return $this->paginate("page: $pagina", "columns: $cols", "join: $join", "group: $group");
     }
 
     /**

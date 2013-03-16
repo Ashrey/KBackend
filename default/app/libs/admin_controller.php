@@ -92,10 +92,6 @@ class AdminController extends Controller
         View::template('backend/backend');
         $acl = new MyAcl();
         if (!$acl->check()) {
-            if ($acl->limiteDeIntentosPasado()) {
-                $acl->resetearIntentos();
-                return $this->intentos_pasados();
-            }
             Flash::error('no posees privilegios para acceder a <b>' . Router::get('route') . '</b>');
             View::select(NULL);
             return FALSE;
