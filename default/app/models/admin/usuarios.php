@@ -22,6 +22,7 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
+ Load::model('admin/roles');
 class Usuarios extends ActiveRecord
 {
 //put your code here
@@ -32,10 +33,9 @@ class Usuarios extends ActiveRecord
     protected function initialize()
     {
         $min_clave = Config::get('config.application.minimo_clave');
-        //$this->belongs_to('roles');
+        $this->belongs_to('admin/roles');
         $this->has_many('admin/auditorias');
-        $this->has_many('admin/roles_usuarios');
-        $this->has_and_belongs_to_many('roles', 'model: admin/roles', 'fk: roles_id', 'through: admin/roles_usuarios', 'key: usuarios_id');
+        
         $this->validates_presence_of('login', 'message: Debe escribir un <b>Login</b> para el Usuario');
         $this->validates_presence_of('clave', 'message: Debe escribir una <b>Contraseña</b>');
         $this->validates_length_of('clave', 50, $min_clave, "too_short: La Clave debe tener <b>Minimo {$min_clave} caracteres</b>");
@@ -140,35 +140,6 @@ class Usuarios extends ActiveRecord
         return TRUE;
     }
 
-    /**
-     * Crea un arreglo con pares idRol => nombreRol con los roles
-     * que posee el usuario.
-     * 
-     * @return array
-     */
-    public function rolesUserIds()
-    {
-        $roles_id = array();
-        if ($this->roles_usuarios) {
-            foreach ($this->roles_usuarios as $e) {
-                $roles_id["$e->roles_id"] = $e->roles_id;
-            }
-        } else {
-            Flash::warning('Hay algo extraño, este user no tiene roles asignados aun...!!!');
-        }
-        return $roles_id;
-    }
-
-    /**
-     * Obtiene un arreglo con los nombres de los roles que posee el usuario.
-     * @return array
-     */
-    public function getRolesNames()
-    {
-        $res = Load::model('admin/roles')->distinct('rol',
-                        "join: INNER JOIN roles_usuarios ru ON ru.roles_id = roles.id AND ru.usuarios_id = '$this->id'");
-        return join(', ', $res);
-    }
 
     /**
      * Realiza el proceso de registro de un usuario desde el frontend.
@@ -218,26 +189,6 @@ class Usuarios extends ActiveRecord
             }
         }
         return FALSE;
-    }
-
-    /**
-     * Obtiene la plantilla a usar por el usuario.
-     * 
-     * Devuelve la plantilla del usuario ( que tenga plantilla asignada )
-     * que tenga la mayor cantidad de privilegios.
-     * 
-     * @param  array $roles_id array con los ids de los roles.
-     * @return string           plantilla a usar.
-     */
-    public function obtenerPlantilla($roles_id)
-    {
-        $res = Load::model('admin/roles')->find_by_sql('select plantilla,MAX(c)
-                from (select roles_id, count(id) as c
-                      from roles_recursos GROUP BY roles_id) as t
-                INNER JOIN roles on roles.id = t.roles_id
-                WHERE roles.id IN (' . join(',',$roles_id). ')
-                GROUP BY plantilla');
-        return $res->plantilla;
     }
 
 }

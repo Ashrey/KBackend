@@ -53,35 +53,17 @@ class MyAcl
         //cargamos la lib Acl2 con el adaptador por defecto (SimpleAcl)
         self::$_acl = Acl2::factory();
 
-        //obtenemos todos los roles del usuario actual
+        //obtenemos el usuario actual
         $user = Load::model('admin/usuarios')->find_first(Auth::get('id'));
 
-        $roles_id = $this->_establecerRoles($user->getRoles());
+        $rol = Load::model('admin/roles')->find_first(Auth::get('roles_id'));
+        $this->_establecerRecursos($rol->id, $rol->getRecursos()); //establecemos los recursos permitidos para el rol
 
-        $this->_establecerTemplate($user->id, $user->obtenerPlantilla($roles_id));
+        $this->_establecerTemplate($user->id, $rol->plantilla);
 
-        self::$_acl->user(Auth::get('id'), $roles_id);
+        self::$_acl->user(Auth::get('id'), array($rol->id));
     }
-
-    /**
-     * Establece los roles del usuario en el ACL
-     *
-     * @param <type> $roles resultado de una consulta del ActiveRecord
-     * @return array arreglo con los ids de los roles a los que pertenece el usuario actual conectado
-     */
-    protected function _establecerRoles($roles)
-    {
-        $roles_id = array();
-        foreach ($roles as $e) {
-            if ($e->activo) { //seguridad
-                self::$_acl->parents($e->id, explode(',', $e->padres)); //seteamos los padres del rol
-                $this->_establecerRecursos($e->id, $e->getRecursos()); //establecemos los recursos permitidos para el rol
-                $roles_id[] = $e->id; //vamos cargando los ids de los roles en un arreglo.
-            }
-        }
-        return $roles_id;
-    }
-
+    
     /**
      * Establece los recursos a los que un rol tiene acceso
      *

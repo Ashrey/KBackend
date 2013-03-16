@@ -71,13 +71,10 @@ class AdminController extends Controller
      * 
      */ 
     protected function checkAuth(){
-        if (MyAuth::es_valido()) {
+        if (Auth::is_valid()) {
             return $this->_tienePermiso();
         } elseif (Input::hasPost('login') && Input::hasPost('clave')) {
             return $this->_logueoValido(Input::post('login'), Input::post('clave'));
-        } elseif (MyAuth::cookiesActivas()) {
-            $data = MyAuth::getCookies();
-            return $this->_logueoValido($data['login'], $data['clave'], FALSE);
         } else {
             View::select(NULL, 'backend/logueo');
             return FALSE;

@@ -62,7 +62,6 @@ class Menus extends ActiveRecord {
         $from = 'menus as m';
         $joins = "INNER JOIN roles_recursos AS rr ON m.recursos_id = rr.recursos_id ";
         $joins .= 'INNER JOIN recursos AS re ON re.activo = 1 AND re.id = rr.recursos_id ';
-        $joins .= 'INNER JOIN roles_usuarios AS ru ON ru.usuarios_id = \'' . $id_user . "' AND rr.roles_id = ru.roles_id";
         $condiciones = " m.menus_id is NULL AND m.activo = 1 ";
         $condiciones .= " AND visible_en IN ('3','$entorno') ";
         $orden = 'm.posicion';
@@ -81,7 +80,6 @@ class Menus extends ActiveRecord {
         $campos = 'menus.' . join(',menus.', $this->fields) . ',r.recurso';
         $join = 'INNER JOIN recursos as r ON r.id = menus.recursos_id AND r.activo = 1 ';
         $join .= 'INNER JOIN roles_recursos as rr ON r.id = rr.recursos_id ';
-        $join .= 'INNER JOIN roles_usuarios AS ru ON ru.usuarios_id = \'' . $id_user . "' AND rr.roles_id = ru.roles_id";
         $condiciones = "menus.menus_id = '{$this->id}' AND menus.activo = 1 ";
         $condiciones .= " AND visible_en IN ('3','$entorno') ";
         $agrupar_por = 'menus.' . join(',menus.', $this->fields) . ',r.recurso';

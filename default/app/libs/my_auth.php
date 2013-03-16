@@ -40,6 +40,7 @@ class MyAuth
      */
     public static function autenticar($user, $pass, $encriptar = TRUE)
     {
+		Load::model('admin/usuarios');
         $pass = $encriptar ? self::hash($pass) : $pass;
         $auth = new Auth('class: usuarios',
                         'login: ' . $user,
