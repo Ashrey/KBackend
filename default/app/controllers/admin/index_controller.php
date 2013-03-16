@@ -27,26 +27,4 @@ class IndexController extends AdminController {
 		
 	}
 	
-    public function config() {
-        try {
-            $temp = Configuracion::leer();
-            $this->config = $temp['application'];
-            if (Input::hasPost('config')) {
-                foreach (Input::post('config') as $variable => $valor) {
-                    Configuracion::set('application', $variable, $valor);
-                }
-                if (Configuracion::guardar()) {
-                    Flash::valid('La Configuración fue Actualizada Exitosamente...!!!');
-                    Acciones::add("Editó la Configuración de la aplicación", 'archivo config.ini');
-                } else {
-                    Flash::warning('No se Pudieron guardar los Datos...!!!');
-                }
-                $temp = Configuracion::leer();
-                $this->config = $temp['application'];
-            }
-        } catch (KumbiaException $e) {
-            View::excepcion($e);
-        }
-    }
-
 }
