@@ -27,7 +27,7 @@ class Acciones {
 
     static public function add($accion_realizada, $tabla_afectada = NULL) {
         try {
-            if (MyAuth::es_valido() &&
+            if (Auth::is_valid() &&
                     Config::get('config.application.guardar_auditorias') == true) {
                 $auditoria = new Auditorias();
                 $auditoria->usuarios_id = Auth::get('id');

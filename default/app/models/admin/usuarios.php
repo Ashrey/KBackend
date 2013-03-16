@@ -97,48 +97,6 @@ class Usuarios extends ActiveRecord
         return $this->update();
     }
 
-    /**
-     * Guarda los datos de un usuario, y los roles que va a poseer
-     *
-     * @param array $data datos que se enviaron del form
-     * @param array $roles ids de los roles a guardar para el user
-     * @return boolean retorna TRUE si se pudieron guardar los datos con exito
-     */
-    public function guardar($data, $roles)
-    {
-        $this->begin();
-
-        if (!$this->save($data)) {
-            $this->rollback();
-            return FALSE;
-        }
-
-        $rolUser = Load::model('admin/roles_usuarios');
-
-        if (is_array($roles) && count($roles)) {
-
-            if (!$rolUser->delete_all("usuarios_id = '$this->id'")) {
-                Flash::error('No se pudieron Guardar los Roles para el usuario');
-                $this->rollback();
-                return FALSE;
-            }
-
-            foreach ($roles as $e) {
-                if (!$rolUser->asignarRol($this->id, $e)) {
-                    Flash::error('No se pudieron Guardar los Roles para el usuario');
-                    $this->rollback();
-                    return FALSE;
-                }
-            }
-        } else {
-            Flash::error('Debe seleccionar al menos un Rol para el Usuario');
-            $this->rollback();
-            return FALSE;
-        }
-
-        $this->commit();
-        return TRUE;
-    }
 
 
     /**
