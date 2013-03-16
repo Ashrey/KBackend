@@ -3,31 +3,20 @@
     <head>
         <meta charset='<?php echo APP_CHARSET ?>' />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?php echo Config::get('config.application.name') ?></title>
+        <title><?php echo Config::get('backend.app.name') ?></title>
         <?php
         Tag::css('backend/bootstrap.min');
-        Tag::css('backend/bootstrap-responsive.min');
-        Tag::css('backend/estilos');
         echo Html::includeCss();
         echo Tag::js('jquery/jquery.min');
         echo Tag::js('jquery/jquery.kumbiaphp');
         echo Tag::js('bootstrap/bootstrap');
-        echo Tag::js('global');
         ?>
-        <style>
-            #form_logueo label.control-label{
-                width: 75px !important;
-            }
-            #form_logueo .controls{
-                margin-left: 90px !important;
-            }
-        </style>
     </head>
     <body>
         <?php View::partial('backend/cabecera_app') ?>
         <div class="container">
             <div id="contenido" class="content">
-                <div id="form_logueo" class="modal" style="position:relative; top: auto; left: auto; margin: 0 auto; z-index: 1">
+                <div id="form_logueo">
                     <div class="modal-header">
                         <h3>Iniciar Sesi&oacute;n</h3>                        
                     </div>
@@ -46,7 +35,7 @@
                                 <?php echo Form::pass('clave'/*,'autocomplete="off"'*/) ?>
                             </div>
                         </div>
-                        <?php if (Config::get('config.application.recordar_sesion')): ?>
+                        <?php if (Config::get('backend.app.recordar_sesion')): ?>
                         <div class="controls">
                             <label class="checkbox">
                                 <?php echo Form::check('recordar', 1 , NULL,MyAuth::cookiesActivas()) ?> No cerrar Sesión
@@ -55,7 +44,7 @@
                         <?php endif; ?>
                     </div>
                     <div class="modal-footer">
-                        <?php if(Config::get('config.application.registro')): ?>
+                        <?php if(Config::get('backend.app.registro')): ?>
                             <?php echo Html::link('registro','Registrate') ?>
                         <?php endif; ?>
                         <?php echo Form::submit('Ingresar', 'class="btn btn-primary btn-large"') ?>

@@ -32,7 +32,7 @@ class Usuarios extends ActiveRecord
 
     protected function initialize()
     {
-        $min_clave = Config::get('config.application.minimo_clave');
+        $min_clave = Config::get('backend.app.minimo_clave');
         $this->belongs_to('admin/roles');
         $this->has_many('admin/auditorias');
         

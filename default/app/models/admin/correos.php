@@ -13,12 +13,12 @@ class Correos {
         $this->_mail->IsSMTP();
         $this->_mail->SMTPAuth = TRUE;
         $this->_mail->SMTPSecure = 'ssl';
-        $this->_mail->Host =   Config::get('config.email.server');
+        $this->_mail->Host =   Config::get('backend.email.server');
         $this->_mail->Port = 465;
-        $this->_mail->Username = Config::get('config.email.user');//escribir el correo
-        $this->_mail->Password =Config::get('config.email.password');//escribir la clave
-        $this->_mail->FROM = Config::get('config.email.user'); //escribir el remitente
-        $this->_mail->FromName = Config::get('config.email.from');
+        $this->_mail->Username = Config::get('backend.email.user');//escribir el correo
+        $this->_mail->Password =Config::get('backend.email.password');//escribir la clave
+        $this->_mail->FROM = Config::get('backend.email.user'); //escribir el remitente
+        $this->_mail->FromName = Config::get('backend.email.from');
     }
 
     /**

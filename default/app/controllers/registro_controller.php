@@ -25,7 +25,7 @@
 class RegistroController extends AppController {
 
 	public function before_filter(){
-		if (!Config::get('config.application.registro')){
+		if (!Config::get('backend.app.registro')){
 			return View::notFound();
 		}
 	}

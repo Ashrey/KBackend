@@ -142,7 +142,7 @@ class MyAcl
         if (Session::has('intentos_acceso')) {
             $intentos = Session::get('intentos_acceso') + 1;
             Session::set('intentos_acceso', $intentos);
-            $max_intentos = Config::get('config.application.intentos_acceso');
+            $max_intentos = Config::get('backend.app.intentos_acceso');
             return $intentos >= $max_intentos;
         } else {
             Session::set('intentos_acceso', 0);
