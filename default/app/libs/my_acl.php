@@ -49,20 +49,13 @@ class MyAcl
      */
     public function __construct()
     {
-
         //cargamos la lib Acl2 con el adaptador por defecto (SimpleAcl)
         self::$_acl = Acl2::factory();
-
-        //obtenemos el usuario actual
-        $user = Load::model('admin/usuarios')->find_first(Auth::get('id'));
-
+		//obtenemos el rol actual
         $rol = Load::model('admin/roles')->find_first(Auth::get('roles_id'));
-        
-        
-        $this->_establecerRecursos($rol->id, $rol->getRecursos()); //establecemos los recursos permitidos para el rol
-
-        $this->_establecerTemplate($user->id, $rol->plantilla);
-
+		//establecemos los recursos permitidos para el rol
+        $this->_establecerRecursos($rol->id, $rol->getRecursos());
+        $this->_establecerTemplate(Auth::get('id'), $rol->plantilla);
         self::$_acl->user(Auth::get('id'), array($rol->id));
     }
     
