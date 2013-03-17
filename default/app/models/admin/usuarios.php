@@ -33,7 +33,7 @@ class Usuarios extends ActiveRecord
     protected function initialize()
     {
         $min_clave = Config::get('backend.app.minimo_clave');
-        $this->belongs_to('admin/roles');
+        $this->belongs_to('roles');
         $this->has_many('admin/auditorias');
         
         $this->validates_presence_of('login', 'message: Debe escribir un <b>Login</b> para el Usuario');
@@ -67,7 +67,8 @@ class Usuarios extends ActiveRecord
      */
     public function paginar($pagina = 1)
     {
-        return $this->paginate("page: $pagina");
+        return $this->paginate("page: $pagina", 'join: JOIN roles r ON r.id = roles_id', 'columns: usuarios.*, r.rol rol',
+                'per_page: '.Config::get('backend.app.per_page') );
     }
 
     public function numAcciones($pagina = 1)

@@ -68,6 +68,20 @@ class UsuariosController extends AdminController {
             View::excepcion($e);
         }
     }
+    
+       /**
+     * Cambio de los datos personales de usuario.
+     * 
+     */
+    public function ver($id) {
+        try {
+            $usr = new Usuarios();
+            $this->result = $usr->find((int)$id);
+
+        } catch (KumbiaException $e) {
+            View::excepcion($e);
+        }
+    }
 
     /**
      * Crea un usuario desde el backend.
@@ -103,23 +117,11 @@ class UsuariosController extends AdminController {
     public function editar($id) {
         try {
 
-            $id = (int) $id;
-
-            $usr = new Usuarios(Input::post('usuario'));
-
+           $usr = new Usuarios(Input::post('usuario'));
             $this->usuario = $usr->find_first($id);
-
             if ($this->usuario) {// verificamos la existencia del usuario
-
-                //obtenemos los roles que tiene el usuario
-                //para mostrar los checks seleccionados para estos roles.
-                $this->rolesUser = $usr->rolesUserIds();
-                
                 if (Input::hasPost('usuario')) {
-
-                    //guarda los datos del usuario, y le asigna los roles 
-                    //seleccionados en el formulario.
-                    if ($usr->save() ){
+                    if ($usr->save(Input::post('usuario')) ){
                         Flash::valid('El Usuario Ha Sido Actualizado Exitosamente...!!!');
                         if (!Input::isAjax()) {
                             return Router::redirect();
@@ -129,7 +131,7 @@ class UsuariosController extends AdminController {
                     }
                 }
             } else {
-                Flash::warning("No existe ningun usuario con id '{$id}'");
+                Flash::warning('El usuario no existe');
                 if (!Input::isAjax()) {
                     return Router::redirect();
                 }
