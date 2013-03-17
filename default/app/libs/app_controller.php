@@ -10,7 +10,8 @@
  * */
 // @see Controller nuevo controller
 require_once CORE_PATH . 'kumbia/controller.php';
-
+/*carga las configuraciones del backend*/
+Config::read('backend');
 class AppController extends Controller {
 
     final protected function initialize() {
