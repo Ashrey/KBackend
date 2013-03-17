@@ -3,17 +3,11 @@
 </div>
 <?php View::content() ?>
 <?php
-echo Form::open('admin/roles/eliminar', 'post', 'class="form_lista"');
 View::partial('backend/barra_superior_listas', FALSE, array('texto' => 'Crear Rol'));
 $dt = new DataTable($roles);
-$dt->addHeaders(Form::check('seleccionar_todos', 'todos', NULL, FALSE));
-$dt->addHeaders('id', 'Rol', 'plantilla a usar', 'Estado', 'Editar', 'Eliminar');
-$dt->check('roles_id');
+$dt->addHeaders('id', 'Rol', 'plantilla a usar', 'Editar', 'Eliminar');
 $dt->addFields('id', 'rol', 'plantilla');
-$dt->imgLink('figuras/circulo_rojo.png|figuras/circulo_verde.png',
-        'admin/roles/activar|admin/roles/desactivar', '', 'activo');
-$dt->imgLink('figuras/editar.png', 'admin/roles/editar');
-$dt->imgLinkConfirm('figuras/eliminar.png', 'admin/roles/eliminar', '', '¿Realmente desea Eliminar Este Rol?');
+$dt->link('admin/roles/editar', '<span class="btn btn-warning"><i class="icon-edit icon-white" title="Activar"></i></span>');
+$dt->linkConfirm('admin/roles/eliminar', '<span class="btn btn-danger"><i class="icon-trash icon-white" title="Activar"></i></span>');
 echo $dt->render('class="table table-bordered table-striped"');
-echo Form::close();
 ?>

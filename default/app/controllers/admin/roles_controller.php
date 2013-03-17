@@ -39,7 +39,7 @@ class RolesController extends AdminController {
     public function index($pag= 1) {
         try {
             $roles = new Roles();
-            $this->roles = $roles->paginate("page: $pag");
+            $this->roles = $roles->paginate("page: $pag", 'per_page: ' . Config::get('backend.app.per_page'));
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
@@ -48,12 +48,8 @@ class RolesController extends AdminController {
     public function crear() {
         $this->titulo = 'Crear Rol (Perfil)';
         try {
-
             if (Input::hasPost('rol')) {
                 $rol = new Roles(Input::post('rol'));
-                if (Input::hasPost('roles_padres')) {
-                    //$rol->padres = join(',', Input::post('roles_padres'));
-                }
                 if ($rol->save()) {
                     Flash::valid('El Rol Ha Sido Agregado Exitosamente...!!!');
                     if (!Input::isAjax()) {
@@ -131,42 +127,5 @@ class RolesController extends AdminController {
         return Router::redirect();
     }
 
-    public function activar($id) {
-        try {
-            $id = (int) $id;
-
-            $rol = new Roles();
-
-            if (!$rol->find_first($id)) { //si no existe
-                Flash::warning("No existe ningun rol con id '{$id}'");
-            } else if ($rol->activar()) {
-                Flash::valid("El rol <b>{$rol->rol}</b> Esta ahora <b>Activo</b>...!!!");
-            } else {
-                Flash::warning("No se Pudo Activar el Rol <b>{$rol->rol}</b>...!!!");
-            }
-        } catch (KumbiaException $e) {
-            View::excepcion($e);
-        }
-        Router::redirect();
-    }
-
-    public function desactivar($id) {
-        try {
-            $id = (int) $id;
-
-            $rol = new Roles();
-
-            if (!$rol->find_first($id)) { //si no existe
-                Flash::warning("No existe ningun rol con id '{$id}'");
-            } else if ($rol->desactivar()) {
-                Flash::valid("El rol <b>{$rol->rol}</b> Esta ahora <b>Inactivo</b>...!!!");
-            } else {
-                Flash::warning("No se Pudo Desactivar el Rol <b>{$rol->rol}</b>...!!!");
-            }
-        } catch (KumbiaException $e) {
-            View::excepcion($e);
-        }
-        return Router::redirect();
-    }
 
 }
