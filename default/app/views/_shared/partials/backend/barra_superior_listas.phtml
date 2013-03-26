@@ -1,18 +1,21 @@
 <?php
-isset($texto) || $texto = 'Crear Registro';
-isset($accion) || $accion = 'crear';
-isset($opciones) || $opciones= TRUE;
+if (!isset($btn)) {
+    $btn = array(
+        array(
+            'action' => 'crear',
+            'icon' => 'plus',
+            'type' => 'btn-primary',
+            'text' => 'Crear'
+        )
+    );
+}
 ?>
 
-<div class="well" style="padding: 8px;border-radius: 2px;">
-    <?php echo Html::linkAction($accion, $texto, 'class="btn btn-primary"') ?>
-    <?php if ($opciones): ?>
-        <div class="btn-group pull-right">
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"> Seleccionados <span class="caret"></span></a>
-            <ul class="dropdown-menu" style="min-width: 130px">
-                <li><a href="#" class="eliminar_seleccionados"><i class="icon-trash"></i> Eliminar</a></li>
-            </ul>
-        </div>
-    <?php endif; ?>
+<div class="well">
+    <div class="btn-group">
+        <?php foreach($btn as $b):?>
+            <?php echo Html::linkAction($b['action'], "<i class=\"icon-white icon-{$b['icon']} \"></i> {$b['text']} ", "class=\"btn {$b['type']}\"") ?>
+        <?php endforeach?>
+    </div>
 </div>
 
