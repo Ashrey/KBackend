@@ -9,21 +9,24 @@ View::partial('backend/barra_superior_listas', FALSE,
             array(
                 'action' => 'crear',
                 'icon' => 'plus',
-                'type' => 'btn-primary'
+                'type' => 'btn-primary',
+                'text' => 'Crear'
             ),
             array(
                 'action' => 'escaner',
                 'icon' => 'search',
-                'type' => 'btn-info'
+                'type' => 'btn-info',
+                'text' => 'Escanear'
             )
         )
     )
 );
 $dt = new DataTable($recursos);
-$dt->addHeaders('id', 'Modulo', 'Controlador', 'Acción', 'Descripción', 'Estado', 'Editar', 'Eliminar');
-$dt->addFields('id', 'modulo', 'controlador', 'accion', 'descripcion');
-$dt->link('admin/recursos/activar|admin/recursos/desactivar', '<span class="btn btn-success"><i class="icon-check icon-white" title="Activar"></i></span> | <span class="btn btn-danger"><i class="icon-ban-circle icon-white" title="Desactivar"></i></span>', 'activo');
-$dt->link('admin/recursos/editar', '<span class="btn btn-warning"><i class="icon-edit icon-white" title="Activar"></i></span>');
-$dt->linkConfirm('admin/recursos/eliminar', '<span class="btn btn-danger"><i class="icon-trash icon-white" title="Activar"></i></span>');
+$dt->addHeaders('id', 'Modulo', 'Controlador', 'Acción', 'Descripción', 'Estado', 'Cambiar','Editar', 'Eliminar');
+$dt->addFields('id', 'modulo', 'controlador', 'accion', 'descripcion', 'activo: <span class="label label-important"><i class="icon-ban-circle icon-white" title="Activar"></i></span> | <span class="label label-success"><i class="icon-ok icon-white" title="Activar"></i></span>');
+$dt->link('admin/recursos/activar|admin/recursos/desactivar',
+          '<span class="btn btn-info"><i class="icon-check icon-white" title="Activar"></i></span>|<span class="btn btn-info"><i class="icon-off icon-white" title="Desactivar"></i></span>', 'activo');
+$dt->link('admin/recursos/editar', '<span class="btn btn-warning"><i class="icon-edit icon-white" title="Editar"></i></span>');
+$dt->linkConfirm('admin/recursos/eliminar', '<span class="btn btn-danger"><i class="icon-trash icon-white" title="Eliminar"></i></span>');
 echo $dt->render('class="table table-bordered table-striped table-condensed"');
 ?>
