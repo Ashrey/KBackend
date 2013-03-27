@@ -10,5 +10,5 @@ $dt->addFields('id', 'login', 'rol');
 $dt->link('admin/usuarios/ver', '<span class="btn btn-info"><i class="icon-edit icon-white" title="Activar"></i></span>');
 $dt->link('admin/usuarios/editar', '<span class="btn btn-warning"><i class="icon-edit icon-white" title="Activar"></i></span>');
 $dt->link('admin/usuarios/activar|admin/usuarios/desactivar', '<span class="btn btn-success"><i class="icon-check icon-white" title="Activar"></i></span> | <span class="btn btn-danger"><i class="icon-ban-circle icon-white" title="Desactivar"></i></span>', 'activo');
-echo $dt->render('class="table table-bordered table-striped"');
+echo $dt->render('class="table table-bordered table-hover table-condensed"');
 ?>

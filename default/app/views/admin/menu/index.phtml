@@ -3,15 +3,14 @@
 </div>
 <?php View::content() ?>
 <?php
-View::partial('backend/barra_superior_listas',FALSE,array('texto' => 'Crear Menú'));
+View::partial('backend/barra_superior_listas');
 $dt = new DataTable($menus);
-$dt->addHeaders('Texto a Mostrar', 'Menu Padre', 'Recurso al que Accede', 'URL', 'Posición');
-$dt->addHeaders('Estado', 'Editar', 'Eliminar');
-$dt->addFields('nombre', 'padre', 'recurso', 'url', 'posicion');
-$dt->imgLink('figuras/circulo_rojo.png|figuras/circulo_verde.png',
-        'admin/menu/activar|admin/menu/desactivar', '', 'activo');
-$dt->imgLink('figuras/editar.png', 'admin/menu/editar');
-$dt->imgLinkConfirm('figuras/eliminar.png', 'admin/menu/eliminar', '',
-        '¿Realmente desea Eliminar El Menu ?');
-echo $dt->render('class="table table-bordered table-striped table-condensed"');
+$dt->addHeaders('Texto a Mostrar', 'Menú Padre', 'Recurso al que Accede', 'URL', 'Posición');
+$dt->addHeaders('Estado', 'Cambiar', 'Editar', 'Eliminar');
+$dt->addFields('nombre', 'padre', 'recurso', 'url', 'posicion', 'activo: <span class="label label-important"><i class="icon-ban-circle icon-white" title="Activar"></i></span> | <span class="label label-success"><i class="icon-ok icon-white" title="Activar"></i></span>');
+$dt->link('admin/recursos/activar|admin/recursos/desactivar',
+          '<span class="btn btn-info"><i class="icon-check icon-white" title="Activar"></i></span>|<span class="btn btn-info"><i class="icon-off icon-white" title="Desactivar"></i></span>', 'activo');    
+$dt->link('admin/menu/editar', '<span class="btn btn-warning"><i class="icon-edit icon-white" title="Editar"></i></span>');
+$dt->linkConfirm('admin/menu/eliminar', '<span class="btn btn-danger"><i class="icon-trash icon-white" title="Eliminar"></i></span>');
+echo $dt->render('class="table table-bordered table-hover table-condensed"');
 ?>
