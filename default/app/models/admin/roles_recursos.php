@@ -31,62 +31,11 @@ class RolesRecursos extends ActiveRecord {
     }
 
     /**
-     * Devuelve los privilegios que tiene  los roles a los recursos.
-     * 
-     * Crea un array donde los indicen son la union de el id del rol con
-     * el recurso separados por un guion, ejemplo "4-10" y el valor de 
-     * esa posicion es el id del registro que tiene la info de la relación.
-     * 
-     * @return array 
-     */
-    public function obtener_privilegios() {
-        $privilegios = array();
-        foreach ($this->find() as $e) {
-            $privilegios["{$e->roles_id}-{$e->recursos_id}"] = $e->id;
-        }
-        return $privilegios;
-    }
-
-    /**
-     * Elimina todos los registros de la tabla.
-     * 
-     * @return [type] [description]
-     */
-    public function eliminarTodos() {
-        return $this->delete_all();
-    }
-
-    /**
-     * Elimina todos los registros por id ejemplo 
-     * 
-     * <code>
-     * 
-     * eliminarPorIds("1,2,3,4");
-     * 
-     * </code>
-     * 
-     * elimina los registros con id 1,2,3 y 4
-     *
-     * @param string $ids
-     * @return boolean 
-     */
-    public function eliminarPorIds($ids) {
-        if (!empty($ids)) {
-            $ids = str_replace('"', "'", Util::encomillar($ids));
-            $res = $this->delete_all("id IN ($ids)");
-            $this->log();
-            return $res;
-        }else{
-            return true;
-        }
-    }
-
-    /**
      * Guarda un nuevo registro.
      * 
      * @param  int $rol     id del rol
      * @param  int  $recurso id del recuro
-     * @return booelan         
+     * @return boolean         
      */
     public function guardar($rol, $recurso) {
         if ($this->existe($rol, $recurso))
@@ -97,26 +46,37 @@ class RolesRecursos extends ActiveRecord {
             'recursos_id' => $recurso
         ));
     }
+    
+    /**
+     * Elimina un privilegio
+     * 
+     * @param  int $rol     id del rol
+     * @param  int  $recurso id del recuro
+     * @return boolean        
+     */
+    public function eliminar($rol, $recurso) {
+        return $this->delete_all("roles_id = '$rol' AND recursos_id = '$recurso'");
+    }
 
     /**
      * Modifica los privilegios en una pagina dada.
-     *  
-     * @param  array $privilegios privilegios a conceder
-     * @param  string $privilegios_a_eliminar 
+     *  @param int $role id del rol a conceder privilegios 
+     * @param  array $priv privilegios a conceder
+     * @param  string $all todos los privilegios de la página 
      * @return boolean  
      */
-    public function editarPrivilegios($privilegios, $privilegios_a_eliminar) {
+    public function editarPrivilegios($rol, $priv, $all) {
         $this->begin();
-        //elimino todo de la bd
-        if (!$this->eliminarPorIds($privilegios_a_eliminar)) {
-            $this->rollback();
-            return FALSE;
-        }
-        foreach ((array) $privilegios as $e) {
-            $data = explode('/', $e); //el formato es 1/4 = rol/recurso
-            if (!$this->guardar($data[0], $data[1])) {
+        foreach ($all as $e) {
+            /*El privilegio ha sido asignado*/
+            if (in_array($e, $priv)) {
+                if(!$this->guardar($rol, $e)){
+                    $this->rollback();
+                    return false;
+                }
+            }else if(!$this->eliminar($rol, $e)){
                 $this->rollback();
-                return FALSE;
+                return false;
             }
         }
         $this->commit();
@@ -132,6 +92,18 @@ class RolesRecursos extends ActiveRecord {
      */
     public function existe($rol, $recurso) {
         return $this->exists("roles_id = '$rol' AND recursos_id = '$recurso'");
+    }
+    
+    /**
+     * Devuelve un array con los privilegios asignados a un rol
+     * @param int $id id del rol
+     */
+    public function privilegios($id){
+        $c = array();
+        $a = $this->find_all_by_roles_id((int)$id);
+        foreach($a as $b)
+            $c[] = $b->recursos_id;
+        return $c;
     }
 
 }

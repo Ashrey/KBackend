@@ -24,35 +24,39 @@
  */
 class PrivilegiosController extends AdminController {
 
-    public $model = 'roles_recursos';
+    public function index(){
+        $this->roles = Load::model('admin/roles')->find();
+    }
+    
 
-    public function index($page=1) {
+    public function asignar($rol, $page=1) {
         try {
-            $this->results = Load::model('admin/recursos')->paginate("page: $page", 'order: recurso');
-            $this->roles = Load::model('admin/roles')->find();
-            $this->privilegios = Load::model('admin/roles_recursos')->obtener_privilegios();
+                $this->rol = Load::model('admin/roles')->find((int)$rol);
+                $this->results = Load::model('admin/recursos')->paginate("page: $page", 'order: recurso');
+                $this->privilegios = Load::model('admin/roles_recursos')->privilegios((int)$rol);
+            
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
     }
 
-    public function asignar_privilegios($page = 1) {
-        //por ahora este paso no es auditable :-s
+    public function asignar_privilegios() {
         try {
-            if (Input::hasPost('priv') || Input::hasPost('privilegios_pagina')) {
+            if (Input::hasPost('priv') && Input::hasPost('todo') && Input::hasPost('rol') ) {
                 $obj = Load::model('admin/roles_recursos');
-                $datos = Input::post('priv');
-                $priv_pag = Input::post('privilegios_pagina');
-                if ($obj->editarPrivilegios($datos, $priv_pag)) {
-                    Flash::valid('Los privilegios Fueron Editados Exitosamente...!!!');
+                $priv = Input::post('priv');
+                $todo  = Input::post('todo');
+                $rol = Input::post('rol');
+                if ($obj->editarPrivilegios($rol, $priv ,$todo)) {
+                    Flash::valid('Los privilegios fueron editados');
                 } else {
-                    Flash::warning('No se Pudieron Guardar los Datos...!!!');
+                    Flash::warning('No se pudo editar los privilegios');
                 }
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction("index/$page");
+        return Router::toAction("asignar/$rol");
     }
 
 }
