@@ -78,26 +78,18 @@ class LectorRecursos {
      * @return array
      */
     protected static function escanearDir($modulo = NUll) {
-        $dir = APP_PATH . 'controllers' . ( $modulo ? "/$modulo" : '' );
-        $res = @scandir($dir);
-        if (!$res){
-            //Flash::error('Imposible escanear los recursos del Sistema...!!!');
-            return;
-        }
-        $modulos = array();
-        foreach ($res as $e) {
-            if (strpos($e, '_controller.php')) {
-                self::$_controladores[] = array(
-                    'dir' => "$dir/$e",
-                    'controlador' => str_replace('_controller.php', '', $e),
-                    'modulo' => $modulo
-                );
-            } elseif ($e !== '.' && $e !== '..') {
-                $modulos[] = $e;
+        $dir = APP_PATH . 'controllers';
+        $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
+        while($it->valid()) {
+            $file = $it->getFilename();
+            if (!$it->isDot() && !$it->isDir() && strpos($file, '_controller.php')){
+                    self::$_controladores[] = array(
+                        'dir' => $it->getSubPathName(),
+                        'controlador' => str_replace('_controller.php', '', $file),
+                        'modulo' => $it->getSubPath()
+                    );
             }
-        }
-        foreach ($modulos as $mod) {
-            self::escanearDir($mod);
+            $it->next();
         }
     }
 
@@ -109,25 +101,18 @@ class LectorRecursos {
     protected static function escanearControladores() {
         foreach (self::$_controladores as $e) {
             $modulo = $e['modulo'] ? $e['modulo'] . '/' : NULL;
-            LectorClases::leerArchivo($e['dir']);
+            /*try{
+            if (!include_once APP_PATH . "controllers/{$e['dir']}")
+                $reflection_class = new ReflectionClass($e['controlador']);
+            }catch(Exception $e){
+                
+            }*/
             self::$_recursos[] = array(
                 'recurso' => "$modulo{$e['controlador']}/*",
                 'modulo' => $e['modulo'],
                 'controlador' => $e['controlador'],
                 'accion' => NULL
             );
-            if ($metodos = LectorClases::getMetodosPublicos()) {
-                foreach ($metodos as $metodo) {
-                    if ($metodo !== '__contruct') {
-                        self::$_recursos[] = array(
-                            'recurso' => "$modulo{$e['controlador']}/$metodo",
-                            'modulo' => $e['modulo'],
-                            'controlador' => $e['controlador'],
-                            'accion' => $metodo
-                        );
-                    }
-                }
-            }
         }
     }
 
