@@ -115,6 +115,7 @@ class AdminController extends Controller
     {
         if (MyAuth::autenticar($user, $pass, $encriptar)) {
             Flash::info('Bienvenido al Sistema <b>' . h(Auth::get('nombres')) . '</b>');
+            Acciones::add('LOGIN', null, 'Login correcto');
             return $this->_tienePermiso();
         } else {
             Input::delete();
