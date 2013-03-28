@@ -74,7 +74,8 @@ class AdminController extends Controller
         if (Auth::is_valid()) {
             return $this->_tienePermiso();
         } elseif (Input::hasPost('login') && Input::hasPost('clave')) {
-            return $this->_logueoValido(Input::post('login'), Input::post('clave'));
+            $this->_logueoValido(Input::post('login'), Input::post('clave'));
+            Router::redirect();
         } else {
             View::select(NULL, 'backend/logueo');
             return FALSE;
