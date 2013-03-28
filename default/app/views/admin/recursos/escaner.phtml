@@ -1,20 +1,17 @@
 <div class="page-header">
-    <h1>Recursos por Agregar al Sistema
-        <?php echo Html::linkAction('', 'Volver', 'class="btn pull-right visible-desktop"') ?>
-        <?php echo Html::linkAction('crear', 'Crear Recurso', 'class="btn btn-info pull-right visible-desktop"') ?>
-    </h1>
+    <h1>Recursos por Agregar al Sistema</h1>
 </div>
 <?php //echo Form::open() ?>
 <?php echo Ajax::form('res-form-ajax') ?>
         <p>
-    <?php echo Form::submit('Guardar Recursos Seleccionados', 'name="guardar" class="btn btn-primary btn-large"') ?>
+    <?php echo Form::submit('Guardar', 'name="guardar" class="btn btn-primary"') ?>
     </p>
     <div id="res-form-ajax"><?php View::content() ?></div>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th class="span4">Datos del Recurso</th>
-                <th>Descripci&oacute;n</th>
+                <th>Descripción</th>
                 <th>Activo</th>
                 <th>Agregar</th>
             </tr>
