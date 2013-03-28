@@ -2,13 +2,9 @@
     <h1><?php eh($titulo) ?></h1>
 </div>
 <div class="row">
-    <div class="span3">
-        <?php View::partial('backend/menus/menus') ?>
-    </div>
-    <div class="span8 span-derecho" >
+    <div class="offset3 span6" >
         <div id="res-form-ajax"><?php View::content() ?></div>
         <?php echo Ajax::form('res-form-ajax', NULL, 'form-horizontal') ?>
-        <?php //echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
         <?php echo Form::hidden('menu.id') ?>
         <div class="control-group">
             <label class="control-label" for="menu_menu_id">Menu Padre : </label>
@@ -48,19 +44,11 @@
         </div>
         <div class="control-group">
             <label class="control-label" for="menu_visible_en">Visible En : </label>
-            <div class="controls" style="margin-left: 210px">
-                <label class="radio" style="white-space: nowrap">
-                    <?php echo Form::radio('menu.visible_en', '1') ?>
-                    Solo en La Aplicación, fuera del Backend
-                </label>
-                <label class="radio">
-                    <?php echo Form::radio('menu.visible_en', '2') ?>
-                    Solo en El Backend
-                </label>
-                <label class="radio">
-                    <?php echo Form::radio('menu.visible_en', '3') ?>
-                    En cualquier parte del sistema
-                </label>
+            <div class="controls">
+                <?php echo Form::select('menu.visible_en',  array(1=>
+                    'Solo en La Aplicación',                                         
+                    'Solo en El Backend',
+                    'En cualquier parte'));?>
             </div>
         </div>
         <div class="control-group">
@@ -69,18 +57,11 @@
                 <?php echo Form::select('menu.activo', array('1' => 'Si', '0' => 'No')) ?>
                 </div>
             </div>
-            <div class="form-actions">
-            <?php echo Form::submit('Guardar', 'class="btn btn-primary"') ?>
-            <?php echo Html::linkAction('', 'Cancelar', 'class="btn"') ?>
-                </div>
+            <div class="form-actions btn-group">
+		<button type="submit" class="btn btn-primary"><i class="icon-white icon-ok"></i>Guardar </button>                 
+		<?php echo Html::linkAction('', 'Cancelar', 'class="btn btn-danger"') ?>
+	    </div>
+
         <?php echo Form::close() ?>
     </div>
 </div>
-<script type="text/javascript" >
-    $(function(){
-        $("#menu_recursos_id").live('change',function(){
-            var recurso = $('option:selected',this).text();
-            $("#menu_url").val(recurso.replace('/*',''));
-        });
-    });
-</script>
