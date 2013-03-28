@@ -14,40 +14,6 @@
 Load::coreLib('kumbia_active_record');
 
 class ActiveRecord extends KumbiaActiveRecord implements ArrayAccess {
-
-//    public $debug = true;
-//    public $logger = true;
-
-    /**
-     * Activa un registro en la tabla actual.
-     *
-     * @return boolean 
-     */
-    public function activar() {
-        if (isset($this->activo)){
-            $this->activo = '1';
-            return $this->update();            
-        }else{
-            Flash::error("La tabla <b>{$this->get_source()}</b> no tiene un campo <b>activo</b>");
-            return FALSE;
-        }
-    }
-
-    /**
-     * Desactiva un registro en la tabla actual.
-     *
-     * @return boolean 
-     */
-    public function desactivar() {
-        if (isset($this->activo)){
-            $this->activo = '0';
-            return $this->update();            
-        }else{
-            Flash::error("La tabla <b>{$this->get_source()}</b> no tiene un campo <b>activo</b>");
-            return FALSE;
-        }
-    }
-
     /**
      * Para llevar auditorias.
      * 
@@ -81,10 +47,11 @@ class ActiveRecord extends KumbiaActiveRecord implements ArrayAccess {
         if ($this->source != 'auditorias') { //mucho ojo con esto
             //solo debemos hacer el log si la tabla no es la de auditorias;
             $tabla = $this->schema ? "$this->schema.$this->source" : $this->source;
-            $sql = $this->db->last_sql_query();
-            if (strpos($sql, 'SELECT ') > 10 || strpos($sql, 'SELECT ') === false) {
-                //las consultas SELECT no las vamos a guardar
-                Acciones::add($this->db->last_sql_query(), $tabla);
+            $sql = trim($this->db->last_sql_query());
+            $tmp = explode(' ', $sql);
+            $type = isset($tmp[0]) && is_string($tmp) ?$tmp[0] :'UNKNOW';
+            if ($type != 'SELECT'){
+                Acciones::add($type, $tabla, $sql);
             }
         }
     }

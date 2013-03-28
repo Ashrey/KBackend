@@ -25,14 +25,15 @@ Load::models('admin/auditorias');
 
 class Acciones {
 
-    static public function add($accion_realizada, $tabla_afectada = NULL) {
+    static public function add($accion, $tabla=null, $sql = null) {
         try {
             if (Auth::is_valid() &&
                     Config::get('backend.app.guardar_auditorias') == true) {
                 $auditoria = new Auditorias();
                 $auditoria->usuarios_id = Auth::get('id');
-                $auditoria->accion_realizada = strip_tags($accion_realizada);
-                $auditoria->tabla_afectada = strtoupper(strip_tags($tabla_afectada));
+                $auditoria->accion = strip_tags($accion);
+                $auditoria->tabla = strtoupper(strip_tags($tabla));
+                $auditoria->sql = $sql;
                 $auditoria->ip = $_SERVER['REMOTE_ADDR'];
                 $auditoria->save();
             }
