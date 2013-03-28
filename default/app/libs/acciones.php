@@ -33,7 +33,7 @@ class Acciones {
                 $auditoria->usuarios_id = Auth::get('id');
                 $auditoria->accion = strip_tags($accion);
                 $auditoria->tabla = strtoupper(strip_tags($tabla));
-                $auditoria->sql = $sql;
+                $auditoria->detalles = $sql;
                 $auditoria->ip = $_SERVER['REMOTE_ADDR'];
                 $auditoria->save();
             }
