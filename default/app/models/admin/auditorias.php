@@ -24,7 +24,8 @@
  */
 class Auditorias extends ActiveRecord {
 
-//    public $debug = true;
+    //protege de un ciclo infinito NO ELIMINAR
+    public $logger = false;
 
     protected function initialize() {
         //relaciones
