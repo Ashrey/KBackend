@@ -111,21 +111,17 @@ abstract class Logger {
             self::$quenue[] = "[$date][$type] " . $msg;
         } else {
             try {
-                
                 $tmp = explode(' ', trim($msg));
-                $t = isset($tmp[0]) && is_string($tmp) ? $tmp[0] : 'UNKNOW';
-                Flash::error($tmp[0]);
-                if ($t != 'SELECT' ||    $t != 'DESCRIBE')
+                $t = isset($tmp[0]) && is_string($tmp[0]) ? strtoupper($tmp[0]) : 'UNKNOW';
+                /*No audito select, ni describe*/
+                if ($t === 'SELECT' ||    $t === 'DESCRIBE')
                     return;
-
-                if (Auth::is_valid() &&
-                        Config::get('backend.app.guardar_auditorias') == true) {
+                if (Config::get('backend.app.guardar_auditorias') == true) {
                     $auditoria = new Auditorias();
-                    $auditoria->usuarios_id = Auth::get('id');
-                    $auditoria->accion = 'strip_tags($accion)';
-                    $auditoria->tabla = 'strtoupper(strip_tags($tabla)';
+                    $auditoria->usuarios_id = Auth::is_valid()? Auth::get('id') : NULL;
+                    $auditoria->accion = $t;
+                    $auditoria->tipo = $type;
                     $auditoria->detalles = $msg;
-                    $auditoria->ip = $_SERVER['REMOTE_ADDR'];
                     $auditoria->save();
                 }
             } catch (KumbiaException $e) {
