@@ -115,10 +115,11 @@ class AdminController extends Controller
     {
         if (MyAuth::autenticar($user, $pass, $encriptar)) {
             Flash::info('Bienvenido al Sistema <b>' . h(Auth::get('nombres')) . '</b>');
-            Acciones::add('LOGIN', null, 'Login correcto');
+            Logger::debug('Login correcto');
             return $this->_tienePermiso();
         } else {
             Input::delete();
+            Logger::error('Login errado');
             Flash::warning('Datos de Acceso invalidos');
             View::select(NULL, 'backend/logueo');
             return FALSE;
