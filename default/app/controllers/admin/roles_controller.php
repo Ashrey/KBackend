@@ -36,7 +36,7 @@ class RolesController extends AdminController {
         }
     }
 
-    public function index($pag= 1) {
+    public function index($pag = 1) {
         try {
             $roles = new Roles();
             $this->roles = $roles->paginate("page: $pag", 'per_page: ' . Config::get('backend.app.per_page'));
@@ -98,34 +98,20 @@ class RolesController extends AdminController {
         }
     }
 
-    public function eliminar($id = NULL) {
+    public function eliminar($id) {
         try {
             $rol = new Roles();
-            if (is_int($id)) {
-
-
-                if (!$rol->find_first($id)) { //si no existe
-                    Flash::warning("No existe ningun rol con id '{$id}'");
-                } else if ($rol->delete()) {
-                    Flash::valid("El rol <b>{$rol->rol}</b> fué Eliminado...!!!");
-                } else {
-                    Flash::warning("No se Pudo Eliminar el Rol <b>{$rol->rol}</b>...!!!");
-                }
-            } elseif (is_string($id)) {
-                if ($rol->delete_all("id IN ($id)")) {
-                    Flash::valid("Los Roles <b>{$id}</b> fueron Eliminados...!!!");
-                } else {
-                    Flash::warning("No se Pudieron Eliminar los Roles...!!!");
-                }
-            } elseif (Input::hasPost('roles_id')) {
-                $this->ids = Input::post('roles_id');
-                return;
+            if (!$rol->find_first((int) $id)) { //si no existe
+                Flash::warning("No existe ningun rol con id '{$id}'");
+            } else if ($rol->delete()) {
+                Flash::valid("El rol <b>{$rol->rol}</b> fue eliminado");
+            } else {
+                Flash::warning("No se Pudo Eliminar el Rol <b>{$rol->rol}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
         return Router::redirect();
     }
-
 
 }
