@@ -37,7 +37,8 @@ class Roles extends ActiveRecord {
     }
 
     /**
-     * Devuelve los recursos a los que un rol tiene acceso.
+     * Devuelve los recursos a los que un rol tiene acceso 
+     * y además están activos
      * 
      * @return array 
      */
@@ -45,7 +46,7 @@ class Roles extends ActiveRecord {
         $columnas = "r.*";
         $join = "INNER JOIN roles_recursos as rr ON rr.roles_id = roles.id ";
         $join .= "INNER JOIN recursos as r ON rr.recursos_id = r.id ";
-        $where = "roles.id = '$this->id'";
+        $where = "roles.id = '$this->id' AND activo = 1";
         return $this->find($where, "columns: $columnas" , "join: $join");
     }
 
