@@ -23,7 +23,7 @@
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
 Load::models('admin/menus');
-
+Load::models('admin/recursos');
 class MenuController extends AdminController {
 
     /**
