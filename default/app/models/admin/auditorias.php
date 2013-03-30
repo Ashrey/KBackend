@@ -31,6 +31,10 @@ class Auditorias extends ActiveRecord {
         //relaciones
         $this->belongs_to('admin/usuarios');
     }
+    
+    protected function before_save(){
+        $this->ip = ip2long( $_SERVER['REMOTE_ADDR']);
+    }
 
     /**
      * Obtiene las acciones realizadas por un usuario especifico
