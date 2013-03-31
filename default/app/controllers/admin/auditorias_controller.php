@@ -38,37 +38,17 @@ class AuditoriasController extends AdminController {
     public function usuario($id, $pagina = 1) {
         $this->url = "admin/auditorias/usuario/$id";
         try {
+            $id = (int)$id;
             $usr = new Usuarios();
             $aud = new Auditorias();
             $this->usuario = $usr->find_first($id);
-            $this->auditorias = $aud->porUsuario($usr,new Filtro(), $pagina);
+            $this->auditorias = $aud->porUsuario($id,new Filtro(), $pagina);
             if (!$this->auditorias->items) {
-                Flash::info('Este usuario no ha realizado ninguna acción en el sistema...!!!');
+                Flash::info('Este usuario no ha realizado ninguna acción en el sistema');
                 return Router::redirect();
             }
-            $this->tablas_afectadas = $aud->tablasAfectadas();
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
     }
-
-    public function resultados_usuario($id,$pagina = 1) {
-        $this->url = "admin/auditorias/resultados_usuario/$id";
-        try {
-            if (Input::hasPost('filtro')) {
-                Session::set('filtro_auditorias_usuario', Input::post('filtro'));
-            }
-            $usr = new Usuarios();
-            $aud = new Auditorias();
-            $this->usuario = $usr->find_first($id);
-            $this->tablas_afectadas = $aud->tablasAfectadas();
-            $this->filtro = Session::get('filtro_auditorias_usuario');
-            $filtro = new Filtro($aud->get_source(), $this->filtro);
-            $this->auditorias = $aud->porUsuario($usr,$filtro ,$pagina);
-        } catch (KumbiaException $e) {
-            View::excepcion($e);
-        }
-        View::select('usuario');
-    }
-
 }
