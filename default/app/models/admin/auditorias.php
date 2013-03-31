@@ -35,6 +35,10 @@ class Auditorias extends ActiveRecord {
     protected function before_save(){
         $this->ip = ip2long( $_SERVER['REMOTE_ADDR']);
     }
+    
+    function ip(){
+        return long2ip($this->ip);
+    }
 
     /**
      * Obtiene las acciones realizadas por un usuario especifico
@@ -44,24 +48,10 @@ class Auditorias extends ActiveRecord {
      * @param  integer  $pagina  pagina a mostrar
      * @return array        registros en la bd
      */
-    public function porUsuario(Usuarios $usuario, Filtro $filtro,$pagina = 1) {
+    public function porUsuario($id, Filtro $filtro,$pagina = 1) {
         $condiciones = $filtro->getQuery();
-        $where = "usuarios_id = '{$usuario->id}' AND {$condiciones}";
+        $where = "usuarios_id = '$id' AND {$condiciones}";
         return $this->paginate("page: $pagina", "conditions: $where", "order: id desc");
     }
-
-    /**
-     * Devuelve las tablas que han sido afectadas en data por los usuarios.
-     * 
-     * @return array nombres de las tablas.
-     */
-    public function tablasAfectadas() {
-        $tablas = array('Seleccione');
-        foreach ($this->distinct('tabla_afectada') as $e) {
-            $tablas["$e"] = $e;
-        }
-        return $tablas;
-    }
-
 }
 
