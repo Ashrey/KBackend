@@ -14,7 +14,8 @@
 Load::coreLib('kumbia_active_record');
 
 class ActiveRecord extends KumbiaActiveRecord implements ArrayAccess {
-    protected $logger  = true;
+
+    protected $logger = true;
 
     public function offsetSet($indice, $valor) {
         if (!is_null($indice)) {
@@ -33,4 +34,5 @@ class ActiveRecord extends KumbiaActiveRecord implements ArrayAccess {
     public function offsetGet($indice) {
         return $this->offsetExists($indice) ? $this->{$indice} : NULL;
     }
+
 }
