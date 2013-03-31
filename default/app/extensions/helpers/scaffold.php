@@ -25,8 +25,7 @@ class Scaffold {
 
     static function filter($model) {
         /* Carga los filtros actuales */
-        $cond = Session::get('filter', $model);
-        $model = Load::model($model);
+        $cond = Session::get('filter', strtolower($model->source));
         $param = array(
             /* Relaciones */
             'rel' => array(
@@ -40,10 +39,49 @@ class Scaffold {
             'model' => $model,
             'cond' => $cond
         );
+        ob_start();
         View::partial('backend/filter', false, $param);
+        return ob_get_clean();
+    }
+    
+    static function request($model){
+        /* Se asegura de que siempre exista el filtro 
+         * en el espacio de nombres */
+        if (!Session::has('filter', $model)) {
+            Session::set('filter', array(), $model);
+        }
+
+        /* Analiza las peticiones */
+        if (Input::post('clear')) {/* Elimina todos los filtros */
+            Session::set('filter', array(), $model);
+            Flash::info('Filtros Borrados');
+        } elseif (Input::post('add')) {/* Agrega un filtro */
+            $cond = Session::get('filter', $model);
+            $nuevo = Input::post('filter');
+            $nuevo['val'] = empty($nuevo['val']) && $nuevo['val'] !== '0' ?
+                    'NULL' : '"' . addslashes($nuevo['val']) . '"';
+            $cond[uniqid()] = $nuevo;
+            Session::set('filter', $cond, $model);
+        } elseif (Input::post('remove')) {/* Remueve un filtro */
+            $cond = Session::get('filter', $model);
+            $key = Input::post('remove');
+            unset($cond[$key]);
+            Session::set('filter', $cond, $model);
+        }
+        /* Hace Redireccion en caso de peticones POST */
+       if ($_SERVER['REQUEST_METHOD'] == 'POST')
+            Router::redirect();
+        $cond = Session::get('filter', $model);
+        /* Crea los filtros */
+        $filter = array('1 = 1 ');
+        foreach ($cond as $val) {
+            $filter[] = implode(' ', $val);
+        }
+        return implode(' AND ', $filter);  
     }
     
     static function update($model, $field){
+        $model = is_string($model)? Load::model($model):$model;
         $model_name = Util::smallcase(get_class($model));
          $tipo = trim(preg_replace('/(\(.*\))/', '', $model->_data_type[$field])); //TODO: recoger tamaño y otros valores
          switch ($tipo) {
@@ -71,11 +109,6 @@ class Scaffold {
                     break;
                 case 'datetime': case 'timestamp':
                     echo "<input  type=\"datetime\" name=\"filter[val]\">" . PHP_EOL;
-
-                    //echo '<script type="text/javascript" src="/javascript/kumbia/jscalendar/calendar.js"></script>
-                    //<script type="text/javascript" src="/javascript/kumbia/jscalendar/calendar-setup.js"></script>
-                    //<script type="text/javascript" src="/javascript/kumbia/jscalendar/calendar-es.js"></script>'.PHP_EOL;
-                    //echo date_field_tag("$formId");
                     break;
 
                 case 'enum': case 'set': case 'bool':

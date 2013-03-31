@@ -36,10 +36,11 @@ class UsuariosController extends AdminController {
         }
     }
 
-    public function index($pagina = 1) {
+    public function index($page = 1) {
         try {
+            $cond = Scaffold::request('usuarios');
             $usr = new Usuarios();
-            $this->usuarios = $usr->paginar($pagina);
+            $this->usuarios = $usr->paginar($cond, $page);
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }

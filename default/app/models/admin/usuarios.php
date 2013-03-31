@@ -65,10 +65,15 @@ class Usuarios extends ActiveRecord
      * @param  integer $pagina numero de pagina a mostrar
      * @return array          resultado de la consulta
      */
-    public function paginar($pagina = 1)
+    public function paginar($cond,$pagina = 1)
     {
-        return $this->paginate("page: $pagina", 'join: JOIN roles r ON r.id = roles_id', 'columns: usuarios.*, r.rol rol',
-                'per_page: '.Config::get('backend.app.per_page') );
+        //Flash::error($cond);
+        return $this->paginate("page: $pagina",
+                'join: JOIN roles r ON r.id = roles_id',
+                'columns: usuarios.*, r.rol rol',
+                'per_page: '.Config::get('backend.app.per_page'),
+                "conditions: $cond"
+               );
     }
 
     public function numAcciones($pagina = 1)

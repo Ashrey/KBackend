@@ -89,6 +89,12 @@ class DataTable {
      * @var String
      */
     protected $_caption = '';
+    
+    /**
+     * uso de filtros
+     * @var boolean
+     */
+    protected $_use_filter = true;
 
     /**
      * Constructor de la Clase
@@ -186,7 +192,9 @@ class DataTable {
             $table .= "<caption>{$this->_caption}</caption>";
 //      head de la tabla
         $table .= '<thead>';
-       
+        $table .= $this->_use_filter? 
+                '<tr><td colspan="100">'.Scaffold::filter(current($model)).'</td></tr>':
+                '';
         $table .= '<tr>';
         foreach ($this->_cabeceras as $e) {
             $table .= "<th>$e</th>";
@@ -200,7 +208,7 @@ class DataTable {
             $table .= '</td></tr></tfoot>';
         } else {
             $table .= '   <tfoot><tr><td colspan="100">';
-            $table .= '<span style="float:right;margin-right:20px;"><b>Total: ' . count($model) . '</b></span>';
+            $table .= 'Total: ' . count($model);
             $table .= '</td></tr></tfoot>';
         }
 //      body de la tabla
@@ -220,7 +228,6 @@ class DataTable {
                             $value = '';
                         }
                     }elseif (method_exists($model, $field['field'])) { //si es un metodo lo llamamos
-                        
                         $value = h($model->$field['field']());
                     } else {
                         $value = h($model->$field['field']);
@@ -416,6 +423,14 @@ class DataTable {
      */
     public function setCaption($txt){
         $this->_caption = $txt;
+    }
+    
+    /**
+     *  Establece si se usan o no filtros
+     * @param boolean $val
+     */
+    public function useFilter($val){
+        $this->_use_filter = $val;
     }
     
     /**
