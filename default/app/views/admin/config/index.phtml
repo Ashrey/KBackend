@@ -12,7 +12,11 @@
                     <div class="control-group">
                         <label class="control-label" for="config_name"><?php echo ucwords(strtr($name, '_-', '  ')); ?>: </label>
                         <div class="controls">
-                            <?php echo Form::text("config.{$name}", null, $value) ?>
+                            <?php if (in_array($value, array('On', 'Off'))): ?>
+                                <?php echo Form::check("config.{$name}", 1, null, $value == 'On') ?>
+                            <?php else: ?>
+                                <?php echo Form::text("config.{$name}", null, $value) ?>
+                            <?php endif ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
