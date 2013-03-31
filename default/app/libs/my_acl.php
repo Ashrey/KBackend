@@ -22,8 +22,7 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
-class MyAcl
-{
+class MyAcl {
 
     /**
      * Objeto Acl2
@@ -31,12 +30,14 @@ class MyAcl
      * @var SimpleAcl
      */
     static protected $_acl = null;
+
     /**
      * arreglo con los templates para cada usuario
      *
      * @var array 
      */
     protected $_templates = array();
+
     /**
      * Recurso al que se esta intentando acceder
      *
@@ -47,31 +48,27 @@ class MyAcl
     /**
      * Crea las reglas para el ACL.
      */
-    public function __construct()
-    {
+    public function __construct() {
         //cargamos la lib Acl2 con el adaptador por defecto (SimpleAcl)
         self::$_acl = Acl2::factory();
-		//obtenemos el rol actual
+        //obtenemos el rol actual
         $rol = Load::model('admin/roles')->find_first(Auth::get('roles_id'));
-		//establecemos los recursos permitidos para el rol
+        //establecemos los recursos permitidos para el rol
         $this->_establecerRecursos($rol->id, $rol->getRecursos());
         $this->_establecerTemplate(Auth::get('id'), $rol->plantilla);
         self::$_acl->user(Auth::get('id'), array($rol->id));
     }
-    
+
     /**
      * Establece los recursos a los que un rol tiene acceso
      *
      * @param int $rol id del rol
      * @param array $recursos resultado de una consulta del ActiveRecord
      */
-    protected function _establecerRecursos($rol, $recursos)
-    {
+    protected function _establecerRecursos($rol, $recursos) {
         $urls = array();
         foreach ($recursos as $e) {
-            if ($e->activo) { //seguridad, solo recursos activos
-                $urls[] = $e->recurso;
-            }
+            $urls[] = $e->recurso;
         }
         self::$_acl->allow($rol, $urls); //damos permiso al rol de acceder al arreglo de recursos
     }
@@ -84,8 +81,7 @@ class MyAcl
      * @param int $user id del usuario
      * @param string $template nombre del template a usar para el rol
      */
-    protected function _establecerTemplate($user, $template)
-    {
+    protected function _establecerTemplate($user, $template) {
         if (!empty($template)) {
             $this->_templates["$user"] = $template; //establecemos el template para el rol
         }
@@ -99,14 +95,11 @@ class MyAcl
      *
      * @return boolean resultado del chequeo
      */
-    public function check()
-    {
-
+    public function check() {
         $usuario = Auth::get('id');
         $modulo = Router::get('module');
         $controlador = Router::get('controller');
         $accion = Router::get('action');
-
         if (isset($this->_templates["$usuario"])) {
             if (file_exists(APP_PATH . 'views/_shared/templates/' . $this->_templates["$usuario"] . '.phtml')) {
                 View::template("{$this->_templates["$usuario"]}");
@@ -126,9 +119,9 @@ class MyAcl
         $recurso4 = "*";  //por si tiene acceso a todo el sistema
         //si se cumple algunas de las codiciones, el user tiene permiso.
         return self::$_acl->check($recurso1, $usuario) ||
-        self::$_acl->check($recurso2, $usuario) ||
-        self::$_acl->check($recurso3, $usuario) ||
-        self::$_acl->check($recurso4, $usuario);
+                self::$_acl->check($recurso2, $usuario) ||
+                self::$_acl->check($recurso3, $usuario) ||
+                self::$_acl->check($recurso4, $usuario);
     }
 
     /**
@@ -137,8 +130,7 @@ class MyAcl
      *
      * @return boolean devuelve true si se ha sobrepasado el limite de intentos
      */
-    public function limiteDeIntentosPasado()
-    {
+    public function limiteDeIntentosPasado() {
         if (Session::has('intentos_acceso')) {
             $intentos = Session::get('intentos_acceso') + 1;
             Session::set('intentos_acceso', $intentos);
@@ -153,8 +145,7 @@ class MyAcl
     /**
      * Reinicia el numero de intentos de un usuario por acceder a un recurso en cero.
      */
-    public function resetearIntentos()
-    {
+    public function resetearIntentos() {
         Session::set('intentos_acceso', 0);
     }
 
