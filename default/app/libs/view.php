@@ -27,7 +27,7 @@ class View extends KumbiaView {
      * @param  KumbiaException $e [description]
      */
     public static function excepcion(KumbiaException $e) {
-        Flash::warning('Lo sentimos, Ha Ocurrido un Error...!!!');
+        Flash::warning('Ha Ocurrido un error');
         if (Config::get('config.application.log_exception') || !PRODUCTION) {
             Flash::error($e->getMessage());
         }
@@ -35,15 +35,15 @@ class View extends KumbiaView {
             Flash::error($e->getTraceAsString());
         }
         Logger::critical($e); //comentar en caso de error de que no se pueda escribir en los logs.
-        Flash::info('Si el problema persiste por favor informe al administrador del sistema...!!!');
+        Flash::info('Si el problema persiste por favor informe al administrador del sistema');
     }
-	
+
     /**
      * Muestra la vista de notFound de la app.
      * 
      */
-	public function notFound(){
-		throw new KumbiaException(NULL, 'no_controller');
-	}
+    public function notFound() {
+        throw new KumbiaException(NULL, 'no_controller');
+    }
 
 }
