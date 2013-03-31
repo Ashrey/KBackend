@@ -1,10 +1,10 @@
 <div id='cabecera' class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
-            <?php echo Html::link('', 'App KumbiaPHP', 'class="brand"') ?>
+            <?php echo Html::link('', Config::get('backend.app.nombre'), 'class="brand"') ?>
             <div class="nav-collapse pull-right">
                 <ul class="nav">
-                    <li><?php echo Html::link('admin/usuarios', 'Administración') ?></li>
+                    <li><?php echo Html::link('admin/', 'Administración') ?></li>
                 </ul>
             </div>
         </div>

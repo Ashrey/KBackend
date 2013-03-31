@@ -69,27 +69,27 @@ if ($page->current <= $half) {
             echo '<li>', Html::link("$url/", '1'), '</li>';
         }
         if ($start > 2):
-        ?>
+            ?>
             <li><a href="#">...</a></li>
         <?php endif; ?>
 
         <?php for ($i = $start; $i <= $page->total && $i < ($start + $show); $i++): ?>
-        <?php echo $i == $page->current ? "<li class=\"active\"><a href='#'>$i</a><li>" : '<li>' . Html::link("$url/$i", $i) . '</li>'; ?>
+            <?php echo $i == $page->current ? "<li class=\"active\"><a href='#'>$i</a><li>" : '<li>' . Html::link("$url/$i", $i) . '</li>'; ?>
         <?php endfor; ?>
 
         <?php if ($page->total > $i): ?>
-                    <li><a href="#">...</a></li>
-        <?php echo '<li>', Html::link("$url/$page->total/", $page->total), '</li>'; ?>
+            <li><a href="#">...</a></li>
+            <?php echo '<li>', Html::link("$url/$page->total/", $page->total), '</li>'; ?>
         <?php elseif ($i == $page->total): ?>
-        <?php echo '<li>', Html::link("$url/$i/", $i), '</li>'; ?>
+            <?php echo '<li>', Html::link("$url/$i/", $i), '</li>'; ?>
         <?php endif; ?>
 
         <?php
-                        if ($page->next) {
-                            echo '<li class="prev">', Html::link("$url/$page->next/", 'Siguiente', 'title="Ir a la pág. siguiente" class="nextprev"'), '</li>';
-                        } else {
-                            echo '<li class="prev disabled"><a title="Ir a la pág. siguiente" href="#">Siguiente</a></li>';
-                        }
+        if ($page->next) {
+            echo '<li class="prev">', Html::link("$url/$page->next/", 'Siguiente', 'title="Ir a la pág. siguiente" class="nextprev"'), '</li>';
+        } else {
+            echo '<li class="prev disabled"><a title="Ir a la pág. siguiente" href="#">Siguiente</a></li>';
+        }
         ?>
     </ul>
 </div>
