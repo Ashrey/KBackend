@@ -145,5 +145,20 @@ class Usuarios extends ActiveRecord
         }
         return FALSE;
     }
+    /**
+     * Desactiva a un usuario
+     */
+    function desactivar() {
+        $this->activo = '0';
+        return $this->save();
+    }
+    
+     /**
+     * Activa a un usuario
+     */
+    function activar() {
+        $this->activo = '1';
+        return $this->save();
+    }
 
 }
