@@ -152,9 +152,9 @@ class UsuariosController extends AdminController {
             if (!$usuario->find_first($id)) { //si no existe el usuario
                 Flash::warning("No existe ningun usuario con id '{$id}'");
             } else if ($usuario->activar()) {
-                Flash::valid("La Cuenta del Usuario {$usuario->login} ({$usuario->nombres}) fué activada...!!!");
+                Flash::valid("La Cuenta {$usuario->login} ({$usuario->nombres}) fue activada");
             } else {
-                Flash::warning('No se Pudo Activar la cuenta del Usuario...!!!');
+                Flash::warning('No se Pudo Activar la cuenta');
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
@@ -173,9 +173,9 @@ class UsuariosController extends AdminController {
             if (!$usuario->find_first($id)) { //si no existe el usuario
                 Flash::warning("No existe ningun usuario con id '{$id}'");
             } else if ($usuario->desactivar()) {
-                Flash::valid("La Cuenta del Usuario {$usuario->login} ({$usuario->nombres}) fué desactivada...!!!");
+                Flash::valid("La Cuenta {$usuario->login} ({$usuario->nombres}) fue desactivada");
             } else {
-                Flash::warning('No se Pudo Desactivar la cuenta del Usuario...!!!');
+                Flash::warning('No se pudo desactivar la cuentaS');
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
