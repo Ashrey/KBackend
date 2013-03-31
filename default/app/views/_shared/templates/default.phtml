@@ -3,16 +3,10 @@
     <head>
         <meta charset='<?php echo APP_CHARSET ?>' />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?php echo Config::get('config.application.name') ?></title>
+        <title>Inicio - <?php echo Config::get('backend.app.nombre') ?></title>
         <?php
         Tag::css('backend/bootstrap.min');
-        Tag::css('backend/bootstrap-responsive.min');
-        Tag::css('backend/estilos');
         echo Html::includeCss();
-        echo Tag::js('jquery/jquery.min');
-        echo Tag::js('jquery/jquery.kumbiaphp');
-        echo Tag::js('bootstrap/bootstrap');
-        echo Tag::js('global');
         ?>
     </head>
     <body>
@@ -23,5 +17,10 @@
             </div>
             <?php View::partial('backend/pie') ?>
         </div>
+
+        <?php
+        echo Tag::js('jquery/jquery.min');
+        echo Tag::js('jquery/jquery.kumbiaphp');
+        ?>
     </body>
 </html>
