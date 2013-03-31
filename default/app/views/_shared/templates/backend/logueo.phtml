@@ -16,30 +16,32 @@
         <?php View::partial('backend/cabecera_app') ?>
         <div class="container">
             <div id="contenido" class="content span4 offset4">                    
-                     <?php View::content() ?>
-                     <?php echo Form::open(NULL, 'post', 'class="well"') ?>
-                
+                <?php View::content() ?>
+                <?php echo Form::open(NULL, 'post', 'class="well"') ?>
                 <div class="control-group">
-                    <label class="control-label" for="login">Usuario </label>
+                    <label class="control-label" for="login"><i class="icon-user"></i>Usuario </label>
                     <div class="controls">
                         <?php echo Form::text('login') ?>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="clave">Contrase&ntilde;a </label>
+                    <label class="control-label" for="clave"><i class="icon-key"></i>Contraseña </label>
                     <div class="controls">
                         <?php echo Form::pass('clave'/* ,'autocomplete="off"' */) ?>
                     </div>
                 </div>
-                <?php if (Config::get('backend.app.registro')): ?>
-                    <?php echo Html::link('registro', 'Registrate') ?>
-                <?php endif; ?>
-                <?php echo Form::submit('Ingresar', 'class="btn btn-primary"') ?>
+                <div class="form-actions">
+                    <div class="btn-group">
+                        <button class=" btn btn-primary" type="submit"><i class="icon-signin"></i> Ingresar</button>
+                        <?php if (Config::get('backend.app.registro')): ?>
+                            <?php echo Html::link('registro', 'Registro <i class=" icon-folder-open"></i>', 'class="btn btn-info"') ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
                 <?php echo Form::close() ?>
+                <?php View::partial('backend/pie') ?>
+                <?php echo (Config::get('backend.app.registro'));?>
             </div>
-            <?php View::partial('backend/pie') ?>
         </div>
-      
-    </div>
-</body>
+    </body>
 </html>
