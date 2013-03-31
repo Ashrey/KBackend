@@ -119,4 +119,19 @@ class Recursos extends ActiveRecord {
         return $res;
     }
 
+     /**
+     * Desactiva a un recurso
+     */
+    function desactivar() {
+        $this->activo = '0';
+        return $this->save();
+    }
+    
+     /**
+     * Activa a un recurso
+     */
+    function activar() {
+        $this->activo = '1';
+        return $this->save();
+    }
 }

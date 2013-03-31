@@ -102,6 +102,22 @@ class Menus extends ActiveRecord {
     protected function before_save() {
         $this->posicion = !empty($this->posicion) ? $this->posicion : '100';
     }
+    
+    /**
+     * Desactiva a un menú
+     */
+    function desactivar() {
+        $this->activo = '0';
+        return $this->save();
+    }
+    
+     /**
+     * Activa a un rmenú
+     */
+    function activar() {
+        $this->activo = '1';
+        return $this->save();
+    }
 
 }
 
