@@ -3,7 +3,7 @@
 </div>
 <?php View::content() ?>
 <?php
-View::partial('backend/barra_superior_listas', FALSE, array('texto' => 'Crear Usuario', 'opciones' => FALSE));
+View::partial('backend/barra_superior_listas');
 $dt = new DataTable($usuarios);
 $dt->addHeaders('id', 'Login', 'Rol', 'Estado', 'Cambiar', 'Ver', 'Editar');
 $dt->addFields('id', 'login', 'rol', 'activo: <span class="label label-important"><i class="icon-ban-circle icon-white" title="Activar"></i></span> | <span class="label label-success"><i class="icon-ok icon-white" title="Activar"></i></span>');
