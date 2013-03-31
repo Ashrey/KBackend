@@ -26,21 +26,15 @@ Load::models('admin/instalacion');
 class InstalacionController extends AppController {
 
     protected function before_filter() {
-        if ($_SERVER['REMOTE_ADDR'] != '127.0.0.1') { //seguridad
+        if (Config::get('backend.app.instalado')) { //seguridad
             header('HTTP/1.0 403 Forbidden');
             exit('No tienes permisos para acceder a esta dirección...!!!');
-        }
-        if (defined('SIN_MOD_REWRITE')) {
-            Flash::error('Debes tener instalado el Mod Rewrite de Apache para poder usar KumbiaPHP');
         }
     }
 
     public function index($index_entorno = 0) {
         $inst = new Instalacion();
-        //$this->entornos_bd = $inst->entornosConexion();
-        //$this->entorno = $inst->entorno($index_entorno);
         $this->database = $inst->configuracionEntorno($index_entorno);
-
         if (Input::hasPost('database')) {
             if ($inst->guardarDatabases($index_entorno, $_POST['database'])) {
                 if ($inst->verificarConexion()) {

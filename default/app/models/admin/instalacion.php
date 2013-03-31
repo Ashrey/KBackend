@@ -1,10 +1,4 @@
 <?php
-
-if ($_SERVER['REMOTE_ADDR'] != '127.0.0.1') { //seguridad
-    header('HTTP/1.0 403 Forbidden');
-    exit('No tienes permisos para acceder a esta dirección...!!!');
-}
-
 /**
  * Description of instalacion
  *
@@ -15,7 +9,7 @@ class Instalacion
 
     protected static $_tablas_necesarias = array(
         'usuarios','auditorias','roles','recursos',
-        'roles_recursos','roles_usuarios','menus');
+        'roles_recursos', 'menus');
 
     public function __construct()
     {
