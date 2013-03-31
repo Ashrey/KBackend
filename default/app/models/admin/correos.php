@@ -1,8 +1,6 @@
 <?php
-
 Load::lib('phpmailer/class.phpmailer');
 Load::lib('phpmailer/class.smtp');
-
 class Correos {
 
     protected $_mail = NULL;
@@ -14,7 +12,7 @@ class Correos {
         $this->_mail->SMTPAuth = TRUE;
         $this->_mail->SMTPSecure = 'ssl';
         $this->_mail->Host =   Config::get('backend.email.server');
-        $this->_mail->Port = 465;
+        $this->_mail->Port = Config::get('backend.email.port');
         $this->_mail->Username = Config::get('backend.email.user');//escribir el correo
         $this->_mail->Password =Config::get('backend.email.password');//escribir la clave
         $this->_mail->FROM = Config::get('backend.email.user'); //escribir el remitente
@@ -37,7 +35,7 @@ class Correos {
              )
          );
         $mensaje = ob_get_clean(); 
-        $this->_mail->Subject = "Tu cuenta ha sido creada con exito - " . Config::get('config.application.name');
+        $this->_mail->Subject = "Tu cuenta ha sido creada con exito - " . Config::get('backend.app.nombre');
         $this->_mail->AltBody = strip_tags($mensaje);
         $this->_mail->MsgHTML($mensaje);
         $this->_mail->IsHTML(TRUE);
