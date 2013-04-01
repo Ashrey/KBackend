@@ -28,7 +28,8 @@
             <?php endforeach ?>
         </tbody>
     </table>
-    <?php View::partial('paginators/bootstrap', false, array('page' => $results, 'url' => Router::get('controller_path') . '/index')); ?>
+    <?php View::partial('paginators/bootstrap', false, array('page' => $results,
+        'url' => Router::get('controller_path') . "/asignar/{$rol->id}")); ?>
 
 <?php else : // Si no hay items?>
     <h2>No hay ningún registro</h2>
