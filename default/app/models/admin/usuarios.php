@@ -83,7 +83,7 @@ class Usuarios extends ActiveRecord
         $join = "LEFT JOIN auditorias ON usuarios.id = auditorias.usuarios_id";
         $group = 'usuarios.' . join(',usuarios.', $this->fields);
         $sql = "SELECT $cols FROM $this->source $join GROUP BY $group";
-        return $this->paginate_by_sql($sql, "page: $pagina");
+        return $this->paginate_by_sql($sql, "page: $pagina", 'per_page: '.Config::get('backend.app.per_page'));
     }
 
     /**

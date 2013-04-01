@@ -31,12 +31,12 @@ class Auditorias extends ActiveRecord {
         //relaciones
         $this->belongs_to('admin/usuarios');
     }
-    
-    protected function before_save(){
-        $this->ip = ip2long( $_SERVER['REMOTE_ADDR']);
+
+    protected function before_save() {
+        $this->ip = ip2long($_SERVER['REMOTE_ADDR']);
     }
-    
-    function ip(){
+
+    function ip() {
         return long2ip($this->ip);
     }
 
@@ -48,10 +48,11 @@ class Auditorias extends ActiveRecord {
      * @param  integer  $pagina  pagina a mostrar
      * @return array        registros en la bd
      */
-    public function porUsuario($id, Filtro $filtro,$pagina = 1) {
-        $condiciones = $filtro->getQuery();
-        $where = "usuarios_id = '$id' AND {$condiciones}";
-        return $this->paginate("page: $pagina", "conditions: $where", "order: id desc");
+    public function porUsuario($id, $pagina = 1) {
+        $where = "usuarios_id = '$id'";
+        return $this->paginate("page: $pagina", "conditions: $where", "order: id desc", 'per_page: ' . Config::get('backend.app.per_page')
+        );
     }
+
 }
 
