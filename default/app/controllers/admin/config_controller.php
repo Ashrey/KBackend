@@ -24,17 +24,18 @@
 class ConfigController extends AdminController {
 
 	
-    public function index($file = 'config') {
+    public function index() {
         try {
+            $file = 'backend';
             $this->config = $file;
             $temp = Configuracion::leer($file);
             $this->values = $temp;
             if (Input::hasPost('config')) {
                 if (Configuracion::guardar()) {
-                    Flash::valid('La Configuración fue Actualizada Exitosamente...!!!');
-                    Acciones::add("Editó la Configuración de la aplicación", "archivo {$file}.ini");
+                    Flash::valid('Configuración fue Actualizada ');
+                    Logger::alert("CONFIG archivo {$file}.ini modificado");
                 } else {
-                    Flash::warning('No se Pudieron guardar los Datos...!!!');
+                    Flash::warning('No se pudo guardar');
                 }
             }
         } catch (KumbiaException $e) {
