@@ -27,7 +27,6 @@ class AuditoriasController extends AdminController {
 
     public function index($pag= 1) {
         try {
-            Session::delete('filtro_auditorias_usuario');
             $usr = new Usuarios();
             $this->usuarios = $usr->numAcciones($pag);
         } catch (KumbiaException $e) {
@@ -42,7 +41,7 @@ class AuditoriasController extends AdminController {
             $usr = new Usuarios();
             $aud = new Auditorias();
             $this->usuario = $usr->find_first($id);
-            $this->auditorias = $aud->porUsuario($id,new Filtro(), $pagina);
+            $this->auditorias = $aud->porUsuario($id, $pagina);
             if (!$this->auditorias->items) {
                 Flash::info('Este usuario no ha realizado ninguna acción en el sistema');
                 return Router::redirect();
