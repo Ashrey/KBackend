@@ -94,7 +94,7 @@ class DataTable {
      * uso de filtros
      * @var boolean
      */
-    protected $_use_filter = true;
+    protected $_use_filter = false;
 
     /**
      * Constructor de la Clase
