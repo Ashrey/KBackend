@@ -32,7 +32,9 @@ class PrivilegiosController extends AdminController {
     public function asignar($rol, $page=1) {
         try {
                 $this->rol = Load::model('admin/roles')->find((int)$rol);
-                $this->results = Load::model('admin/recursos')->paginate("page: $page", 'order: recurso');
+                $this->results = Load::model('admin/recursos')->paginate("page: $page",
+                        'per_page: '.Config::get('backend.app.per_page'),
+                        'order: recurso');
                 $this->privilegios = Load::model('admin/roles_recursos')->privilegios((int)$rol);
             
         } catch (KumbiaException $e) {
