@@ -29,7 +29,7 @@ class MyAuth
      * Namespace de las cookies y el hash de clave que se va a encriptar
      * Recordar que si se cambian, se deben actualizar las claves en la bd.
      */ 
-    protected static $_clave_sesion = 'backend_kumbiaphp';
+    protected static $_hash = '$2a$05$AcoE7zCEG276ztq4bGUADu';
 
     /**
      * Realiza el proceso de autenticación de un usuario en el sistema.
@@ -70,7 +70,7 @@ class MyAuth
      */
     public static function hash($pass)
     {
-        return crypt($pass, self::$_clave_sesion);
+        return crypt($pass, self::$_hash);
     }
 
 }
