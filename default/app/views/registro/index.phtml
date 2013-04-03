@@ -5,28 +5,28 @@
 <?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
 <?php echo Form::hidden('registro.id') ?>
 <div class="control-group">
-    <label for="usuario_login">Nombre de Usuario (Login)* : </label>
+    <label for="usuario_login" class="control-label">Nombre de Usuario</label>
     <div class="controls">
         <?php echo Form::text('registro.login') ?>
     </div>
 </div>
 <div class="control-group">
-    <label for="usuario_clave">Contrase&ntilde;a* : </label>
+    <label for="usuario_clave" class="control-label">Contraseña</label>
     <div class="controls">
         <?php echo Form::pass('registro.clave') ?>
     </div>
 </div>
 <div class="control-group">
-    <label for="usuario_clave2">Repita Contrase&ntilde;a* : </label>
+    <label for="usuario_clave2" class="control-label">Repita Contraseña</label>
     <div class="controls">
         <?php echo Form::pass('registro.clave2') ?>
     </div>
 </div>
 <div class="control-group">
-    <label for="usuario_email">Correo Electronico* : </label>
+    <label for="usuario_email" class="control-label">Correo Electrónico</label>
     <div class="controls">
         <?php echo Form::text('registro.email') ?>
     </div>
 </div>
-<?php View::partial('backend/submit')?>
+<?php View::partial('backend/submit') ?>
 <?php echo Form::close() ?>
