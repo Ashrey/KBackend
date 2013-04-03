@@ -17,15 +17,9 @@
     </div>
 </div>
 <div class="control-group">
-    <label for="usuario_clave2">Volver a escribir Contrase&ntilde;a* : </label>
+    <label for="usuario_clave2">Repita Contrase&ntilde;a* : </label>
     <div class="controls">
         <?php echo Form::pass('registro.clave2') ?>
-    </div>
-</div>
-<div class="control-group">
-    <label for="usuario_nombres">Nombre Completo* : </label>
-    <div class="controls">
-        <?php echo Form::text('registro.nombres') ?>
     </div>
 </div>
 <div class="control-group">
@@ -34,8 +28,5 @@
         <?php echo Form::text('registro.email') ?>
     </div>
 </div>
-<div class="form-actions">
-    <?php echo Form::submit('Crear Cuenta', 'class="btn btn-primary"') ?>
-    <?php echo Html::linkAction('', 'Cancelar', 'class="btn"') ?>
-</div>
+<?php View::partial('backend/submit')?>
 <?php echo Form::close() ?>

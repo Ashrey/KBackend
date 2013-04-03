@@ -25,9 +25,6 @@
  Load::model('admin/roles');
 class Usuarios extends ActiveRecord
 {
-//put your code here
-//    public $debug = true;
-
     const ROL_DEFECTO = 1;
 
     protected function initialize()
@@ -35,12 +32,9 @@ class Usuarios extends ActiveRecord
         $min_clave = Config::get('backend.app.minimo_clave');
         $this->belongs_to('roles');
         $this->has_many('admin/auditorias');
-        
         $this->validates_presence_of('login', 'message: Debe escribir un <b>Login</b> para el Usuario');
         $this->validates_presence_of('clave', 'message: Debe escribir una <b>Contraseña</b>');
-        $this->validates_length_of('clave', 50, $min_clave, "too_short: La Clave debe tener <b>Minimo {$min_clave} caracteres</b>");
         $this->validates_presence_of('clave2', 'message: Debe volver a escribir la <b>Contraseña</b>');
-        $this->validates_presence_of('nombres', 'message: Debe escribir su <b>nombre completo</b>');
         $this->validates_presence_of('email', 'message: Debe escribir un <b>correo electronico</b>');
         $this->validates_email_in('email', 'message: Debe escribir un <b>correo electronico</b> válido');
         $this->validates_uniqueness_of('login', 'message: El <b>Login</b> ya está siendo utilizado');
@@ -112,9 +106,9 @@ class Usuarios extends ActiveRecord
         //Revisar esto en la base de datos
         $this->activo = '0'; 
         $this->begin(); //iniciamos una transaccion
-
-        if ($this->save() && Load::model('admin/roles_usuarios')->asignarRol($this->id, self::ROL_DEFECTO)) {
-            $hash = sha1($this->login . $this->id . $this->clave);
+        $this->roles_id = self::ROL_DEFECTO;
+        if ($this->save() ) {
+            $hash = $this->hash();
             $correo = Load::model('admin/correos');
             if ($correo->enviarRegistro($this, $clave, $hash)) {
                 $this->commit();
@@ -134,14 +128,14 @@ class Usuarios extends ActiveRecord
      * Si el estado es negativo es que ha sido bloqueado y no se puede 
      * activar vía correo
      *
-     * @param <type> $id_usuario
-     * @param <type> $hash
-     * @return <type>
+     * @param int $id_usuario
+     * @param string $hash
+     * @return boolean
      */
     public function activarCuenta($id_usuario, $hash)
     {
         if ($this->find_first((int) $id_usuario)) { //verificamos la existencia del user
-            if (sha1($this->login . $this->id . $this->clave) === $hash && $this->activo > -1 ){
+            if ( $this->hash() === $hash && $this->activo > -1 ){
                 $this->activo = 1;
                 if ($this->save()) {
                     return TRUE;
@@ -149,6 +143,14 @@ class Usuarios extends ActiveRecord
             }
         }
         return FALSE;
+    }
+    
+    /**
+     * Devuelve el hash de identificacion de usuario registrado
+     * @return String
+     */
+    function hash(){
+        return sha1($this->login . $this->id . $this->clave);
     }
     /**
      * Desactiva a un usuario

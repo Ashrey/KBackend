@@ -24,19 +24,19 @@
  */
 class RegistroController extends AppController {
 
-	public function before_filter(){
-		if (!Config::get('backend.app.registro')){
-			return View::notFound();
-		}
-	}
+    public function before_filter() {
+        if (!Config::get('backend.app.registro')) {
+            return View::notFound();
+        }
+    }
 
     public function index() {
         if (Input::hasPost('registro')) {
-            if (Load::model('admin/usuarios', Input::post('registro'))->registrar()){
-				Flash::valid("Exito");
-			}else{
-				Flash::error("Problemas");			
-			}
+            if (Load::model('admin/usuarios', Input::post('registro'))->registrar()) {
+                Flash::valid("Exito");
+            } else {
+                Flash::error("Problemas");
+            }
         }
     }
 
