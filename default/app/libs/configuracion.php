@@ -55,7 +55,6 @@ class Configuracion {
                 if (in_array($valor, array('On', 'Off')) || is_numeric($valor)) {
                     $html .= "$variable = $valor" . PHP_EOL;
                 } else {
-                    $valor = h($valor);
                     $html .= "$variable = \"$valor\"" . PHP_EOL;
                 }
             }

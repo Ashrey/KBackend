@@ -31,6 +31,11 @@ class ConfigController extends AdminController {
             $temp = Configuracion::leer($file);
             $this->values = $temp;
             if (Input::hasPost('config')) {
+                $config = Input::post('config');
+                foreach ($config as $key => $value) {
+                    $val = explode('.', $key);
+                    Configuracion::set($val[0], $val[1], $value);
+                }
                 if (Configuracion::guardar()) {
                     Flash::valid('Configuración fue Actualizada ');
                     Logger::alert("CONFIG archivo {$file}.ini modificado");
