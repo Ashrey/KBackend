@@ -7,37 +7,31 @@
         <?php echo Ajax::form('res-form-ajax', NULL, 'form-horizontal') ?>
         <?php echo Form::hidden('usuario.id') ?>
         <div class="control-group">
-            <label class="control-label" for="usuario_login">Nombre de Usuario (Login)* : </label>
+            <label class="control-label" for="usuario_login">Nombre de Usuario</label>
             <div class="controls">
                 <?php echo Form::text('usuario.login') ?>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label" for="usuario_clave">Contrase&ntilde;a* : </label>
+            <label class="control-label" for="usuario_clave">Contraseña</label>
             <div class="controls">
                 <?php echo Form::pass('usuario.clave') ?>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label" for="usuario_clave2">Volver a escribir Contrase&ntilde;a* : </label>
+            <label class="control-label" for="usuario_clave2">Repita  Contraseña</label>
             <div class="controls">
                 <?php echo Form::pass('usuario.clave2') ?>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label" for="usuario_nombres">Nombre Completo* : </label>
-            <div class="controls">
-                <?php echo Form::text('usuario.nombres') ?>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="usuario_email">Correo Electronico* : </label>
+            <label class="control-label" for="usuario_email">Correo Electronico</label>
             <div class="controls">
                 <?php echo Form::text('usuario.email') ?>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label" for="usuario_roles_id">Roles del Usuario* : </label>
+            <label class="control-label" for="usuario_roles_id">Roles del Usuario</label>
             <div class="controls">
 				<?php echo Form::dbSelect('usuario.roles_id') ?>
 
