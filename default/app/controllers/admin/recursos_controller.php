@@ -136,28 +136,15 @@ class RecursosController extends AdminController {
         return Router::redirect();
     }
 
-    public function eliminar($id = NULL) {
+    public function eliminar($id) {
         try {
             $rec = new Recursos();
-
-            if (is_int($id)) {
-
-                if (!$rec->find_first($id)) {
-                    Flash::warning("No existe ningun recurso con id '{$id}'");
-                } elseif ($rec->delete()) {
-                    Flash::valid("El recurso <b>{$rec->recurso}</b> ha sido Eliminado...!!!");
-                } else {
-                    Flash::warning("No se Pudo Eliminar el Recurso <b>{$rec->recurso}</b>...!!!");
-                }
-            } elseif (is_string($id)) {
-                if ($rec->delete_all("id IN ($id)")) {
-                    Flash::valid("Los Recursos <b>{$id}</b> fueron Eliminados...!!!");
-                } else {
-                    Flash::warning("No se Pudieron Eliminar los Recursos...!!!");
-                }
-            } elseif (Input::hasPost('recursos_id')) {
-                $this->ids = Input::post('recursos_id');
-                return;
+            if (!$rec->find_first($id)) {
+                Flash::warning("No existe ningun recurso con id '{$id}'");
+            } elseif ($rec->delete()) {
+                Flash::valid("El recurso <b>{$rec->recurso}</b> ha sido Eliminado...!!!");
+            } else {
+                Flash::warning("No se Pudo Eliminar el Recurso <b>{$rec->recurso}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
@@ -168,19 +155,19 @@ class RecursosController extends AdminController {
     public function escaner($pagina = 1) {
         try {
             $recurso = new Recursos();
-            $this->recursos = $recurso->obtener_recursos_nuevos($pagina);
-            if (Input::hasPost('guardar') || Input::hasPost('descripcion')) {
+            if (Input::hasPost('descripcion') && Input::hasPost('check')) {
+                //para obtener los valores de los nuevos controladores
+                $recurso->obtener_recursos_nuevos($pagina);
                 if ($recurso->guardar_nuevos()) {
-                    $this->recursos = $recurso->obtener_recursos_nuevos($pagina);
                     Input::delete();
-                    Flash::valid('Los Recursos Fueron Guardados Exitosamente...!!!');
+                    Flash::valid('Recursos Guardados Exitosamente');
                 } else {
-                    Flash::warning('Por favor Complete los datos requeridos he intente guardar nuevamente');
+                    Flash::warning('Complete los datos requeridos e intente nuevamente');
                 }
             }
+            $this->recursos = $recurso->obtener_recursos_nuevos($pagina);
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
     }
-
 }

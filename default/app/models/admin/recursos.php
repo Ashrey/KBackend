@@ -49,7 +49,7 @@ class Recursos extends ActiveRecord {
     protected function before_validation() {
         $this->recurso = !empty($this->modulo) ? "$this->modulo/" : '';
         $this->recurso .= "$this->controlador/";
-        $this->recurso .= ! empty($this->accion) ? "$this->accion" : '*';
+        $this->recurso .=!empty($this->accion) ? "$this->accion" : '*';
     }
 
     /**
@@ -65,7 +65,7 @@ class Recursos extends ActiveRecord {
                 unset($recursos[$index]);
             }
         }
-        $recursos = LectorRecursos::paginar($recursos, $pagina, 6);
+        $recursos = LectorRecursos::paginar($recursos, $pagina, Config::get('backend.app.per_page'));
         $this->recursos_nuevos = $recursos->items;
         array_unshift($this->recursos_nuevos, null);
         return $recursos;
@@ -78,28 +78,23 @@ class Recursos extends ActiveRecord {
      * @return boolean 
      */
     public function guardar_nuevos() {
-        $recursos_a_guardar = array();
-        $recursos_chequeados = Input::post('check');
+        $chequeados = Input::post('check');
         $descripciones = Input::post('descripcion');
         $activos = Input::post('activo');
-        if ($recursos_chequeados) {
-            foreach ($recursos_chequeados as $valor) {
-                if (empty($descripciones[$valor])) {
-                    Flash::error('Existen Recursos Seleccionados que no tienen especificada una Descripción');
-                    return FALSE;
-                }
-                $data = null;
-                $data = $this->recursos_nuevos[$valor];
-                $data['descripcion'] = $descripciones[$valor];
-                $data['activo'] = $activos[$valor];
-                $recursos_a_guardar[] = $data;
-            }
-        } else {
+        $this->begin();
+        if (!$chequeados) {
             return FALSE;
         }
-        $this->begin();
-        foreach ($recursos_a_guardar as $e) {
-            if (!$this->save($e)) {
+        foreach ($chequeados as $valor) {
+            if (empty($descripciones[$valor])) {
+                Flash::error('Hay recursos seleccionados que no tienen descripción');
+                $this->rollback();
+                return FALSE;
+            }
+            $data = $this->recursos_nuevos[$valor];
+            $data['descripcion'] = $descripciones[$valor];
+            $data['activo'] = $activos[$valor];
+            if (!$this->create($data)) {
                 $this->rollback();
                 return FALSE;
             }
@@ -113,25 +108,25 @@ class Recursos extends ActiveRecord {
      * 
      * @return array 
      */
-    public function accionesPorControlador(){
-        $res = $this->find("modulo = '$this->modulo' AND controlador = '$this->controlador' AND accion != ''",
-                'columns: id,accion');
+    public function accionesPorControlador() {
+        $res = $this->find("modulo = '$this->modulo' AND controlador = '$this->controlador' AND accion != ''", 'columns: id,accion');
         return $res;
     }
 
-     /**
+    /**
      * Desactiva a un recurso
      */
     function desactivar() {
         $this->activo = '0';
         return $this->save();
     }
-    
-     /**
+
+    /**
      * Activa a un recurso
      */
     function activar() {
         $this->activo = '1';
         return $this->save();
     }
+
 }
