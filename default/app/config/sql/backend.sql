@@ -175,18 +175,38 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   KEY `roles_id` (`roles_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
+
+CREATE TABLE IF NOT EXISTS `usuarios` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `login` varchar(50) NOT NULL,
+  `clave` varchar(60) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `activo` int(11) NOT NULL DEFAULT '1',
+  `roles_id` int(10) NOT NULL,
+  `creado_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `login` (`login`),
+  KEY `roles_id` (`roles_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `login`, `clave`, `nombres`, `email`, `activo`, `roles_id`) VALUES
-(1, 'usuario', 'baPeZ2ZnhwtCs', 'Usuario básico', 'usuario@mail.com', 1, 1),
-(2, 'admin', 'baPeZ2ZnhwtCs', 'Administrador del sistema', 'admin@mail.com', 1, 2),
-(3, 'root', 'baPeZ2ZnhwtCs', 'Usuario administrador', 'user@prueba.com', 1, 3);
+INSERT INTO `usuarios` (`id`, `login`, `clave`, `email`, `activo`, `roles_id`, `creado_at`) VALUES
+(1, 'usuario', '$2a$05$AcoE7zCEG276ztq4bGUADuLu4zpq2W3Htt2a8HcBJjO4vkylxy2i2', 'usuario@mail.com', 0, 1, NULL),
+(2, 'admin', '$2a$05$AcoE7zCEG276ztq4bGUADuLu4zpq2W3Htt2a8HcBJjO4vkylxy2i2', 'admin@mail.com', 1, 2, NULL),
+(3, 'root', '$2a$05$AcoE7zCEG276ztq4bGUADuLu4zpq2W3Htt2a8HcBJjO4vkylxy2i2', 'user@prueba.com', 1, 3, NULL);
 
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD CONSTRAINT `usuarios_ibfk_1` FOREIGN KEY (`roles_id`) REFERENCES `roles` (`id`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `auditorias`
