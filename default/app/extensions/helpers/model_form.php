@@ -21,88 +21,90 @@
  * @copyright  Copyright (c) 2005-2009 Kumbia Team (http://www.kumbiaphp.com)
  * @license    http://wiki.kumbiaphp.com/Licencia     New BSD License
  */
-class ModelForm{
-	
+class ModelForm {
+
     /**
      * Genera un form de un modelo (objeto) automáticamente
      *
      * @var object 
      */
-    public static function create($model, $action = NULL)
-    {
+    public static function create($model, $action = NULL) {
+
+        /**
+         * Data extra para los campos
+         */
+        $skip = isset($data['skip']) ? $data['skip'] : array();
+        $switch = isset($data['switch']) ? $data['switch'] : array();
+        $label = isset($data['label']) ? $data['label'] : array();
+
+
 
         $model_name = Util::smallcase(get_class($model));
+        $saltos = array_keys($switch);
         if (!$action)
             $action = ltrim(Router::get('route'), '/');
-
-        echo '<form action="', PUBLIC_PATH . $action, '" method="post" id="', $model_name, '" class="well">' . PHP_EOL;
+        echo Form::open($action, 'post', 'class="form-horizontal well"'), PHP_EOL;
         $pk = $model->primary_key[0];
-        echo '<input id="', $model_name, '_', $pk, '" name="', $model_name, '[', $pk, ']" class="id" value="', $model->$pk . '" type="hidden">' . PHP_EOL;
-
+        echo Form::hidden("{$model_name}.{$pk}", $model->$pk);
+        echo '<fieldset>';
         $fields = array_diff($model->fields, $model->_at, $model->_in, $model->primary_key);
-
         foreach ($fields as $field) {
-
+            /* Se salta algunos campos */
+            if (in_array($field, $skip))
+                continue;
+            /* Permite un cambio de fieldset */
+            if (in_array($field, $saltos)) {
+                echo '</fieldset>';
+                echo '<fieldset><legend>', $switch[$field], '</legend>';
+            }
             $tipo = trim(preg_replace('/(\(.*\))/', '', $model->_data_type[$field])); //TODO: recoger tamaño y otros valores
-            $alias = $model->get_alias($field);
+            $alias = isset($label[$field]) ? $label[$field] : $model->get_alias($field);
             $formId = $model_name . '_' . $field;
-            $formName = $model_name . '[' . $field . ']';
-	
+            $name = "$model_name.$field";
             echo '<div class="control-group">';
-            if (in_array($field, $model->not_null)) {
-                echo "<label for=\"$formId\" class=\"required control-label\">$alias *</label>" . PHP_EOL;
-            } else
-                echo "<label for=\"$formId\"  class=\"control-label\">$alias</label>" . PHP_EOL;
-	
+            /* Coloco la Etiqueta */
+            $css_class = in_array($field, $model->not_null) ? 
+                    'class="required control-label"' : 'class="control-label"';
+            echo Form::label($alias, $formId, $css_class), PHP_EOL;
             echo '<div class="controls">';
             switch ($tipo) {
-                case 'tinyint': case 'smallint': case 'mediumint':
-                case 'integer': case 'int': case 'bigint':
-                case 'float': case 'double': case 'precision':
-                case 'real': case 'decimal': case 'numeric':
-                case 'year': case 'day': case 'int unsigned': // Números
-
+                case 'tinyint': case 'smallint': case 'mediumint':case 'integer': case 'int':
+                case 'bigint': case 'float': case 'double': case 'precision': case 'real':
+                case 'decimal': case 'numeric': case 'year': case 'day': case 'int unsigned': // Números
                     if (strripos($field, '_id', -3)) {
-                        echo Form::dbSelect($model_name . '.' . $field, NULL, NULL, 'Seleccione', NULL, $model->$field);
+                        echo Form::dbSelect($name, NULL, NULL, 'Seleccione', NULL, $model->$field);
                         break;
                     } else {
-                        echo "<input id=\"$formId\" type=\"number\" name=\"$formName\" value=\"{$model->$field}\">" . PHP_EOL;
+                        echo Form::text($name);
                         break;
                     }
-
-                case 'date': // Usar el js de datetime
-                    echo "<input id=\"$formId\" type=\"date\" name=\"$formName\" value=\"{$model->$field}\">" . PHP_EOL;
+                case 'date':
+                    echo Form::date($name);
                     break;
-                case 'datetime': case 'timestamp':
-                    echo "<input id=\"$formId\" type=\"datetime\" name=\"$formName\" value=\"{$model->$field}\">" . PHP_EOL;
-
-                    //echo '<script type="text/javascript" src="/javascript/kumbia/jscalendar/calendar.js"></script>
-                    //<script type="text/javascript" src="/javascript/kumbia/jscalendar/calendar-setup.js"></script>
-                    //<script type="text/javascript" src="/javascript/kumbia/jscalendar/calendar-es.js"></script>'.PHP_EOL;
-                    //echo date_field_tag("$formId");
+                case 'time':
+                    echo Form::time($name);
                     break;
-
-                case 'enum': case 'set': case 'bool':
+                case 'datetime': case 'timestamp': // Usar el js de datetime
+                    echo Form::datetime($name);
+                    break;
+                case 'enum': case 'set':
                     // Intentar usar select y lo mismo para los field_id
-                    echo "<input id=\"$formId\" class=\"select\" name=\"$formName\" type=\"text\" value=\"{$model->$field}\">" . PHP_EOL;
+                    $data = explode(',', str_replace(array('\')', '\'', 'enum('), '', $model->_data_type[$field]));
+                    $data = array_combine($data, array_map('ucfirst', $data));
+                    $data = array_merge(array('' => 'Seleccione...'), $data);
+                    echo Form::select($name, $data);
                     break;
-
-                case 'text': case 'mediumtext': case 'longtext':
+                case'tinytext': case 'text': case 'mediumtext': case 'longtext':
                 case 'blob': case 'mediumblob': case 'longblob': // Usar textarea
-                    echo "<textarea id=\"$formId\" name=\"$formName\">{$model->$field}</textarea>" . PHP_EOL;
+                    echo Form::textarea($name);
                     break;
-
                 default: //text,tinytext,varchar, char,etc se comprobara su tamaño
-                    echo "<input class=\"input-xlarge\" id=\"$formId\" type=\"text\" name=\"$formName\" value=\"{$model->$field}\">" . PHP_EOL;
+                    echo Form::text($name);
                 //break;
             }
-            echo '</div></div>';
+            echo '</div></div>' . PHP_EOL;
         }
-        //echo radio_field_tag("actuacion", array("U" => "una", "D" => "dos", "N" => "Nada"), "value: N");
-        echo '<div class="btn-group">';
-        echo '<button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Enviar</button>' . PHP_EOL;
-	echo Html::LinkAction('', 'Listado <i class="icon-list icon-white"></i>',' class="btn btn-info js-confirm"');
-	echo '</div>';
-        echo '</form>' . PHP_EOL;
+        View::partial('backend/submit');
+        echo '</form>', PHP_EOL;
     }
 }

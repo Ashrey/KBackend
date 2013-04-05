@@ -1,11 +1,10 @@
 <div class="page-header">
-    <h1><?php echo ucwords("$model"), ": <span>$action_name</span>" ?></h1>
+    <h1><?php echo $title, ": <span>$action_name</span>" ?></h1>
 </div>
 <?php View::content(); ?>
-
 <div class="container">
-    <div class="cols">
-        <div class="span4 offset3">
+    <div class="row">
+        <div class="span6 offset3">
             <?php ModelForm::create($$model) ?>
         </div>
     </div>
