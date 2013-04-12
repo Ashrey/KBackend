@@ -1,7 +1,21 @@
 <?php
 
 class ScaffoldController extends AdminController {
-
+    /**
+     * Acción por defecto de visualizar
+     */
+    const D_VIEW = 1;
+    
+    /**
+     * Accion por defecto de editar
+     */
+    const D_EDIT = 2;
+    
+    /**
+     * Acción por defecto de borrar
+     */
+    const D_DELETE = 4;
+    
     /**
      * Decide el scaffold a usar
      * @var String 
@@ -31,7 +45,38 @@ class ScaffoldController extends AdminController {
      * @var String
      */
     protected $_title  = '';
-   
+    
+    /**
+     * Nombre del método a la hora de indexar los registros
+     * @var String 
+     */
+    protected $_index = 'index';
+
+    /**
+     * Nombre del método a la hora de mostrar un registro específico
+     * @var String 
+     */
+    protected $_view = 'view';
+    
+    /**
+     * Acciones a mostrar por defecto en el index
+     * @var Integer 
+     */
+    protected $_default_action = 7;
+
+    /**
+     * Acciones extras
+     * @var Array 
+     */
+    protected $_action = array();
+    
+    /**
+     * Mostrar la barra de acciones
+     * @var boolean 
+     */
+    protected $_show_bar = true;
+
+
     protected function after_filter() {
         if (Input::isAjax()) {
             View::select('ajax', null);
@@ -43,18 +88,27 @@ class ScaffoldController extends AdminController {
             View::template(null);
         $this->title = empty($this->_title)?$this->model : ucwords($this->_title);
         $this->use_filter = $this->_use_filter;
+        
     }
 
     public function index($page = 1) {
         $cols = $this->_getCols();
-        $this->cols = $this->show_cols;
         $cond = Scaffold::request($this->model);
         $model = Load::model($this->model);
-
-        $this->results = method_exists($model, 'index') ?
-                $model->index($cond, $page) : $model->paginate($cond, "page: $page", "columns: $cols", 'per_page: ' . Config::get('backend.app.per_page'));
+        $this->result = method_exists($model, $this->_index) ?
+            call_user_func_array(array($model, $this->_index), array($cond, $page)):
+            $model->paginate($cond, "page: $page", "columns: $cols", 'per_page: ' . Config::get('backend.app.per_page'));
+        /*asigna columnas a mostrar*/
+        $col = current($this->result->items);
+        $this->cols = $col ? array_keys(get_object_vars($col)):array();
+        /*Acciones a mostrar*/
+        $this->d_accion = $this->_default_action;
+        $this->action = $this->_action;
+        /*Mostrar la barra de acciones*/
+        $this->show_bar = $this->_show_bar;
     }
 
+    
     /**
      * Crea un Registro
      */
@@ -122,8 +176,10 @@ class ScaffoldController extends AdminController {
     public function ver($id) {
         $model = Load::model($this->model);
         $this->result = method_exists($model, 'view') ?
-                $model->view($id) :
+                call_user_func_array(array($model, $this->_index), array($id)) :
                 $model->find_first((int) $id);
+        /*asigna columnas a mostrar*/
+        $this->cols = array_keys(get_object_vars($this->result));
 
     }
 
@@ -131,11 +187,11 @@ class ScaffoldController extends AdminController {
         Scaffold::update(Load::model($this->model), $field);
         die();
     }
-
-    /**
-     * Retorna las columnas a consultar
-     * @return string
-     */
+    
+        /**
+-     * Retorna las columnas a consultar
+-     * @return string
+-     */
     protected function _getCols() {
         return !empty($this->show_cols) || is_array($this->show_cols) ?
                 implode(',', $this->show_cols) : '*';

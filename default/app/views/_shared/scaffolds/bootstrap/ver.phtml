@@ -1,22 +1,20 @@
 <?php if ($result) : ?>
     <div class="page-header">
-        <h1><?php echo ucwords("$model") ?></h1>
+        <h1><?php echo $title?></h1>
     </div>
     <div class="row">
         <div class="span4 offset4">
             <dl class="dl-horizontal">
-                <?php foreach ($result->fields as $field): ?>
-
-                    <dt><?php echo $result->alias[$field] ?>:</dt>
+                <?php foreach ($cols as $field => $val): ?>
+                <dt><?php echo  ucwords(strtr($field, '_-', '  '))?></dt>
                     <?php
-                    /* permite llamar a las claves foraneas */
                     if (isset($field[3]) && strripos($field, '_id', -3)) {
-                        $method = substr($field, 0, -3);
-                        $t = $result->$method;
-                        $c = $t->non_primary[0];
-                        $value = h($t->$c);
-                    } else {
-                        $value = $result->$field;
+                        $method = 'get' . substr($field, 0, -3);
+                        $t = call_user_func(array($result, $method));
+                        $value = is_object($t) ?
+                                $t->{$t->non_primary[0]} : '';
+                    } else { //si es un metodo lo llamamos
+                        $value = method_exists($result, $field) ? $result->$field() : $val;
                     }
                     ?>
                     <dd> <?php eh($value) ?></dd>
@@ -25,10 +23,10 @@
 
             <?php if (!Input::isAjax()): ?>
                 <div class="btn-group">
-                    <?php echo Html::LinkAction('crear', 'Crear <i class="icon-plus icon-white"></i>', ' class="btn btn-primary"') ?>
-                    <?php echo Html::LinkAction("editar/$result->id", 'Editar <i class="icon-edit icon-white"></i>', ' class="btn btn-warning"') ?>
-                    <?php echo Html::LinkAction("borrar/$result->id", 'Borrar <i class="icon-remove icon-white"></i>', ' class="btn btn-danger js-confirm" title="Está seguro?"') ?>
-                    <?php echo Html::LinkAction('', 'Listar  <i class="icon-list icon-white"></i>', ' class="btn btn-info"') ?>
+                    <?php echo Html::LinkAction('crear', 'Crear <i class="icon-plus"></i>', ' class="btn btn-primary"') ?>
+                    <?php echo Html::LinkAction("editar/$result->id", 'Editar <i class="icon-edit"></i>', ' class="btn btn-warning"') ?>
+                    <?php echo Html::LinkAction("borrar/$result->id", 'Borrar <i class="icon-remove"></i>', ' class="btn btn-danger js-confirm" title="Está seguro?"') ?>
+                    <?php echo Html::LinkAction('', 'Listar  <i class="icon-list"></i>', ' class="btn btn-info"') ?>
                 </div>
             <?php endif; ?>
         </div>

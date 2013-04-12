@@ -1,20 +1,33 @@
-<div class="page-header">
-    <h1><?php echo ucwords("$model") ?></h1>
+<div class="page-header">'
+    <h1><?php echo $title ?></h1>
 </div>
 <?php View::content() ?>
-<?php View::partial('backend/barra_superior_listas')?>
+<?php if ($show_bar): ?>
+    <?php View::partial('backend/barra_superior_listas') ?>
+<?php endif; ?>
 <?php
-$dt = new DataTable($results);
-
-if(!empty($cols))
+$dt = new DataTable($result);
+if (!empty($cols)) {
     $dt->addFieldAuto($cols);
-$dt->addHeaders('Ver', 'Editar', 'Eliminar');
-$dt->link( Router::get('controller_path') . '/ver',
-        '<span class="btn btn-info"><i class=" icon-search icon-white"></i></span>');
-$dt->link( Router::get('controller_path') . '/editar',
-        '<span class="btn btn-warning"><i class="icon-pencil icon-white"></i></span>');
-$dt->linkConfirm(Router::get('controller_path') . '/borrar',
-        '<span class="btn btn-danger"><i class="icon-trash icon-white"></i></span>');
+}
+
+if ($d_accion & ScaffoldController::D_VIEW):
+    $dt->addHeaders('Ver');
+    $dt->link(Router::get('controller_path') . '/ver', '<span class="btn btn-info"><i class=" icon-search"></i></span>');
+endif;
+if ($d_accion & ScaffoldController::D_EDIT):
+    $dt->addHeaders('Editar');
+    $dt->link(Router::get('controller_path') . '/editar', '<span class="btn btn-warning"><i class="icon-pencil"></i></span>');
+endif;
+if ($d_accion & ScaffoldController::D_DELETE):
+    $dt->addHeaders('Eliminar');
+    $dt->linkConfirm(Router::get('controller_path') . '/borrar', '<span class="btn btn-danger"><i class="icon-trash"></i></span>');
+endif;
+
+foreach ($action as $n => $val):
+    $dt->addHeaders($n);
+    $dt->linkConfirm(Router::get('controller_path') . "/{$n}", "<span class=\"btn\"><i class=\"icon-{$val['icon']}\"></i></span>");
+endforeach;
 $dt->useFilter($use_filter);
 echo $dt->render('class="table table-hover table-condensed table-bordered"');
 ?>
