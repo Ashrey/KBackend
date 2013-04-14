@@ -1,26 +1,15 @@
-<?php if ($result) : ?>
-    <div class="page-header">
-        <h1><?php echo $title?></h1>
-    </div>
-    <div class="row">
+<div class="page-header">
+    <h1><?php echo $title ?></h1>
+</div>
+<div class="row">
+    <?php if ($result) : ?>
         <div class="span4 offset4">
             <dl class="dl-horizontal">
-                <?php foreach ($cols as $field => $val): ?>
-                <dt><?php echo  ucwords(strtr($field, '_-', '  '))?></dt>
-                    <?php
-                    if (isset($field[3]) && strripos($field, '_id', -3)) {
-                        $method = 'get' . substr($field, 0, -3);
-                        $t = call_user_func(array($result, $method));
-                        $value = is_object($t) ?
-                                $t->{$t->non_primary[0]} : '';
-                    } else { //si es un metodo lo llamamos
-                        $value = method_exists($result, $field) ? $result->$field() : $val;
-                    }
-                    ?>
-                    <dd> <?php eh($value) ?></dd>
+                <?php foreach ($cols as $field) : ?>
+                    <dt><?php echo $result->alias[$field] ?></dt>
+                    <dd><?php eh(ModelForm::fieldValue($field, $result)) ?></dd>
                 <?php endforeach ?>
             </dl>
-
             <?php if (!Input::isAjax()): ?>
                 <div class="btn-group">
                     <?php echo Html::LinkAction('crear', 'Crear <i class="icon-plus"></i>', ' class="btn btn-primary"') ?>
@@ -30,18 +19,12 @@
                 </div>
             <?php endif; ?>
         </div>
-    </div>
-<?php else : ?>
-    <?php header("HTTP/1.0 404 Not Found") ?>
-    <div class="page-header">
-        <h1>No existe</h1>
-    </div>
-    <div class="row">
+    <?php else : ?>
+        <?php header("HTTP/1.0 404 Not Found") ?>
         <div class="span4 offset4">
-            <div class="btn-group">
-                <?php echo Html::LinkAction('crear', 'Crear <i class="icon-plus icon-white"></i>', ' class="btn btn-primary"') ?>
-                <?php echo Html::LinkAction('', 'Listar  <i class="icon-list icon-white"></i>', ' class="btn btn-info"') ?>
+            <div class="alert alert-block alert-danger">
+                No se ha encontrado el registro buscado
             </div>
         </div>
-    </div>
-<?php endif ?>
+    <?php endif ?>
+</div>

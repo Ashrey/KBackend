@@ -5,29 +5,27 @@
 <?php if ($show_bar): ?>
     <?php View::partial('backend/barra_superior_listas') ?>
 <?php endif; ?>
-<?php
-$dt = new DataTable($result);
-if (!empty($cols)) {
-    $dt->addFieldAuto($cols);
-}
+<table class="table table-bordered table-condensed table-hover">
+    <?php $head = current($result->items); ?>
+    <thead>
+        <?php foreach ($cols as $key): ?>
+        <th><?php echo $head->get_alias($key) ?></th>
+    <?php endforeach ?>
+    <?php if (!empty($action)): $c = count($action); ?>
+        <th colspan="<?php echo $c ?>">Acciones</th>
+    <?php endif; ?>
+</thead>
 
-if ($d_accion & ScaffoldController::D_VIEW):
-    $dt->addHeaders('Ver');
-    $dt->link(Router::get('controller_path') . '/ver', '<span class="btn btn-info"><i class=" icon-search"></i></span>');
-endif;
-if ($d_accion & ScaffoldController::D_EDIT):
-    $dt->addHeaders('Editar');
-    $dt->link(Router::get('controller_path') . '/editar', '<span class="btn btn-warning"><i class="icon-pencil"></i></span>');
-endif;
-if ($d_accion & ScaffoldController::D_DELETE):
-    $dt->addHeaders('Eliminar');
-    $dt->linkConfirm(Router::get('controller_path') . '/borrar', '<span class="btn btn-danger"><i class="icon-trash"></i></span>');
-endif;
+<?php foreach ($result->items as $item): ?>
+    <tr>
+        <?php foreach ($item as $key => $val): ?>
+            <td><?php eh(ModelForm::fieldValue($key, $item)) ?></td>
+        <?php endforeach ?>
 
-foreach ($action as $n => $val):
-    $dt->addHeaders($n);
-    $dt->linkConfirm(Router::get('controller_path') . "/{$n}", "<span class=\"btn\"><i class=\"icon-{$val['icon']}\"></i></span>");
-endforeach;
-$dt->useFilter($use_filter);
-echo $dt->render('class="table table-hover table-condensed table-bordered"');
-?>
+        <?php foreach ($action as $val): ?>
+            <td><?php echo str_replace(array('%id%'), array($item->id), $val) ?></td>
+        <?php endforeach ?>
+    </tr>
+<?php endforeach ?>
+</table>
+<?php KumbiaView::partial("paginators/$paginator", false, array('page' => $result));?>

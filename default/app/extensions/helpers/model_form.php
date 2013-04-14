@@ -28,7 +28,7 @@ class ModelForm {
      *
      * @var object 
      */
-    public static function create($model, $action = NULL) {
+    public static function create($model, $data = array(), $action = NULL) {
 
         /**
          * Data extra para los campos
@@ -63,9 +63,9 @@ class ModelForm {
             $name = "$model_name.$field";
             echo '<div class="control-group">';
             /* Coloco la Etiqueta */
-            $css_class = in_array($field, $model->not_null) ? 
-                    'class="required control-label"' : 'class="control-label"';
-            echo Form::label($alias, $formId, $css_class), PHP_EOL;
+            $css_class = in_array($field, $model->not_null) ?
+                    'required' : '';
+            echo Form::label($alias, $formId, 'class="control-label"'), PHP_EOL;
             echo '<div class="controls">';
             switch ($tipo) {
                 case 'tinyint': case 'smallint': case 'mediumint':case 'integer': case 'int':
@@ -75,31 +75,31 @@ class ModelForm {
                         echo Form::dbSelect($name, NULL, NULL, 'Seleccione', NULL, $model->$field);
                         break;
                     } else {
-                        echo Form::text($name);
+                        echo Form::text($name, $css_class);
                         break;
                     }
                 case 'date':
-                    echo Form::date($name);
+                    echo Form::date($name, $css_class);
                     break;
                 case 'time':
-                    echo Form::time($name);
+                    echo Form::time($name, $css_class);
                     break;
                 case 'datetime': case 'timestamp': // Usar el js de datetime
-                    echo Form::datetime($name);
+                    echo Form::datetime($name, $css_class);
                     break;
                 case 'enum': case 'set':
                     // Intentar usar select y lo mismo para los field_id
-                    $data = explode(',', str_replace(array('\')', '\'', 'enum('), '', $model->_data_type[$field]));
-                    $data = array_combine($data, array_map('ucfirst', $data));
-                    $data = array_merge(array('' => 'Seleccione...'), $data);
-                    echo Form::select($name, $data);
+                    $d = explode(',', str_replace(array('\')', '\'', 'enum('), '', $model->_data_type[$field]));
+                    $d = array_combine($d, array_map('ucfirst', $d));
+                    $d = array_merge(array('' => 'Seleccione...'), $d);
+                    echo Form::select($name, $d);
                     break;
                 case'tinytext': case 'text': case 'mediumtext': case 'longtext':
                 case 'blob': case 'mediumblob': case 'longblob': // Usar textarea
-                    echo Form::textarea($name);
+                    echo Form::textarea($name, $css_class);
                     break;
                 default: //text,tinytext,varchar, char,etc se comprobara su tamaño
-                    echo Form::text($name);
+                    echo Form::text($name, $css_class);
                 //break;
             }
             echo '</div></div>' . PHP_EOL;
@@ -107,4 +107,18 @@ class ModelForm {
         View::partial('backend/submit');
         echo '</form>', PHP_EOL;
     }
+
+    public static function fieldValue($field, $result) {
+        /* permite llamar a las claves foraneas */
+        if (isset($field[3]) && strripos($field, '_id', -3)) {
+            $method = substr($field, 0, -3);
+            $t = $result->$method; 
+            $c = is_object($t) ? $t->non_primary[0]:null;
+            $value = is_null($c)? '' :h($t->$c);
+        } else {
+            $value = $result->$field;
+        }
+        return $value;
+    }
+
 }

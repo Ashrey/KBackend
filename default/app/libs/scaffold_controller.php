@@ -1,21 +1,7 @@
 <?php
 
 class ScaffoldController extends AdminController {
-    /**
-     * Acción por defecto de visualizar
-     */
-    const D_VIEW = 1;
-    
-    /**
-     * Accion por defecto de editar
-     */
-    const D_EDIT = 2;
-    
-    /**
-     * Acción por defecto de borrar
-     */
-    const D_DELETE = 4;
-    
+
     /**
      * Decide el scaffold a usar
      * @var String 
@@ -27,6 +13,8 @@ class ScaffoldController extends AdminController {
      * @var String
      */
     public $model;
+    
+    public $paginator = 'digg';
 
     /**
      * Array de columnas a  mostrar
@@ -39,13 +27,13 @@ class ScaffoldController extends AdminController {
      * @var boolean 
      */
     protected $_use_filter = false;
-   
+
     /**
      * Establece el titulo
      * @var String
      */
-    protected $_title  = '';
-    
+    protected $_title = '';
+
     /**
      * Nombre del método a la hora de indexar los registros
      * @var String 
@@ -58,24 +46,37 @@ class ScaffoldController extends AdminController {
      */
     protected $_view = 'view';
     
-    /**
-     * Acciones a mostrar por defecto en el index
-     * @var Integer 
-     */
-    protected $_default_action = 7;
+    
 
     /**
-     * Acciones extras
+     * Acciones disponibles
      * @var Array 
      */
     protected $_action = array();
-    
+
     /**
      * Mostrar la barra de acciones
      * @var boolean 
      */
     protected $_show_bar = true;
 
+    /**
+     * Añade la funcionalidad de iniciación
+     * @param type $module
+     * @param type $controller
+     * @param type $action
+     * @param type $parameters
+     */
+    function __construct($module, $controller, $action, $parameters) {
+        parent::__construct($module, $controller, $action, $parameters);
+        if (method_exists($this, 'init')) {
+            call_user_func(array($this, 'init'));
+        }
+    }
+
+    protected function init() {
+        $this->useCRUD();
+    }
 
     protected function after_filter() {
         if (Input::isAjax()) {
@@ -86,9 +87,8 @@ class ScaffoldController extends AdminController {
     protected function before_filter() {
         if ($this->scaffold == 'static')
             View::template(null);
-        $this->title = empty($this->_title)?$this->model : ucwords($this->_title);
+        $this->title = empty($this->_title) ? ucwords($this->model) : $this->_title;
         $this->use_filter = $this->_use_filter;
-        
     }
 
     public function index($page = 1) {
@@ -96,19 +96,17 @@ class ScaffoldController extends AdminController {
         $cond = Scaffold::request($this->model);
         $model = Load::model($this->model);
         $this->result = method_exists($model, $this->_index) ?
-            call_user_func_array(array($model, $this->_index), array($cond, $page)):
-            $model->paginate($cond, "page: $page", "columns: $cols", 'per_page: ' . Config::get('backend.app.per_page'));
-        /*asigna columnas a mostrar*/
+                call_user_func_array(array($model, $this->_index), array($cond, $page)) :
+                $model->paginate($cond, "page: $page", "columns: $cols", 'per_page: ' . Config::get('backend.app.per_page'));
+        /* asigna columnas a mostrar */
         $col = current($this->result->items);
-        $this->cols = $col ? array_keys(get_object_vars($col)):array();
-        /*Acciones a mostrar*/
-        $this->d_accion = $this->_default_action;
+        $this->cols = $col ? array_keys(get_object_vars($col)) : array();
+        /* Acciones a mostrar */
         $this->action = $this->_action;
-        /*Mostrar la barra de acciones*/
+        /* Mostrar la barra de acciones */
         $this->show_bar = $this->_show_bar;
     }
 
-    
     /**
      * Crea un Registro
      */
@@ -178,22 +176,40 @@ class ScaffoldController extends AdminController {
         $this->result = method_exists($model, 'view') ?
                 call_user_func_array(array($model, $this->_index), array($id)) :
                 $model->find_first((int) $id);
-        /*asigna columnas a mostrar*/
+        /* asigna columnas a mostrar */
         $this->cols = array_keys(get_object_vars($this->result));
-
     }
 
     public function update($field) {
         Scaffold::update(Load::model($this->model), $field);
         die();
     }
-    
-        /**
--     * Retorna las columnas a consultar
--     * @return string
--     */
+
+    /**
+      -     * Retorna las columnas a consultar
+      -     * @return string
+      - */
     protected function _getCols() {
         return !empty($this->show_cols) || is_array($this->show_cols) ?
                 implode(',', $this->show_cols) : '*';
     }
+
+    /**
+     * Permite añadir una acción
+     * @param string $action identificador de la accion
+     * @param type $html HTML para la acción 
+     */
+    protected function action($action, $html) {
+        $this->_action[$action] = $html;
+    }
+
+    /**
+     * Asigna acciones básicas para el CRUD 
+     */
+    protected function useCRUD() {
+        $this->action('ver', Html::linkAction('ver/%id%', '<span class="btn"><i class="icon-eye-open"></i></span>'));
+        $this->action('editar', Html::linkAction('editar/%id%', '<span class="btn"><i class="icon-edit"></i></span>'));
+        $this->action('borrar', Html::linkAction('borrar/%id%', '<span class="btn"><i class="icon-trash"></i></span>', 'class="js-confirm" data-msg="¿Desea Eliminar?"'));
+    }
+
 }
