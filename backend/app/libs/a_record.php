@@ -12,8 +12,8 @@
  */
 // Carga el active record
 Load::coreLib('kumbia_active_record');
+class ARecord extends KumbiaActiveRecord implements ArrayAccess {
 
-class ActiveRecord extends KumbiaActiveRecord implements ArrayAccess {
 
     protected $logger = true;
 
