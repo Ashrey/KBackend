@@ -1,0 +1,31 @@
+<div class="page-header">'
+    <h1><?php echo $title ?></h1>
+</div>
+<?php View::content() ?>
+<?php if ($show_bar): ?>
+    <?php View::partial('backend/barra_superior_listas') ?>
+<?php endif; ?>
+<table class="table table-bordered table-condensed table-hover">
+    <?php $head = current($result->items); ?>
+    <thead>
+        <?php foreach ($cols as $key): ?>
+        <th><?php echo $head->get_alias($key) ?></th>
+    <?php endforeach ?>
+    <?php if (!empty($action)): $c = count($action); ?>
+        <th colspan="<?php echo $c ?>">Acciones</th>
+    <?php endif; ?>
+</thead>
+
+<?php foreach ($result->items as $item): ?>
+    <tr>
+        <?php foreach ($item as $key => $val): ?>
+            <td><?php eh(ModelForm::fieldValue($key, $item)) ?></td>
+        <?php endforeach ?>
+
+        <?php foreach ($action as $val): ?>
+            <td><?php echo str_replace(array('%id%'), array($item->id), $val) ?></td>
+        <?php endforeach ?>
+    </tr>
+<?php endforeach ?>
+</table>
+<?php KumbiaView::partial("paginators/$paginator", false, array('page' => $result));?>

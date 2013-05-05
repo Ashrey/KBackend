@@ -1,0 +1,63 @@
+<div class="page-header">
+    <h1><?php eh($titulo) ?></h1>
+</div>
+<div class="row">
+    <div class="offset3 span6" >
+        <div id="res-form-ajax"><?php View::content() ?></div>
+        <?php echo Ajax::form('res-form-ajax', NULL, 'form-horizontal') ?>
+        <?php echo Form::hidden('menu.id') ?>
+        <div class="control-group">
+            <label class="control-label" for="menu_menu_id">Menu Padre : </label>
+            <div class="controls">
+                <?php echo Form::dbSelect('menu.menus_id', 'nombre', array('menus', 'find', 'activo = 1'), 'Ninguno') ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="menu_recursos_id">Recurso al que Accede : </label>
+            <div class="controls">
+                <?php echo Form::dbSelect('menu.recursos_id', 'recurso') ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="menu_nombre">Texto a Mostrar : </label>
+            <div class="controls">
+                <?php echo Form::text('menu.nombre') ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="menu_url">Url del Menu : </label>
+            <div class="controls">
+                <?php echo Form::text('menu.url') ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="menu_posicion">Posicion en el Menu : </label>
+            <div class="controls">
+                <?php echo Form::text('menu.posicion') ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="menu_clases">Clases del Menu : </label>
+            <div class="controls">
+                <?php echo Form::text('menu.clases') ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="menu_visible_en">Visible En : </label>
+            <div class="controls">
+                <?php echo Form::select('menu.visible_en',  array(1=>
+                    'Solo en La Aplicación',                                         
+                    'Solo en El Backend',
+                    'En cualquier parte'));?>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="menu_activo">Activo (Visible) : </label>
+            <div class="controls">
+                <?php echo Form::select('menu.activo', array('1' => 'Si', '0' => 'No')) ?>
+                </div>
+            </div>
+            <?php View::partial('backend/submit') ?>
+        <?php echo Form::close() ?>
+    </div>
+</div>

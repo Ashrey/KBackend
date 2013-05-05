@@ -1,0 +1,46 @@
+<div class="page-header">
+    <h1>Crear Usuario</h1>
+</div>
+<div class="row">
+    <div class="offset3 span6" >
+        <div id="res-form-ajax"><?php View::content() ?></div>
+        <?php echo Ajax::form('res-form-ajax', NULL, 'form-horizontal') ?>
+        <?php echo Form::hidden('usuario.id') ?>
+        <div class="control-group">
+            <label class="control-label" for="usuario_login">Nombre de Usuario</label>
+            <div class="controls">
+                <?php echo Form::text('usuario.login') ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="usuario_clave">Contraseña</label>
+            <div class="controls">
+                <?php echo Form::pass('usuario.clave') ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="usuario_clave2">Repita  Contraseña</label>
+            <div class="controls">
+                <?php echo Form::pass('usuario.clave2') ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="usuario_email">Correo Electronico</label>
+            <div class="controls">
+                <?php echo Form::text('usuario.email') ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="usuario_roles_id">Roles del Usuario</label>
+            <div class="controls">
+				<?php echo Form::dbSelect('usuario.roles_id') ?>
+
+                </div>
+            </div>
+            <div class="form-actions btn-group">
+		<button type="submit" class="btn btn-primary"><i class="icon-white icon-ok"></i>Guardar </button>                 
+		<?php echo Html::linkAction('', 'Cancelar', 'class="btn btn-danger"') ?>
+	    </div>
+        <?php echo Form::close() ?>
+    </div>
+</div>

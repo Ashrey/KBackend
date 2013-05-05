@@ -1,0 +1,21 @@
+<div id='cabecera' class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand">Área Admnistrativa</a>
+            <div class="nav-collapse">
+                <?php View::renderMenu(Menu::BACKEND) ?>
+                <ul class="nav pull-right">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <?php eh(Auth::get('login')) ?>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><?php echo Html::link('admin/index/logout', 'Salir') ?></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

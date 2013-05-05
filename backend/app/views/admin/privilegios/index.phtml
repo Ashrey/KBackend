@@ -1,0 +1,8 @@
+<div class="page-header">
+    <h1>Privilegios de Roles</h1>
+</div>
+<ul>
+<?php foreach($roles as $r):?>
+    <li><?php echo Html::linkAction("asignar/$r->id", $r->rol)?></li>
+<?php endforeach?>
+</ul>

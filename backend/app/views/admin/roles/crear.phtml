@@ -1,0 +1,25 @@
+<div class="page-header">
+    <h1><?php eh($titulo) ?></h1>
+</div>
+<div class="row">
+    <div class="offset3 span6" >
+        <div id="res-form-ajax"><?php View::content() ?></div>
+        <?php echo Ajax::form('res-form-ajax', NULL, 'form-horizontal') ?>
+        <?php echo Form::hidden('rol.id') ?>
+        <div class="control-group">
+            <label class="control-label" for="rol_rol">Nombre del rol* : </label>
+            <div class="controls">
+                <?php echo Form::text('rol.rol') ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="rol_plantilla">Plantilla a Usar : </label>
+            <div class="controls">
+                <?php echo Form::text('rol.plantilla') ?>
+            </div>
+        </div>
+        <?php View::partial('backend/submit')?>
+        <?php echo Form::close() ?>
+    </div>
+</div>
+
