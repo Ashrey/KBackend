@@ -1,7 +1,0 @@
-<?php header('Content-type: text/plain');?>
-<div class="page-header">
-    <h1><?php echo ucwords("$model"), ": <em>$action_name</em>" ?></h1>
-</div>
-<?php echo '<?php';?> View::content(); ?>
-
-<?php StaticForm::create($$model) ?>
