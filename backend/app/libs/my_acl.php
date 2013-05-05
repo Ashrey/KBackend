@@ -52,7 +52,7 @@ class MyAcl {
         //cargamos la lib Acl2 con el adaptador por defecto (SimpleAcl)
         self::$_acl = Acl2::factory();
         //obtenemos el rol actual
-        $rol = Load::model('admin/roles')->find_first(Auth::get('roles_id'));
+        $rol = Load::model('roles')->find_first(Auth::get('roles_id'));
         //establecemos los recursos permitidos para el rol
         $this->_establecerRecursos($rol->id, $rol->getRecursos());
         $this->_establecerTemplate(Auth::get('id'), $rol->plantilla);
