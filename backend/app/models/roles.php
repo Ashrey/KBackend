@@ -1,7 +1,6 @@
 <?php
 /**
-* Backend - KumbiaPHP Backend
-* PHP version 5
+* KBackend - KumbiaPHP Backend
 * LICENSE
 *
 * This program is free software: you can redistribute it and/or modify
@@ -19,12 +18,9 @@
 *
 * @package Modelos
 * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
-* @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
+* @author KBackend Team
 */
-class Roles extends ActiveRecord {
-    
-//    public $debug = true;
-
+class Roles extends ARecord {
     protected function initialize() {
         //relaciones
         $this->has_and_belongs_to_many('recursos', 'model: admin/recursos', 'fk: recursos_id', 'through: admin/roles_recursos', 'key: roles_id');

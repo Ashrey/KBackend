@@ -22,8 +22,8 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
- Load::model('admin/roles');
-class Usuarios extends ActiveRecord
+ Load::model('roles');
+class Usuarios extends ARecord
 {
     const ROL_DEFECTO = 1;
 
@@ -31,7 +31,7 @@ class Usuarios extends ActiveRecord
     {
         $min_clave = Config::get('backend.app.minimo_clave');
         $this->belongs_to('roles');
-        $this->has_many('admin/auditorias');
+        $this->has_many('auditorias');
         $this->validates_presence_of('login', 'message: Debe escribir un <b>Login</b> para el Usuario');
         $this->validates_presence_of('clave', 'message: Debe escribir una <b>Contraseña</b>');
         $this->validates_presence_of('clave2', 'message: Debe volver a escribir la <b>Contraseña</b>');

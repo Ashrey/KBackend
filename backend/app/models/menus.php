@@ -22,7 +22,7 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
-class Menus extends ActiveRecord {
+class Menus extends ARecord {
    // public $debug = true;
 //    public $logger = true;
 
@@ -42,7 +42,7 @@ class Menus extends ActiveRecord {
     const VISIBILIDAD_TODAS = 3;
 
     protected function initialize() {
-        $this->has_many('admin/menus');
+        $this->has_many('menus');
         //validaciones
         $this->validates_presence_of('recursos_id', 'message: Debe seleccionar un <b>Recurso</b> al cual se va acceder');
         $this->validates_presence_of('nombre', 'message: Debe escribir el <b>Texto a Mostrar</b> en el menu');
@@ -58,14 +58,14 @@ class Menus extends ActiveRecord {
      * @return array          
      */
     public function obtener_menu_por_usuario($rol, $entorno) {
-        $select = 'm.' . join(',m.', $this->fields) . ',re.recurso';
+        $select = 'm.' . join(',m.', $this->fields);
         $from = 'menus as m';
         $joins = "INNER JOIN roles_recursos AS rr ON m.recursos_id = rr.recursos_id  AND rr.roles_id = '$rol' ";
         $joins .= "INNER JOIN recursos AS re ON re.activo = 1 AND re.id = rr.recursos_id";
         $condiciones = " m.menus_id is NULL AND m.activo = 1 ";
         $condiciones .= " AND visible_en IN ('3','$entorno') ";
         $orden = 'm.posicion';
-        $agrupar_por = 'm.' . join(',m.', $this->fields) . ',re.recurso';
+        $agrupar_por = 'm.' . join(',m.', $this->fields) ;
         return $this->find_all_by_sql("SELECT $select FROM $from $joins WHERE $condiciones GROUP BY $agrupar_por ORDER BY $orden");
     }
 
@@ -77,12 +77,12 @@ class Menus extends ActiveRecord {
      * @return array          
      */
     public function get_sub_menus($rol, $entorno) {
-        $campos = 'menus.' . join(',menus.', $this->fields) . ',r.recurso';
+        $campos = 'menus.' . join(',menus.', $this->fields);
         $join = 'INNER JOIN recursos as r ON r.id = menus.recursos_id AND r.activo = 1 ';
         $join .= "INNER JOIN roles_recursos as rr ON r.id = rr.recursos_id AND rr.roles_id = '$rol'";
         $condiciones = "menus.menus_id = '{$this->id}' AND menus.activo = 1 ";
         $condiciones .= " AND visible_en IN ('3','$entorno') ";
-        $agrupar_por = 'menus.' . join(',menus.', $this->fields) . ',r.recurso';
+        $agrupar_por = 'menus.' . join(',menus.', $this->fields);
         return $this->find($condiciones, "join: $join", "columns: $campos", 'order: menus.posicion', "group: $agrupar_por");
     }
 

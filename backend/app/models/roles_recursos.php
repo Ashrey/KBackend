@@ -22,12 +22,12 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
-class RolesRecursos extends ActiveRecord {
+class RolesRecursos extends ARecord {
 
 //    public $debug = true;
 
     protected function initialize() {
-        $this->belongs_to('admin/roles');
+        $this->belongs_to('roles');
     }
 
     /**

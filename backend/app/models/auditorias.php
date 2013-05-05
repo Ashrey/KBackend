@@ -22,7 +22,7 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
-class Auditorias extends ActiveRecord {
+class Auditorias extends ARecord {
 
     //protege de un ciclo infinito NO ELIMINAR
     public $logger = false;

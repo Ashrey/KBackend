@@ -22,7 +22,7 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU AFFERO GENERAL PUBLIC LICENSE version 3.
  * @author Manuel José Aguirre Garcia <programador.manuel@gmail.com>
  */
-class Recursos extends ActiveRecord {
+class Recursos extends ARecord {
 
 //    public $debug = true;
 
@@ -44,12 +44,6 @@ class Recursos extends ActiveRecord {
         $joins = 'INNER JOIN roles_recursos as r ON r.recursos_id = recursos.id';
         $where = "r.roles_id = '$id_rol'";
         return $this->find("columns: $cols", "join: $joins", "$where");
-    }
-
-    protected function before_validation() {
-        $this->recurso = !empty($this->modulo) ? "$this->modulo/" : '';
-        $this->recurso .= "$this->controlador/";
-        $this->recurso .=!empty($this->accion) ? "$this->accion" : '*';
     }
 
     /**
