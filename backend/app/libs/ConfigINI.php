@@ -8,13 +8,24 @@ namespace KBackend\Libs;
  * @author KumbiaPHP Development Team
  */
 class ConfigINI{
+	/**
+	 * File to parse
+	 */
+	protected $_file = null;
 	
 	/**
-	 * Read a ini FILE and parse
+	 * Values and key of file
 	 */
-    public static function read($file) {
-        $_file = APP_PATH . "config/{$file}.ini";
-        $_conf= parse_ini_file($_file, true);
+	protected $_value = array();
+	
+	/**
+	 * Last error ocurred
+	 */
+	protected $_lastError = 'unknoww error';
+	
+    public function __construct ($file) {
+        $this->_file = APP_PATH . "config/{$file}.ini";
+        $_conf = parse_ini_file($this->_file, true);
         foreach ($_conf as $key => $section) {
             foreach ($section as $variable => $valor) {
                 if ($valor == 1) {
@@ -24,12 +35,17 @@ class ConfigINI{
                 }
             }
         }
-        return $_conf;
+        $this->_value = $_conf;
     }
 
-    public static function save() {
+    public function save($config) {
+		//assign new values
+		foreach ($config as $key => $value) {
+			$val = explode('.', $key);
+            $this->_value[$val[0]][$val[1]]=$value;
+        }    
         $html = '';
-        foreach (self::$_configuracion as $key => $section) {
+        foreach ($this->_value as $key => $section) {
             $html .= "[$key]" . PHP_EOL;
             foreach ($section as $variable => $valor) {
                 $valor = empty($valor) ? ' ':$valor;
@@ -40,7 +56,28 @@ class ConfigINI{
                 }
             }
         }
-        return file_put_contents(self::$_archivo_ini, $html);
+		if(is_writable($this->_file)){
+			\Logger::alert("CONFIG archivo {$this->_file}.ini modificado");
+			return file_put_contents($this->_file, $html);
+		}else{
+			$this->_lastError = '';
+			return false;
+		}
+       
     }
-
+	
+	/**
+	 * Get array with file value
+	 */
+	public function getAll(){
+		return $this->_value;
+	}
+	
+	/**
+	 * Return last error
+	 */
+	public function getError(){
+		return $this->_lastError;
+	}
+	
 }
