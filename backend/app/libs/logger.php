@@ -53,7 +53,6 @@
  * @category   Kumbia
  * @package    Flash 
  */
-Load::model('admin/auditorias');
 
 abstract class Logger {
 
@@ -117,11 +116,11 @@ abstract class Logger {
                 if ($t === 'SELECT' ||    $t === 'DESCRIBE')
                     return;
                 if (Config::get('backend.app.guardar_auditorias') == true) {
-                    $auditoria = new Auditorias();
-                    $auditoria->usuarios_id = Auth::is_valid()? Auth::get('id') : NULL;
-                    $auditoria->accion = $t;
-                    $auditoria->tipo = $type;
-                    $auditoria->detalles = $msg;
+                    $auditoria = new \KBackend\Model\Action();
+                    $auditoria->user_id = Auth::is_valid()? Auth::get('id') : NULL;
+                    $auditoria->action = $t;
+                    $auditoria->type = $type;
+                    $auditoria->extra = $msg;
                     $auditoria->save();
                 }
             } catch (KumbiaException $e) {
