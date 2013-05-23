@@ -1,0 +1,30 @@
+<div class="page-header">
+    <h1>
+        Auditorias del Sistema 
+        <small>Usuario: <?php eh(strtoupper($usuario->login)) ?></small>
+    </h1>
+</div>   
+    <?php View::content() ?>
+<table class="table table-bordered table-condensed table-hover">
+
+    <thead>
+		
+		<tr>
+			<th>Fecha</th>
+			<th>Tipo</th>
+			<th>Acción</th>
+			<th>IP</th>
+		</tr>
+	</thead>
+
+<?php foreach ($result->items as $item): ?>
+    <tr>
+		<td><?php echo  $item->date_at?></td>
+		<td><?php echo  $item->type?></td>
+		<td><?php echo  $item->action?></td>
+		<td><?php echo  $item->ip()?></td>
+    </tr>
+<?php endforeach ?>
+</table>
+<?php View::partial("paginators/simple", false, array('page' => $result, 'url' =>$url));?>
+

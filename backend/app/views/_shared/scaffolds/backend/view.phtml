@@ -1,0 +1,30 @@
+<div class="page-header">
+    <h1><?php echo $title ?></h1>
+</div>
+<div class="row">
+    <?php if ($result) : ?>
+        <div class="span4 offset4">
+            <dl class="dl-horizontal">
+                <?php foreach ($cols as $field) : ?>
+                    <dt><?php echo $result->alias[$field] ?></dt>
+                    <dd><?php eh(ModelForm::fieldValue($field, $result)) ?></dd>
+                <?php endforeach ?>
+            </dl>
+            <?php if (!Input::isAjax()): ?>
+                <div class="btn-group">
+                    <?php echo Html::LinkAction('crear', 'Crear <i class="icon-plus"></i>', ' class="btn btn-primary"') ?>
+                    <?php echo Html::LinkAction("editar/$result->id", 'Editar <i class="icon-edit"></i>', ' class="btn btn-warning"') ?>
+                    <?php echo Html::LinkAction("borrar/$result->id", 'Borrar <i class="icon-remove"></i>', ' class="btn btn-danger js-confirm" title="Está seguro?"') ?>
+                    <?php echo Html::LinkAction('', 'Listar  <i class="icon-list"></i>', ' class="btn btn-info"') ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    <?php else : ?>
+        <?php header("HTTP/1.0 404 Not Found") ?>
+        <div class="span4 offset4">
+            <div class="alert alert-block alert-danger">
+                No se ha encontrado el registro buscado
+            </div>
+        </div>
+    <?php endif ?>
+</div>

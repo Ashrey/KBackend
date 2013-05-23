@@ -1,0 +1,12 @@
+<div class="page-header">
+    <h1><?php echo $title, ": <small>$action_name</small   >" ?></h1>
+</div>
+<?php View::content(); ?>
+<div class="container">
+    <div class="row">
+        <div class="span6 offset3">
+            <?php ModelForm::create($model) ?>
+        </div>
+    </div>
+</div>
+

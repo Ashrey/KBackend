@@ -1,0 +1,12 @@
+<div class="page-header">
+    <h1>Auditorias del Sistema</h1>
+</div>
+<?php View::content() ?>
+
+<h3>Usuarios del Sistema</h3>
+<ul>
+<?php foreach($user->items as $r):?>
+    <li><?php echo Html::linkAction("user/$r->id", $r->login)?></li>
+<?php endforeach?>
+</ul>
+<?php View::partial("paginators/simple", false, array('page' => $user));?>

@@ -1,0 +1,21 @@
+<?php
+if (!isset($btn)) {
+    $btn = array(
+        array(
+            'action' => 'create',
+            'icon' => 'plus',
+            'type' => 'btn-primary',
+            'text' => 'Crear'
+        )
+    );
+}
+?>
+
+<div class="well">
+    <div class="btn-group">
+        <?php foreach($btn as $b):?>
+            <?php echo Html::linkAction($b['action'], "<i class=\"icon-white icon-{$b['icon']} \"></i> {$b['text']} ", "class=\"btn {$b['type']}\"") ?>
+        <?php endforeach?>
+    </div>
+</div>
+

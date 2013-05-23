@@ -1,0 +1,28 @@
+<div class="page-header">
+    <h1>
+        Edición del Usuario
+        <small><?php eh(strtoupper($user->login)) ?></small>
+    </h1>
+</div>
+<div class="row">
+    <div class="span6 offset3">
+        <div id="res-form-ajax"><?php View::content() ?></div>
+        <?php echo Ajax::form('res-form-ajax', NULL, 'form-horizontal') ?>
+        <?php echo Form::hidden('user.id') ?>
+        <div class="control-group">
+            <label class="control-label" for="user_role_id">Roles del Usuario* : </label>
+            <div class="controls">
+                <?php echo Form::dbSelect('user.role_id', 'role', array('\KBackend\Model\Role','find')) ?>
+
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="user_enable">Activo : </label>
+            <div class="controls">
+                <?php echo Form::select('user.enable', array('1' => 'Si', '0' => 'No')) ?>
+            </div>
+        </div>
+         <?php View::partial('backend/submit')?>
+        <?php echo Form::close() ?>
+    </div>
+</div>
