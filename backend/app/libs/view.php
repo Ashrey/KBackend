@@ -10,17 +10,6 @@
 require_once CORE_PATH . 'kumbia/kumbia_view.php';
 
 class View extends KumbiaView {
-
-    /**
-     * Renderiza un menú para el usuario conectado y para el entorno especificado.
-     * @param  int $entorno 
-     */
-    public static function renderMenu($entorno) {
-        if (Auth::is_valid()) {
-            echo Menu::render(Auth::get('roles_id'), $entorno);
-        }
-    }
-
     /**
      * Muestra las excepciones generadas y crea un log de las mismas.
      * 
