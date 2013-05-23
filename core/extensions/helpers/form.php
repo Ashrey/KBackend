@@ -540,7 +540,7 @@ class Form
 
             $data = $model_asoc->find("columns: $pk,$show", "order: $show asc"); //mejor usar array
         } else {
-            $model_asoc = Load::model($data[0]);
+            $model_asoc =  Load::model($data[0]);
             $pk = $model_asoc->primary_key[0];
 
             // Verifica si existe el parámetro

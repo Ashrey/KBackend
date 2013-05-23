@@ -98,7 +98,7 @@ class Auth
 
     public function set_adapter($adapter, $auth = null, $extra_args = array())
     {
-        if (!in_array($adapter, array('digest', 'http', 'model', 'kerberos5', 'radius'))) {
+        if (!in_array($adapter, array('digest', 'http', 'model', 'kerberos5', 'radius',  'object'))) {
             throw new kumbiaException("Adaptador de autenticaci&oacute;n '$adapter' no soportado");
         }
         $this->adapter = Util::camelcase($adapter);
