@@ -1,0 +1,29 @@
+[
+	{
+		"name":"Admin",
+		"url": "#",
+		"clases": null,
+		"sub":[
+			{
+				"name":"Usuarios",
+				"url": "user"
+			},
+			{
+				"name":"Configurar",
+				"url": "config"
+			},
+			{
+				"name":"Roles",
+				"url": "role"
+			},
+			{
+				"name":"Accesos",
+				"url": "access"
+			},
+			{
+				"name":"Acciones",
+				"url": "action"
+			}
+		]
+	}
+]
