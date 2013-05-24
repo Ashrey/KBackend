@@ -25,23 +25,24 @@ class AccessController extends  \KBackend\Libs\AuthController{
         }
     }
 
-    public function asignar_privilegios() {
+    public function assign() {
         try {
             if (Input::hasPost('priv') && Input::hasPost('todo') && Input::hasPost('rol') ) {
-                $obj = Load::model('admin/roles_recursos');
+                $obj = new \KBackend\Model\RoleResource();
                 $priv = Input::post('priv');
                 $todo  = Input::post('todo');
                 $rol = Input::post('rol');
-                if ($obj->editarPrivilegios($rol, $priv ,$todo)) {
+                if ($obj->edit($rol, $priv ,$todo)) {
                     Flash::valid('Los privilegios fueron editados');
                 } else {
                     Flash::warning('No se pudo editar los privilegios');
                 }
+                return Router::toAction("allow/$rol");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction("asignar/$rol");
+        return Router::toAction();
     }
 
 }

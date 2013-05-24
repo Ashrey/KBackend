@@ -15,19 +15,17 @@ class RoleResource extends \KBackend\Libs\ARecord {
     }
 
     /**
-     * Guarda un nuevo registro.
-     * 
-     * @param  int $rol     id del rol
-     * @param  int  $recurso id del recuro
+     * Add new record
+     * @param  int $rol     id of role
+     * @param  int  $recurso id of resource
      * @return boolean         
      */
-    public function guardar($rol, $recurso) {
-        if ($this->existe($rol, $recurso))
+    public function add($rol, $resourse) {
+        if ($this->isCreated($rol,$resourse ))
             return TRUE;
-        
         return $this->create(array(
-            'roles_id' => $rol,
-            'recursos_id' => $recurso
+            'role_id' => $rol,
+            'resource_id' => $resourse
         ));
     }
     
@@ -38,27 +36,27 @@ class RoleResource extends \KBackend\Libs\ARecord {
      * @param  int  $recurso id del recuro
      * @return boolean        
      */
-    public function eliminar($rol, $recurso) {
-        return $this->delete_all("roles_id = '$rol' AND recursos_id = '$recurso'");
+    public function deny($rol, $resource) {
+        return $this->delete_all("role_id = '$rol' AND resource_id = '$resource'");
     }
 
     /**
-     * Modifica los privilegios en una pagina dada.
-     *  @param int $role id del rol a conceder privilegios 
-     * @param  array $priv privilegios a conceder
-     * @param  string $all todos los privilegios de la página 
+     * Edit access for user id
+     *  @param int $role id 
+     * @param  array $priv allows
+     * @param  string $all all alow for page
      * @return boolean  
      */
-    public function editarPrivilegios($rol, $priv, $all) {
+    public function edit($rol, $priv, $all) {
         $this->begin();
         foreach ($all as $e) {
             /*El privilegio ha sido asignado*/
             if (in_array($e, $priv)) {
-                if(!$this->guardar($rol, $e)){
+                if(!$this->add($rol, $e)){
                     $this->rollback();
                     return false;
                 }
-            }else if(!$this->eliminar($rol, $e)){
+            }else if(!$this->deny($rol, $e)){
                 $this->rollback();
                 return false;
             }
@@ -74,8 +72,8 @@ class RoleResource extends \KBackend\Libs\ARecord {
      * @param  int $recurso id del recurso
      * @return boolean
      */
-    public function existe($rol, $recurso) {
-        return $this->exists("roles_id = '$rol' AND recursos_id = '$recurso'");
+    public function isCreated($rol, $resource) {
+        return $this->exists("role_id = '$rol' AND resource_id = '$resource'");
     }
     
     /**

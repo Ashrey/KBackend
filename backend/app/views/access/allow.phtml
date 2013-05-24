@@ -4,7 +4,7 @@
 </div>
 <?php View::content() ?>
 <?php if (isset($results)) : ?>
-    <?php echo Form::open('admin/privilegios/asignar_privilegios/') ?>
+    <?php echo Form::open('access/assign') ?>
     <?php View::partial('backend/submit') ?>
     <?php echo Form::hidden("rol", null, $rol->id) ?>
     <table id="tabla_privilegios" class="table table-bordered table-condensed table-hover">
@@ -31,7 +31,7 @@
         </tbody>
     </table>
     <?php View::partial('paginators/bootstrap', false, array('page' => $results,
-        'url' => Router::get('controller_path') . "/asignar/{$rol->id}")); ?>
+        'url' => Router::get('controller_path') . "/assign/{$rol->id}")); ?>
 
 <?php else : // Si no hay items?>
     <h2>No hay ningún registro</h2>
