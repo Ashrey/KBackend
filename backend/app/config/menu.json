@@ -23,6 +23,10 @@
 			{
 				"name":"Acciones",
 				"url": "action"
+			},
+			{
+				"name":"Recursos",
+				"url": "resource"
 			}
 		]
 	}
