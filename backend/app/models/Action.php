@@ -8,18 +8,13 @@ namespace KBackend\Model;
  * @author KumbiaPHP Development Team
  */
 class Action extends \KBackend\Libs\ARecord {
-	protected $source = 'action';
+	protected $source = '_action';
     /**
      * DANGER!!!!!
      * protege de un ciclo infinito 
      * DON'T REMOVE
      */
     protected $logger = false;
-
-    protected function initialize() {
-        //relaciones
-        $this->belongs_to('admin/usuarios');
-    }
 
     protected function before_save() {
         $this->ip = ip2long($_SERVER['REMOTE_ADDR']);

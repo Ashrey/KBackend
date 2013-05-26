@@ -8,12 +8,8 @@ namespace KBackend\Model;
  * @author KumbiaPHP Development Team
  */
 class RoleResource extends \KBackend\Libs\ARecord {
-	protected $source = 'role_resource';
+	protected $source = '_role_resource';
 	
-    protected function initialize() {
-        $this->belongs_to('roles');
-    }
-
     /**
      * Add new record
      * @param  int $rol     id of role

@@ -8,17 +8,12 @@ namespace KBackend\Model;
  * @author KumbiaPHP Development Team
  */
 class Role extends \KBackend\Libs\ARecord {
-	protected $source = 'role';
+	protected $source = '_role';
 	
     protected function initialize() {
-        //relaciones
-        $this->has_and_belongs_to_many('recursos', 'model: admin/recursos', 'fk: recursos_id', 'through: admin/roles_recursos', 'key: roles_id');
-        $this->has_and_belongs_to_many('usuarios', 'model: admin/usuarios', 'fk: usuarios_id', 'through: admin/roles_usuarios', 'key: roles_id');
-        
         //validaciones
         $this->validates_presence_of('rol','message: Debe escribir el <b>Nombre del Rol</b>');
         $this->validates_uniqueness_of('rol','message: Este Rol <b>ya existe</b> en el sistema');
-        
     }
 
     /**
@@ -29,9 +24,9 @@ class Role extends \KBackend\Libs\ARecord {
      */
     public function getRecursos(){
         $columnas = "r.*";
-        $join = "INNER JOIN role_resource as rr ON rr.role_id = role.id ";
-        $join .= "INNER JOIN resource as r ON rr.resource_id = r.id ";
-        $where = "role.id = '$this->id'";
+        $join = "INNER JOIN _role_resource as rr ON rr.role_id = _role.id ";
+        $join .= "INNER JOIN _resource as r ON rr.resource_id = r.id ";
+        $where = "_role.id = '$this->id'";
         return $this->find($where, "columns: $columnas" , "join: $join");
     }
 

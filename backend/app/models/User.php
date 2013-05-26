@@ -9,14 +9,12 @@ namespace KBackend\Model;
  */
 class User extends \KBackend\Libs\ARecord
 {
-	protected $source = 'user';
+	protected $source = '_user';
     const ROL_DEFECTO = 1;
 
     protected function initialize()
     {
         $min_clave = \Config::get('backend.app.minimo_clave');
-        $this->belongs_to('roles');
-        $this->has_many('auditorias');
         $this->validates_presence_of('login', 'message: Debe escribir un <b>Login</b> para el Usuario');
         $this->validates_presence_of('clave', 'message: Debe escribir una <b>Contraseña</b>');
         $this->validates_presence_of('clave2', 'message: Debe volver a escribir la <b>Contraseña</b>');
@@ -47,8 +45,8 @@ class User extends \KBackend\Libs\ARecord
     public function paginar($cond,$pagina = 1)
     {
         return $this->paginate("page: $pagina",
-                'join: JOIN role r ON r.id = role_id',
-                'columns: user.id, user.login, user.email, r.role rol',
+                'join: JOIN _role r ON r.id = role_id',
+                'columns: _user.id, _user.login, _user.email, r.role rol',
                 'per_page: '.\Config::get('backend.app.per_page'),
                 "conditions: $cond"
                );
@@ -56,9 +54,9 @@ class User extends \KBackend\Libs\ARecord
 
     public function numAcciones($pagina = 1)
     {
-        $cols = "user.*,COUNT(action.id) as total";
-        $join = "LEFT JOIN action ON user.id = action.user_id";
-        $group = 'user.' . join(',user.', $this->fields);
+        $cols = "_user.*,COUNT(_action.id) as total";
+        $join = "LEFT JOIN _action ON _user.id = _action.user_id";
+        $group = '_user.' . join(',_user.', $this->fields);
         $sql = "SELECT $cols FROM $this->source $join GROUP BY $group";
         return $this->paginate_by_sql($sql, "page: $pagina", 'per_page: '.\Config::get('backend.app.per_page'));
     }

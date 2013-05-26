@@ -8,26 +8,13 @@ namespace KBackend\Model;
  * @author KumbiaPHP Development Team
  */
 class Resource extends \KBackend\Libs\ARecord {
-	var $source = 'resource';
+	protected $source = '_resource';
 
     protected function initialize() {
         //validaciones
         $this->validates_presence_of('controlador', 'message: Debe escribir un <b>Controlador</b>');
         $this->validates_presence_of('descripcion', 'message: Debe escribir una <b>Descripción</b>');
         $this->validates_uniqueness_of('recurso', 'message: Este Recurso <b>ya existe</b> en el sistema');
-    }
-
-    /**
-     * Obtiene los recursos a los que un rol tiene acceso.
-     * 
-     * @param  int $id_rol 
-     * @return array         
-     */
-    public function obtener_recursos_por_rol($id_rol) {
-        $cols = 'recursos.recurso';
-        $joins = 'INNER JOIN roles_recursos as r ON r.recursos_id = recursos.id';
-        $where = "r.roles_id = '$id_rol'";
-        return $this->find("columns: $cols", "join: $joins", "$where");
     }
 
     /**
