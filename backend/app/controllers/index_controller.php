@@ -27,4 +27,11 @@ class IndexController extends AppController {
     public function index() {
 
     }
+    
+    public function logout() {
+		\KBackend\Libs\MyAuth::finish();
+		return Router::redirect();
+    }
+    
+    
 }
