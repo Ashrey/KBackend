@@ -25,7 +25,7 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
      * Nombre del paginador a usar
      * @var String
      */    
-    protected $_paginator = 'digg';
+    protected $_paginator = 'backend';
 
     /**
      * Array de columnas a  mostrar
