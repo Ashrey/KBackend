@@ -30,7 +30,7 @@
             <?php endforeach ?>
         </tbody>
     </table>
-    <?php View::partial('paginators/bootstrap', false, array('page' => $results,
+    <?php View::partial('paginators/backend', false, array('page' => $results,
         'url' => Router::get('controller_path') . "/assign/{$rol->id}")); ?>
 
 <?php else : // Si no hay items?>

@@ -28,4 +28,4 @@
     </tr>
 <?php endforeach ?>
 </table>
-<?php View::partial("paginators/simple", false, array('page' => $result));?>
+<?php View::partial("paginators/$paginator", false, array('page' => $result));?>
