@@ -44,42 +44,6 @@ class Scaffold {
         return ob_get_clean();
     }
     
-    static function request($model){
-        /* Se asegura de que siempre exista el filtro 
-         * en el espacio de nombres */
-        if (!Session::has('filter', $model)) {
-            Session::set('filter', array(), $model);
-        }
-
-        /* Analiza las peticiones */
-        if (Input::post('clear')) {/* Elimina todos los filtros */
-            Session::set('filter', array(), $model);
-            Flash::info('Filtros Borrados');
-        } elseif (Input::post('add')) {/* Agrega un filtro */
-            $cond = Session::get('filter', $model);
-            $nuevo = Input::post('filter');
-            $nuevo['val'] = empty($nuevo['val']) && $nuevo['val'] !== '0' ?
-                    'NULL' : '"' . addslashes($nuevo['val']) . '"';
-            $cond[uniqid()] = $nuevo;
-            Session::set('filter', $cond, $model);
-        } elseif (Input::post('remove')) {/* Remueve un filtro */
-            $cond = Session::get('filter', $model);
-            $key = Input::post('remove');
-            unset($cond[$key]);
-            Session::set('filter', $cond, $model);
-        }
-        /* Hace Redireccion en caso de peticones POST */
-       if ($_SERVER['REQUEST_METHOD'] == 'POST')
-            Router::redirect();
-        $cond = Session::get('filter', $model);
-        /* Crea los filtros */
-        $filter = array('1 = 1 ');
-        foreach ($cond as $val) {
-            $filter[] = implode(' ', $val);
-        }
-        return implode(' AND ', $filter);  
-    }
-    
     static function update($model, $field){
         $model = is_string($model)? Load::model($model):$model;
         $model_name = Util::smallcase(get_class($model));
@@ -126,5 +90,4 @@ class Scaffold {
                 //break;
             }
     }
-
 }

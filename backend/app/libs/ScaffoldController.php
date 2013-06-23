@@ -1,5 +1,7 @@
 <?php
+
 namespace KBackend\Libs;
+
 /**
  * KBackend
  * PHP version 5
@@ -13,7 +15,7 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
      * Decide el scaffold a usar
      * @var String 
      */
-	public $scaffold = 'backend';
+    public $scaffold = 'backend';
 
     /**
      * Nombre del _modelo a mostrar
@@ -24,7 +26,7 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
     /**
      * Nombre del paginador a usar
      * @var String
-     */    
+     */
     protected $_paginator = 'backend';
 
     /**
@@ -56,8 +58,6 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
      * @var String 
      */
     protected $_view = 'view';
-    
-    
 
     /**
      * Acciones disponibles
@@ -101,32 +101,43 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
     }
 
     protected function before_filter() {
-        if ($this->scaffold == 'static')
-            View::template(null);
         $this->title = empty($this->_title) ? ucwords($this->_model) : $this->_title;
         $this->use_filter = $this->_use_filter;
     }
 
+    public function cond($cmd = null, $value = null) {
+        $filter = SQLFilter::getFilter($this->_model);
+        if (is_null($cmd)) {
+            $filter->request();
+        } elseif ($cmd == 'order') {
+            $filter->setOrder($value);
+        }
+        \Router::redirect();
+    }
+
     public function index($page = 1) {
-		try{
-			$cols = $this->_getCols();
-			$cond = \Scaffold::request($this->_model);
-			$_model = new $this->_model();
-			$this->result = method_exists($_model, $this->_index) ?
-					call_user_func_array(array($_model, $this->_index), array($cond, $page)) :
-					$_model->paginate($cond, "page: $page", "columns: $cols", 'per_page: ' . \Config::get('backend.app.per_page'));
-			/* asigna columnas a mostrar */
-			$col = current($this->result->items);
-			$this->cols = $col ? array_keys(get_object_vars($col)) : array();
-			/* Acciones a mostrar */
-			$this->action = $this->_action;
-			/* Mostrar la barra de acciones */
-			$this->show_bar = $this->_show_bar;
-			/*Envia el paginador*/
-			$this->paginator = $this->_paginator;
-		}catch(KumbiaException $e) {
+        try {
+            $cols = $this->_getCols();
+            $filter = SQLFilter::getFilter($this->_model);
+            $_model = new $this->_model();
+            $args = array_merge(array("page: $page", "columns: $cols", 'per_page: ' . \Config::get('backend.app.per_page')), $filter->getArray());
+
+            $this->result = method_exists($_model, $this->_index) ?
+                    call_user_func_array(array($_model, $this->_index), $args) :
+                    call_user_func_array(array($_model, 'paginate'), $args);
+
+            /* asigna columnas a mostrar */
+            $col = current($this->result->items);
+            $this->cols = $col ? array_keys(get_object_vars($col)) : array();
+            /* Acciones a mostrar */
+            $this->action = $this->_action;
+            /* Mostrar la barra de acciones */
+            $this->show_bar = $this->_show_bar;
+            /* Envia el paginador */
+            $this->paginator = $this->_paginator;
+        } catch (KumbiaException $e) {
             \View::excepcion($e);
-		}
+        }
     }
 
     /**
@@ -134,10 +145,10 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
      */
     public function create() {
         try {
-           /**
-			* Date set in request
-			*/
-			if (\Input::hasPost($this->model)) {
+            /**
+             * Date set in request
+             */
+            if (\Input::hasPost($this->model)) {
                 $obj = new $this->_model();
                 if (!$obj->save(\Input::post($this->model))) {
                     \Flash::error('Falló Operación');
@@ -146,13 +157,13 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
                     return;
                 } else {
                     \Flash::success('Agregegado correctamente');
-                    if(!\Input::isAjax()){
-						\Router::toAction('');
-					}
+                    if (!\Input::isAjax()) {
+                        \Router::toAction('');
+                    }
                 }
             }
             // Solo es necesario para el autoForm
-            $this->{$this->_model} = new  $this->_model();
+            $this->{$this->_model} = new $this->_model();
         } catch (KumbiaException $e) {
             Flash::error($e);
         }
@@ -166,21 +177,21 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
          * Date set in request
          */
         if (\Input::hasPost($this->model)) {
-			$data = \Input::post($this->model);
+            $data = \Input::post($this->model);
             $obj = call_user_func(array($this->_model, '_find_first'), $id);
-            if(is_object($obj)){
-				 if (!$obj->update($data)) {
-					//se hacen persistente los datos en el formulario
-					$this->{$this->_model} = $data;
-				} else {
-					\Flash::success('Edición hecha');
-					if(!\Input::isAjax()){
-						\Router::toAction('');
-					}
-				}
-			}else{
-				\Flash::error('No existe este registro');
-			}
+            if (is_object($obj)) {
+                if (!$obj->update($data)) {
+                    //se hacen persistente los datos en el formulario
+                    $this->{$this->_model} = $data;
+                } else {
+                    \Flash::success('Edición hecha');
+                    if (!\Input::isAjax()) {
+                        \Router::toAction('');
+                    }
+                }
+            } else {
+                \Flash::error('No existe este registro');
+            }
         }
         //Aplicando la autocarga de objeto, para comenzar la edición
         $this->{$this->model} = (new $this->_model())->find((int) $id);
@@ -190,10 +201,10 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
      * Borra un Registro
      */
     public function delete($id) {
-        if (call_user_func(array($this->_model, '_delete'), (int)$id)){
-			\Flash::success('Borrado correctamente');   
+        if (call_user_func(array($this->_model, '_delete'), (int) $id)) {
+            \Flash::success('Borrado correctamente');
         } else {
-			\Flash::error('Falló Operación');
+            \Flash::error('Falló Operación');
         }
         //enrutando al index
         \Router::redirect();
