@@ -1,5 +1,5 @@
 <?php
-namespace KBackend\Libs;
+//namespace KBackend\Libs;
 /**
  * KBackend
  * PHP version 5
@@ -7,7 +7,7 @@ namespace KBackend\Libs;
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team
  */
-abstract class Logger {
+class Logger {
 
     /**
      * Indica si hay transaccion o no
