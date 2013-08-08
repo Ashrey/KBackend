@@ -7,8 +7,7 @@
                 <ul class="nav pull-right">
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <?php eh(Auth::get('login')) ?>
-                            <b class="caret"></b>
+                            <?php eh(\KBackend\Libs\AuthACL::get('login')) ?>
                         </a>
                         <ul class="dropdown-menu">
                             <li><?php echo Html::link('index/logout', 'Salir') ?></li>
