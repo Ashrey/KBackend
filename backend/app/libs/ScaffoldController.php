@@ -30,12 +30,6 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
     protected $_paginator = 'backend';
 
     /**
-     * Array de columnas a  mostrar
-     * @var Array
-     */
-    protected $show_cols = array();
-
-    /**
      * Establece si se usan o no filtros
      * @var boolean 
      */
@@ -117,15 +111,15 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
 
     public function index($page = 1) {
         try {
-            $cols = $this->_getCols();
-            $filter = SQLFilter::getFilter($this->_model);
             $_model = new $this->_model();
-            $args = array_merge(array("page: $page", "columns: $cols", 'per_page: ' . \Config::get('backend.app.per_page')), $filter->getArray());
-
+            /*captura los filtros*/
+            $filter = SQLFilter::getFilter($this->_model);
+            $filter->pagination($page, \Config::get('backend.app.per_page'));
+            /*llama a la funcion de resultados*/
+            $args =  $filter->getArray();
             $this->result = method_exists($_model, $this->_index) ?
-                    call_user_func_array(array($_model, $this->_index), $args) :
+                    call_user_func(array($_model, $this->_index), $args) :
                     call_user_func_array(array($_model, 'paginate'), $args);
-
             /* asigna columnas a mostrar */
             $col = current($this->result->items);
             $this->cols = $col ? array_keys(get_object_vars($col)) : array();
@@ -220,20 +214,6 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
                 $_model->find_first((int) $id);
         /* asigna columnas a mostrar */
         $this->cols = array_keys(get_object_vars($this->result));
-    }
-
-    public function update($field) {
-        Scaffold::update(Load::_model($this->_model), $field);
-        die();
-    }
-
-    /**
-      -     * Retorna las columnas a consultar
-      -     * @return string
-      - */
-    protected function _getCols() {
-        return !empty($this->show_cols) || is_array($this->show_cols) ?
-                implode(',', $this->show_cols) : '*';
     }
 
     /**
