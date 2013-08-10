@@ -37,12 +37,7 @@ class ModelAuth extends Auth2
      * @var String
      */
     protected $_model = 'users';
-    /**
-     * Namespace de sesion donde se cargaran los campos del modelo
-     * 
-     * @var string
-     */
-    protected $_sessionNamespace = 'default';
+    
     /**
      * Campos que se cargan del modelo
      * 

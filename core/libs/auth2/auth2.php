@@ -28,6 +28,13 @@ abstract class Auth2
 {
 
     /**
+     * Namespace de sesion donde se cargaran los campos del modelo
+     * 
+     * @var string
+     */
+    static protected $_sessionNamespace = 'default';
+    
+    /**
      * Mensaje de Error
      *
      * @var String
@@ -252,6 +259,17 @@ abstract class Auth2
     public static function setDefault($adapter)
     {
         self::$_defaultAdapter = $adapter;
+    }
+    
+     /**
+     * Obtiene un valor de la identidad actual
+     * 
+     * @param string $var 
+     * @return string
+     */
+    public static function get($var)
+    {
+		return Session::get($var, self::$_sessionNamespace);
     }
 
 }

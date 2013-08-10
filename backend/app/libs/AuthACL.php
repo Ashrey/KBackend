@@ -61,9 +61,9 @@ class AuthACL {
      */
     public function login($user, $pass) {
         $pass = self::hash($pass);
-        $this->_auth->identify('obj: \KBackend\Model\User', "login: $user", "clave: $pass");
-        $this->_assignAccess();
-       
+        $this->_auth->setOption('\KBackend\Model\User');
+        $this->_auth->identify($user, $pass, 'auth');
+        $this->_assignAccess();  
     }
 
     /**

@@ -20,7 +20,6 @@ class AuthController extends \Controller
      * crearse un array con los nombres de dichas acciones, ejemplo:
      * 
      * <code>
-     * 
      * protected $_protected_actions = array(
      *                          'ultimos_envios',
      *                          'editar',
@@ -70,10 +69,11 @@ class AuthController extends \Controller
      * 
      */ 
     protected function checkAuth(){
-        if (\Auth::is_valid()) {
-            return $this->_tienePermiso();
+        $auth = AuthACL::getAuth();
+        if ($auth->isLogin()) {
+            return $this->_isAllow();
         } elseif (\Input::hasPost('login') && \Input::hasPost('clave')) {
-            $this->_logueoValido(\Input::post('login'), \Input::post('clave'));
+            $this->_valid();
             \Router::redirect();
         } else {
             \View::select(NULL, 'logueo');
@@ -87,10 +87,10 @@ class AuthController extends \Controller
      * 
      * @return boolean devuelve TRUE si tiene acceso a la acción.
      */
-    protected function _tienePermiso()
+    protected function _isAllow()
     {
         \View::template('backend');
-        $acl = new MyAcl();
+        $acl = AuthACL::getAuth();
         if (!$acl->check()) {
             \Flash::error('no posees privilegios para acceder a <b>' . \Router::get('route') . '</b>');
             \View::select(NULL);
@@ -109,15 +109,17 @@ class AuthController extends \Controller
      * @return boolean devuelve TRUE si se pudo loguear y tiene acceso a la acción.
      * 
      */ 
-    protected function _logueoValido($user, $pass, $encriptar = TRUE)
+    protected function _valid()
     {
-        if (MyAuth::autenticar($user, $pass, $encriptar)) {
+        $auth = AuthACL::getAuth();
+        $auth->login(\Input::post('login'), \Input::post('clave'));
+        if ($auth->isLogin()) {
             \Logger::debug('Login correcto');
-            return $this->_tienePermiso();
+            return $this->_isAllow();
         } else {
             \Input::delete();
             \Logger::error('Login errado');
-            \Flash::warning('Datos de Acceso invalidos');
+            \Flash::warning('Datos de acceso  no válidos');
             \View::select(NULL, 'backend/logueo');
             return FALSE;
         }
@@ -132,19 +134,8 @@ class AuthController extends \Controller
      */ 
     public function logout()
     {
-        MyAuth::cerrar_sesion();
+        AuthACL::logout();
         return Router::redirect('/');
-    }
-
-    /**
-     * Metodo que desloguea al usuario cuando esté sobrepasa el limite de 
-     * intentos de acceder a un recurso al que no tiene permisos.
-     * 
-     */ 
-    protected function intentos_pasados()
-    {
-        Flash::warning('Has Sobrepasado el limite de intentos fallidos al tratar acceder a ciertas partes del sistema');
-        return $this->logout();
     }
 
     /**
