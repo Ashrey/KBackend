@@ -10,8 +10,7 @@ namespace KBackend\Libs;
  * @package Db
  * @subpackage ActiveRecord
  */
-// Carga el active record
-\Load::coreLib('kumbia_active_record');
+
 class ARecord extends \KumbiaActiveRecord implements \ArrayAccess {
 
 
