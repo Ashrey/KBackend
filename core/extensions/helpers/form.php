@@ -33,6 +33,8 @@ class Form
      * @var array
      */
     protected static $_radios = array();
+
+    
     /**
      * Utilizado para avisar al programador,si usa Form::file()
      * y no tiene el form mulipart muestra un error
@@ -204,15 +206,15 @@ class Form
      * @param string $content Contenido interno (opcional)
      * @return string
      */
-    public static function input($attrs = NULL, $content = NULL)
+    public static function input($type, $field,$attrs = NULL, $value=NULL)
     {
+       
         if (is_array($attrs)) {
             $attrs = Tag::getAttrs($attrs);
         }
-        if (is_null($content)) {
-            return "<input $attrs/>";
-        }
-        return "<input $attrs>$content</input>";
+         // Obtiene name, id y value (solo para autoload) para el campo y los carga en el scope
+        extract(self::getFieldData($field, $value), EXTR_OVERWRITE);
+        return "<input id=\"$id\" name=\"$name\" type=\"$type\" value=\"$value\" $attrs/>";
     }
 
     /**
@@ -339,14 +341,7 @@ class Form
      */
     public static function text($field, $attrs = NULL, $value = NULL)
     {
-        if (is_array($attrs)) {
-            $attrs = Tag::getAttrs($attrs);
-        }
-
-        // Obtiene name, id y value (solo para autoload) para el campo y los carga en el scope
-        extract(self::getFieldData($field, $value), EXTR_OVERWRITE);
-
-        return "<input id=\"$id\" name=\"$name\" type=\"text\" value=\"$value\" $attrs/>";
+        return self::input('text', $field, $attrs, $value);
     }
 
     /**
@@ -470,14 +465,7 @@ class Form
      */
     public static function hidden($field, $attrs = NULL, $value = NULL)
     {
-        if (is_array($attrs)) {
-            $attrs = Tag::getAttrs($attrs);
-        }
-
-        // Obtiene name, id y value (solo para autoload) para el campo y los carga en el scope
-        extract(self::getFieldData($field, $value), EXTR_OVERWRITE);
-
-        return "<input id=\"$id\" name=\"$name\" type=\"hidden\" value=\"$value\" $attrs/>";
+        return self::input('hidden', $field, $attrs, $value);
     }
 
     /**
@@ -489,14 +477,7 @@ class Form
      */
     public static function pass($field, $attrs = NULL, $value = NULL)
     {
-        if (is_array($attrs)) {
-            $attrs = Tag::getAttrs($attrs);
-        }
-
-        // Obtiene name, id y value (solo para autoload) para el campo y los carga en el scope
-        extract(self::getFieldData($field, $value), EXTR_OVERWRITE);
-
-        return "<input id=\"$id\" name=\"$name\" type=\"password\" value=\"$value\" $attrs/>";
+       return self::input('password',$field, $attrs, $value);
     }
 
     /**
@@ -540,7 +521,7 @@ class Form
 
             $data = $model_asoc->find("columns: $pk,$show", "order: $show asc"); //mejor usar array
         } else {
-            $model_asoc =  Load::model($data[0]);
+            $model_asoc = Load::model($data[0]);
             $pk = $model_asoc->primary_key[0];
 
             // Verifica si existe el parámetro
@@ -582,14 +563,13 @@ class Form
         if (!self::$_multipart) {
             Flash::error('Para poder subir ficheros, debe abrir el form con Form::openMultipart()');
         }
-
+        
         if (is_array($attrs)) {
             $attrs = Tag::getAttrs($attrs);
         }
-
+ 
         // Obtiene name y id, y los carga en el scope
         extract(self::getFieldData($field, false), EXTR_OVERWRITE);
-
         return "<input id=\"$id\" name=\"$name\" type=\"file\" $attrs/>";
     }
 
@@ -614,7 +594,7 @@ class Form
     }
 
     /**
-     * Crea un campo fecha
+     * Crea un campo fecha nativo (HTML5)
      *
      * @param string $field Nombre de campo
      * @param string $class Clase de estilo (opcional)
@@ -622,7 +602,21 @@ class Form
      * @param string $value (opcional)
      * @return string
      */
-    public static function date($field, $class = NULL, $attrs = NULL, $value = NULL)
+    public static function date($field, $attrs = NULL, $value = NULL)
+    {
+        return self::input('date',$field, $attrs, $value);
+    }
+    
+     /**
+     * Crea un campo de texo para fecha (Requiere JS )
+     *
+     * @param string $field Nombre de campo
+     * @param string $class Clase de estilo (opcional)
+     * @param string|array $attrs Atributos de campo (opcional)
+     * @param string $value (opcional)
+     * @return string
+     */
+    public static function datepicker($field, $class = NULL, $attrs = NULL, $value = NULL)
     {
         if (is_array($attrs)) {
             $attrs = Tag::getAttrs($attrs);
@@ -630,8 +624,78 @@ class Form
 
         // Obtiene name, id y value (solo para autoload) para el campo y los carga en el scope
         extract(self::getFieldData($field, $value), EXTR_OVERWRITE);
+		return "<input id=\"$id\" name=\"$name\" class=\"js-datepicker $class\" type=\"text\" value=\"$value\" $attrs/>";
 
-        return "<input id=\"$id\" name=\"$name\" class=\"js-datepicker $class\" type=\"date\" value=\"$value\" $attrs/>";
     }
 
+    /**
+     * Crea un campo tiempo nativo (HTML5)
+     *
+     * @param string $field Nombre de campo
+     * @param string $class Clase de estilo (opcional)
+     * @param string|array $attrs Atributos de campo (opcional)
+     * @param string $value (opcional)
+     * @return string
+     */
+    public static function time($field, $attrs = NULL, $value = NULL)
+    {
+       return self::input('time',$field, $attrs, $value);
+    }
+
+    /**
+     * Crea un campo fecha/tiempo nativo (HTML5)
+     *
+     * @param string $field Nombre de campo
+     * @param string $class Clase de estilo (opcional)
+     * @param string|array $attrs Atributos de campo (opcional)
+     * @param string $value (opcional)
+     * @return string
+     */
+    public static function datetime($field, $attrs = NULL, $value = NULL)
+    {
+        return self::input('datetime',$field, $attrs, $value);
+    }
+
+    /**
+     * Crea un campo numerico nativo (HTML5)
+     *
+     * @param string $field Nombre de campo
+     * @param string $class Clase de estilo (opcional)
+     * @param string|array $attrs Atributos de campo (opcional)
+     * @param string $value (opcional)
+     * @return string
+     */
+    public static function number($field, $attrs = NULL, $value = NULL)
+    {
+        return self::input('number',$field, $attrs, $value);
+    }
+
+
+    /**
+     * Crea un campo url nativo (HTML5)
+     *
+     * @param string $field Nombre de campo
+     * @param string $class Clase de estilo (opcional)
+     * @param string|array $attrs Atributos de campo (opcional)
+     * @param string $value (opcional)
+     * @return string
+     */
+    public static function url($field, $attrs = NULL, $value = NULL)
+    {
+        return self::input('url',$field, $attrs, $value);
+    }
+
+    /**
+     * Crea un campo email nativo (HTML5)
+     *
+     * @param string $field Nombre de campo
+     * @param string $class Clase de estilo (opcional)
+     * @param string|array $attrs Atributos de campo (opcional)
+     * @param string $value (opcional)
+     * @return string
+     */
+    public static function email($field, $attrs = NULL, $value = NULL)
+    {
+        return self::input('email',$field, $attrs, $value);
+    }
 }
