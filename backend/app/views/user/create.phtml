@@ -6,40 +6,40 @@
         <div id="res-form-ajax"><?php View::content() ?></div>
         <?php echo Ajax::form('res-form-ajax', NULL, 'form-horizontal') ?>
         <?php echo Form::hidden('user.id') ?>
-        <div class="control-group">
-            <label class="control-label" for="usuario_login">Nombre de Usuario</label>
-            <div class="controls">
-                <?php echo Form::text('user.login') ?>
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="usuario_login">Nombre de Usuario</label>
+            <div class="col-sm-8">
+                <?php echo Form::text('user.login',  'class="form-control"') ?>
             </div>
         </div>
-        <div class="control-group">
-            <label class="control-label" for="usuario_clave">Contraseña</label>
-            <div class="controls">
-                <?php echo Form::pass('user.password') ?>
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="usuario_clave">Contraseña</label>
+            <div class="col-sm-8">
+                <?php echo Form::pass('user.password',   'class="form-control"') ?>
             </div>
         </div>
-        <div class="control-group">
-            <label class="control-label" for="usuario_clave2">Repita  Contraseña</label>
-            <div class="controls">
-                <?php echo Form::pass('user.clave2') ?>
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="usuario_clave2">Repita  Contraseña</label>
+            <div class="col-sm-8">
+                <?php echo Form::pass('user.clave2',   'class="form-control"') ?>
             </div>
         </div>
-        <div class="control-group">
-            <label class="control-label" for="usuario_email">Correo Electronico</label>
-            <div class="controls">
-                <?php echo Form::text('user.email') ?>
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="usuario_email">Correo Electronico</label>
+            <div class="col-sm-8">
+                <?php echo Form::text('user.email',  'class="form-control"') ?>
             </div>
         </div>
-        <div class="control-group">
-            <label class="control-label" for="usuario_roles_id">Roles del Usuario</label>
-            <div class="controls">
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="usuario_roles_id">Roles del Usuario</label>
+            <div class="col-sm-8">
 				<?php echo Form::dbSelect('user.role_id', 'role', array('\KBackend\Model\Role','find')) ?>
 
             </div>
         </div>
-        <div class="control-group">
-            <label class="control-label" for="user_enable">Activo : </label>
-            <div class="controls">
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="user_enable">Activo : </label>
+            <div class="col-sm-8">
                 <?php echo Form::select('user.enable', array('1' => 'Si', '0' => 'No')) ?>
             </div>
         </div>

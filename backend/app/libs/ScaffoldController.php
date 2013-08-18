@@ -229,9 +229,9 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
      * Asigna acciones básicas para el CRUD 
      */
     protected function useCRUD() {
-        $this->action('ver', \Html::linkAction('view/%id%', '<span class="btn"><i class="icon-eye-open"></i></span>'));
-        $this->action('editar', \Html::linkAction('edit/%id%', '<span class="btn"><i class="icon-edit"></i></span>'));
-        $this->action('borrar', \Html::linkAction('delete/%id%', '<span class="btn"><i class="icon-trash"></i></span>', 'class="js-confirm" data-msg="¿Desea Eliminar?"'));
+        $this->action('ver', \Html::linkAction('view/%id%', '<i class="icon-eye-open"></i>',  'class="btn btn-default"'));
+        $this->action('editar', \Html::linkAction('edit/%id%', '<i class="icon-edit"></i>', 'class="btn btn-default"'));
+        $this->action('borrar', \Html::linkAction('delete/%id%', '<i class="icon-trash"></i>', 'class="js-confirm btn btn-default" data-msg="¿Desea Eliminar?"'));
     }
 
 }

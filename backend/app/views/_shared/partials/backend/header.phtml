@@ -1,20 +1,19 @@
-<div id='cabecera' class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
-            <a class="brand">Área Admnistrativa</a>
-            <div class="nav-collapse">
-                <?php echo Menu::render(1) ?>
-                <ul class="nav pull-right">
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <?php eh(\KBackend\Libs\AuthACL::get('login')) ?>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><?php echo Html::link('index/logout', 'Salir') ?></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
+<div class="navbar">
+	<?php /*.navbar-toggle is used as the toggle for collapsed navbar content */?>
+	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+      <i class="icon-cogs"></i>>
+    </button>
+	
+	<a class="navbar-brand">Administración</a>
+	<div class="collapse navbar-collapse navbar-ex1-collapse">
+		<ul class="nav navbar-nav">
+			<?php echo Menu::render(1) ?>
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php eh(\KBackend\Libs\AuthACL::get('login')) ?><b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><?php echo Html::link('index/logout', 'Salir') ?></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
 </div>

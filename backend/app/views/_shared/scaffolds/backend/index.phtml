@@ -1,4 +1,4 @@
-<div class="page-header">'
+<div class="page-header">
     <h1><?php echo $title ?></h1>
 </div>
 <?php View::content() ?>
@@ -12,8 +12,8 @@
 			<?php foreach ($cols as $key): ?>
 			<th><?php echo Html::linkAction("cond/order/$key", $head->get_alias($key)) ?><i class="icon-sort"></i></th>
 		<?php endforeach ?>
-		<?php if (!empty($action)): $c = count($action); ?>
-			<th colspan="<?php echo $c ?>">Acciones</th>
+		<?php if (!empty($action)):?>
+			<th>Acciones</th>
 		<?php endif; ?>
 	</thead>
 
@@ -23,9 +23,9 @@
 				<td><?php eh(ModelForm::fieldValue($key, $item)) ?></td>
 			<?php endforeach ?>
 
-			<?php foreach ($action as $val): ?>
-				<td><?php echo str_replace(array('%id%'), array($item->id), $val) ?></td>
-			<?php endforeach ?>
+			<td><?php foreach ($action as $val): ?>
+				<?php echo str_replace(array('%id%'), array($item->id), $val) ?>
+			<?php endforeach ?></td>
 		</tr>
 	<?php endforeach ?>
 	</table>

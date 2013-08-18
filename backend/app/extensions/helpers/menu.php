@@ -18,11 +18,9 @@ class Menu {
         $registros = self::load();
         $html = '';
         if ($registros) {
-            $html .= '<ul class="nav">' . PHP_EOL;
             foreach ($registros as $e) {
                 $html .= self::generarItems($e);
             }
-            $html .= '</ul>' . PHP_EOL;
         }
         return $html;
     }
@@ -36,19 +34,19 @@ class Menu {
      */
     protected static function generarItems($objeto_menu) {
         $sub_menu = isset($objeto_menu->sub)?$objeto_menu->sub:null;
-        $class = 'menu_' . str_replace('/', '_', $objeto_menu->name);
-        $class .= h(isset($objeto_menu->clases)?$objeto_menu->clases:null);
+        //$class = 'menu_' . str_replace('/', '_', $objeto_menu->name);
+        $class = h(isset($objeto_menu->clases)?$objeto_menu->clases:null);
         if ($sub_menu) {
-            $html = "<li class='" . h($class) . " dropdown'>" .
+            $html = '<li class="'. h($class) . ' dropdown">' .
                     Html::link('#', h($objeto_menu->name) .
                             ' <b class="caret"></b>',
-                            'class="dropdown-toggle" data-toggle="dropdown"') . PHP_EOL;
+                            'class="dropdown-toggle" data-toggle="dropdown"');
         } else {
-            $html = "<li class='" . h($class) . "'>" .
-                    Html::link($objeto_menu->url, h($objeto_menu->name)) . PHP_EOL;
+            $html = '<li class="' . h($class) . '">' .
+                    Html::link($objeto_menu->url, h($objeto_menu->name));
         }
         if ($sub_menu) {
-            $html .= '<ul class="dropdown-menu">' . PHP_EOL;
+            $html .= '<ul class="dropdown-menu">';
             foreach ($sub_menu as $e) {
                 $html .= self::generarItems($e);
             }

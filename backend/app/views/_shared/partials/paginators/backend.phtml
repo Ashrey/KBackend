@@ -50,46 +50,45 @@ if ($page->current <= $half) {
     $start = $page->current - $half;
 }
 ?>
+<div class="text-center">
+<ul class="pagination">
+	<?php
+	if ($page->prev) {
+		echo '<li class="prev">', Html::link("$url/$page->prev", 'Anterior', 'title="Ir a la pág. anterior"'), '</li>'; // Se coloca el link sin numero de pagina para la pagina 1
+	} else {
+		echo '<li class="prev  disabled"><a title="Ir a la pág. anterior" href="#">Anterior</a></li>';
+	}
+	?>
+	<?php
+	if ($start == 1) { //se coloca el link sin numero de pagina para la pagina 1
+		$start = 2;
+		$show -= 1;
+		echo $page->current == 1 ? "<li class=\"active\"><a href='#'>1</a><li>" : '<li>' . Html::link("$url/", '1') . '</li>';
+	} elseif ($start > 1) {
+		echo '<li>', Html::link("$url/", '1'), '</li>';
+	}
+	if ($start > 2):
+		?>
+		<li><a href="#">...</a></li>
+	<?php endif; ?>
 
-<div class="pagination">
-    <ul>
-        <?php
-        if ($page->prev) {
-            echo '<li class="prev">', Html::link("$url/$page->prev", 'Anterior', 'title="Ir a la pág. anterior"'), '</li>'; // Se coloca el link sin numero de pagina para la pagina 1
-        } else {
-            echo '<li class="prev  disabled"><a title="Ir a la pág. anterior" href="#">Anterior</a></li>';
-        }
-        ?>
-        <?php
-        if ($start == 1) { //se coloca el link sin numero de pagina para la pagina 1
-            $start = 2;
-            $show -= 1;
-            echo $page->current == 1 ? "<li class=\"active\"><a href='#'>1</a><li>" : '<li>' . Html::link("$url/", '1') . '</li>';
-        } elseif ($start > 1) {
-            echo '<li>', Html::link("$url/", '1'), '</li>';
-        }
-        if ($start > 2):
-            ?>
-            <li><a href="#">...</a></li>
-        <?php endif; ?>
+	<?php for ($i = $start; $i <= $page->total && $i < ($start + $show); $i++): ?>
+		<?php echo $i == $page->current ? "<li class=\"active\"><a href='#'>$i</a><li>" : '<li>' . Html::link("$url/$i", $i) . '</li>'; ?>
+	<?php endfor; ?>
 
-        <?php for ($i = $start; $i <= $page->total && $i < ($start + $show); $i++): ?>
-            <?php echo $i == $page->current ? "<li class=\"active\"><a href='#'>$i</a><li>" : '<li>' . Html::link("$url/$i", $i) . '</li>'; ?>
-        <?php endfor; ?>
+	<?php if ($page->total > $i): ?>
+		<li><a href="#">...</a></li>
+		<?php echo '<li>', Html::link("$url/$page->total/", $page->total), '</li>'; ?>
+	<?php elseif ($i == $page->total): ?>
+		<?php echo '<li>', Html::link("$url/$i/", $i), '</li>'; ?>
+	<?php endif; ?>
 
-        <?php if ($page->total > $i): ?>
-            <li><a href="#">...</a></li>
-            <?php echo '<li>', Html::link("$url/$page->total/", $page->total), '</li>'; ?>
-        <?php elseif ($i == $page->total): ?>
-            <?php echo '<li>', Html::link("$url/$i/", $i), '</li>'; ?>
-        <?php endif; ?>
-
-        <?php
-        if ($page->next) {
-            echo '<li class="prev">', Html::link("$url/$page->next/", 'Siguiente', 'title="Ir a la pág. siguiente" class="nextprev"'), '</li>';
-        } else {
-            echo '<li class="prev disabled"><a title="Ir a la pág. siguiente" href="#">Siguiente</a></li>';
-        }
-        ?>
-    </ul>
+	<?php
+	if ($page->next) {
+		echo '<li class="prev">', Html::link("$url/$page->next/", 'Siguiente', 'title="Ir a la pág. siguiente" class="nextprev"'), '</li>';
+	} else {
+		echo '<li class="prev disabled"><a title="Ir a la pág. siguiente" href="#">Siguiente</a></li>';
+	}
+	?>
+</ul>
 </div>
