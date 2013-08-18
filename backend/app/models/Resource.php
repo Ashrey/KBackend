@@ -11,11 +11,7 @@ class Resource extends \KBackend\Libs\ARecord {
 	protected $source = '_resource';
 
     protected function initialize() {
-        //validaciones
-        $this->validates_presence_of('controlador', 'message: Debe escribir un <b>Controlador</b>');
-        $this->validates_presence_of('descripcion', 'message: Debe escribir una <b>Descripción</b>');
-        $this->validates_uniqueness_of('recurso', 'message: Este Recurso <b>ya existe</b> en el sistema');
-    }
+   }
 
     /**
      * Obtiene los recursos que no se han agregado al al bd.
@@ -67,31 +63,4 @@ class Resource extends \KBackend\Libs\ARecord {
         $this->commit();
         return TRUE;
     }
-
-    /**
-     * Obtiene las acciones existentes por cada controlador.
-     * 
-     * @return array 
-     */
-    public function accionesPorControlador() {
-        $res = $this->find("modulo = '$this->modulo' AND controlador = '$this->controlador' AND accion != ''", 'columns: id,accion');
-        return $res;
-    }
-
-    /**
-     * Desactiva a un recurso
-     */
-    function desactivar() {
-        $this->activo = '0';
-        return $this->save();
-    }
-
-    /**
-     * Activa a un recurso
-     */
-    function activar() {
-        $this->activo = '1';
-        return $this->save();
-    }
-
 }
