@@ -71,7 +71,8 @@ class AuthACL {
      * @return boolean
      */
     public function isLogin() {
-        return $this->_auth->isValid();
+		$a = \Auth2::factory('object');
+        return $a->isValid();
     }
 
     
