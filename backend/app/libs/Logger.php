@@ -70,7 +70,7 @@ class Logger {
                     return;
                 if (\Config::get('backend.app.logger') == true) {
                     $auditoria = new \KBackend\Model\Action();
-                    $auditoria->user_id = AuthACL::isLogin()?  AuthACL::get('id') : NULL;
+                    $auditoria->user_id = \KBackend\Libs\AuthACL::isLogin()?  \KBackend\Libs\AuthACL::get('id') : NULL;
                     $auditoria->action = $t;
                     $auditoria->type = $type;
                     $auditoria->extra = $msg;
