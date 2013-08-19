@@ -23,11 +23,14 @@ class User extends \KBackend\Libs\ARecord {
     }
 
     protected function before_save() {
-        if (isset($this->clave2) and $this->clave !== $this->clave2) {
-            Flash::error('Las <b>CLaves</b> no Coinciden...!!!');
-            return 'cancel';
-        } else {
-            $this->clave = \KBackend\Libs\AuthACL::hash($this->clave);
+        if (\Input::hasPost('user')){
+			$data = \Input::post('user');
+			if($data['password'] == $data['clave2']){
+				$this->password = \KBackend\Libs\AuthACL::hash($data['password']);
+			}else{
+				 \Flash::error('Las <b>CLaves</b> no Coinciden...!!!');
+				return 'cancel';
+			}
         }
     }
 
