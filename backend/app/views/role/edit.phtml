@@ -1,0 +1,18 @@
+<div class="page-header">
+    <h1>Editar Rol</h1>
+</div>
+<div class="row">
+    <div class="offset3 span6" >
+        <div id="res-form-ajax"><?php View::content() ?></div>
+        <?php echo Ajax::form('res-form-ajax', NULL, 'form-horizontal') ?>
+        <?php echo Form::hidden('role.id') ?>
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="usuario_login">Nombre del rol</label>
+            <div class="col-sm-8">
+                <?php echo Form::text('role.role',  'class="form-control"') ?>
+            </div>
+        </div>
+        <?php View::partial('backend/submit');?>S
+        <?php echo Form::close() ?>
+    </div>
+</div>
