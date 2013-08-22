@@ -44,7 +44,7 @@ class Flash {
      * @param string $text
      */
     public static function error($text) {
-        return self::show('alert-error error', $text);
+        return self::show('alert-danger', $text);
     }
 
     /**
@@ -53,7 +53,7 @@ class Flash {
      * @param string $text
      */
     public static function warning($text) {
-        return self::show('alert-warning warning', $text);
+        return self::show('alert-warning', $text);
     }
 
     /**
@@ -62,7 +62,7 @@ class Flash {
      * @param string $text
      */
     public static function info($text) {
-        return self::show('alert-info info', $text);
+        return self::show('alert-info', $text);
     }
 
     /**
