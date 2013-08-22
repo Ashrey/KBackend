@@ -12,23 +12,22 @@ class User extends \KBackend\Libs\ARecord {
     protected $source = '_user';
 
     protected function initialize() {
-        $min_clave = \Config::get('backend.app.minimo_clave');
         $this->validates_presence_of('login', 'message: Debe escribir un <b>Login</b> para el Usuario');
-        $this->validates_presence_of('clave', 'message: Debe escribir una <b>Contraseña</b>');
+        $this->validates_presence_of('password', 'message: Debe escribir una <b>Contraseña</b>');
         $this->validates_presence_of('clave2', 'message: Debe volver a escribir la <b>Contraseña</b>');
         $this->validates_presence_of('email', 'message: Debe escribir un <b>correo electronico</b>');
         $this->validates_email_in('email', 'message: Debe escribir un <b>correo electronico</b> válido');
-        $this->validates_uniqueness_of('login', 'message: El <b>Login</b> ya está siendo utilizado');
-        $this->validates_uniqueness_of('email', 'message: El <b>Email</b> ya está siendo utilizado');
+        $this->validates_uniqueness_of('login', 'message: El <b>Usuario</b> ya está registrado');
+        $this->validates_uniqueness_of('email', 'message: El <b>Email</b> ya está registrado');
     }
 
     protected function before_save() {
         if (\Input::hasPost('user')){
 			$data = \Input::post('user');
-			if($data['password'] == $data['clave2']){
+			if($data['password'] === $data['clave2']){
 				$this->password = \KBackend\Libs\AuthACL::hash($data['password']);
 			}else{
-				 \Flash::error('Las <b>CLaves</b> no Coinciden...!!!');
+				 \Flash::error('Las <strong>Claves</strong> no Coinciden...!!!');
 				return 'cancel';
 			}
         }
@@ -71,45 +70,38 @@ class User extends \KBackend\Libs\ARecord {
      * Realiza el proceso de registro de un usuario desde el frontend.
      * @return boolean true si la operación fué exitosa.
      */
-    public function registrar() {
-        $clave = $this->clave;
-        //por defecto las cuentas están desactivadas
-        //Revisar esto en la base de datos
-        $this->activo = '0';
+    public function register() {
+        $clave = $this->password;
         $this->begin(); //iniciamos una transaccion
-        $this->roles_id = self::ROL_DEFECTO;
+        $this->enable = '0';//por defecto las cuentas están desactivadas
+        $this->role_id = '3';//el minimo de permisos
         if ($this->save()) {
             $hash = $this->hash();
-            $correo = Load::model('admin/correos');
+            $correo = new Email();
             if ($correo->enviarRegistro($this, $clave, $hash)) {
-                $this->commit();
-                return TRUE;
+                $this->commit();   
             } else {
-                Flash::error($correo->getError());
-                $this->rollback();
-                return FALSE;
+				$this->rollback();
+				throw new \Exception($correo->getError());
             }
         } else {
             $this->rollback();
-            return FALSE;
+            throw new \Exception('Existen datos que no son válidos');
         }
+        return true;
     }
 
     /**
-     * Si el estado es negativo es que ha sido bloqueado y no se puede 
-     * activar vía correo
-     *
-     * @param int $id_usuario
+     * Activa un usaurio via correo
+     * @param int $id_
      * @param string $hash
      * @return boolean
      */
-    public function activarCuenta($id_usuario, $hash) {
-        if ($this->find_first((int) $id_usuario)) { //verificamos la existencia del user
-            if ($this->hash() === $hash && $this->activo > -1) {
-                $this->activo = 1;
-                if ($this->save()) {
-                    return TRUE;
-                }
+    public function active($id, $hash) {
+        if ($this->find_first((int) $id)) { //verificamos la existencia del user
+            if ($this->hash() === $hash && ($this->enable === '0' or  $this->enable === '1')) {
+                $this->enable = 1;
+                return $this->save();
             }
         }
         return FALSE;
@@ -121,22 +113,6 @@ class User extends \KBackend\Libs\ARecord {
      */
     function hash() {
         return sha1($this->login . $this->id . $this->clave);
-    }
-
-    /**
-     * Desactiva a un usuario
-     */
-    function desactivar() {
-        $this->active = '0';
-        return $this->save();
-    }
-
-    /**
-     * Activa a un usuario
-     */
-    function activar() {
-        $this->active = '1';
-        return $this->save();
     }
 
     function auth($arg) {
