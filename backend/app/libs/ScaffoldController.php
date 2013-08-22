@@ -195,13 +195,17 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
      * Borra un Registro
      */
     public function delete($id) {
-        if (call_user_func(array($this->_model, '_delete'), (int) $id)) {
-            \Flash::success('Borrado correctamente');
-        } else {
-            \Flash::error('Falló Operación');
+        try {
+			if (call_user_func(array($this->_model, '_delete'), (int) $id)) {
+				\Flash::success('Borrado correctamente');
+			} else {
+				\Flash::error('Falló Operación');
+			}
+			//enrutando al index
+			\Router::redirect();
+		} catch (Exception $e) {
+            Flash::error($e);
         }
-        //enrutando al index
-        \Router::redirect();
     }
 
     /**
