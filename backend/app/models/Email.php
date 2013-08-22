@@ -26,6 +26,7 @@ class Email {
         $this->_mail->Password = \Config::get('backend.email.password');//escribir la clave
         $this->_mail->From = \Config::get('backend.email.user'); //escribir el remitente
         $this->_mail->FromName = \Config::get('backend.email.from');
+        $this->_mail->CharSet = 'UTF-8';
     }
 
     /**
@@ -34,31 +35,60 @@ class Email {
      * @param  Usuarios $usuario 
      * @return boolean        
      */
-    public function enviarRegistro(User $usuario, $clave, $hash) {
-        ob_start();
-        \View::partial('email/register', NULL, 
-             array(
-                'user' => $usuario,
-                'clave'=>$clave,
-                'hash'=> $hash
-             )
-         );
-        $mensaje = ob_get_clean(); 
-        $this->_mail->Subject = "Tu cuenta ha sido creada con exito - " . \Config::get('backend.app.nombre');
-        $this->_mail->AltBody = strip_tags($mensaje);
-        $this->_mail->MsgHTML($mensaje);
-        $this->_mail->IsHTML(TRUE);
-        $this->_mail->AddAddress($usuario->email, $usuario->nombres);
-        return $this->_enviar();
+    public function enviarRegistro(User $u, $clave, $hash) {
+        return $this->create('Tu cuenta ha sido creada con exito', $u->email, $u->login,
+			'register', NULL, array('user' => $u, 'clave'=>$clave, 'hash'=> $hash));
     }
+    
+     /**
+     * Envia un correo para recuperar la contraseña
+     * @param  Usuarios $usuario 
+     * @param  String $hash
+     * @return boolean        
+     */
+    public function sendPass(User $u, $hash) {
+		return $this->create('Pasos para recuperar tu contraseña', 
+			$u->email, $u->login, 'forget',  array('user' => $u, 'hash'=> $hash)) ;
+    }
+    
+     /**
+     * Envia un correo con una nueva contraseña
+     * @param  Usuarios $usuario 
+     * @param  String $hash
+     * @return boolean        
+     */
+    public function sendNewPass(User $u, $pass) {
+		return $this->create('Nueva contraseña contraseña', 
+			$u->email, $u->login, 'change',  array('user' => $u, 'pass'=> $pass)) ;
+    }
+   
+    /**
+	 * Create a new mail
+	 */
+	protected function create($subject, $to, $toName, $tpl, $var){
+		ob_start();
+        \View::partial("email/$tpl", NULL, $var);
+        $msg =  ob_get_clean();
+        $this->_mail->Subject = "$subject - " . \Config::get('backend.app.nombre');
+        $this->_mail->AltBody = strip_tags($msg);
+        $this->_mail->MsgHTML($msg);
+        $this->_mail->IsHTML(TRUE);
+        $this->_mail->AddAddress($to, $toName);
+        return $this->_enviar();
+	
+	}
 
+	/**
+	 * Send mail
+	 */
     protected function _enviar(){
         ob_start();
         $res = $this->_mail->Send();
         ob_clean();
         $this->_error = $this->_mail->ErrorInfo;
         return $res;
-    }
+	}
+	
     
     /**
      *Retorna el ultimo error  
