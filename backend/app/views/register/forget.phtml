@@ -1,0 +1,15 @@
+<div class="page-header">
+    <h1>Recuperar contraseña</h1>
+</div>
+<?php View::content(); ?>
+<?php if(empty($hidden)):?>
+	<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+	<div class="form-group">
+		<label for="forget" class="col-sm-4 control-label">Nombre de Usuario o correo</label>
+		<div class="col-sm-8">
+			<?php echo Form::text('forget', 'class="form-control"') ?>
+		</div>
+	</div>
+	<?php View::partial('backend/submit') ?>
+<?php endif;?>
+<?php echo Form::close() ?>

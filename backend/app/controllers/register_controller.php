@@ -7,12 +7,17 @@
  * @author KumbiaPHP Development Team
  */
 class RegisterController extends \AppController{
+	
 	public function before_filter(){
+		/*Inactive by config*/
 		if (!Config::get('backend.app.register')){
 			return View::notFound();
 		}
 	}
 	
+	/**
+	 * Register new user
+	 */
 	public function index() {
 		try{
 			if (Input::hasPost('user')) {
@@ -25,6 +30,9 @@ class RegisterController extends \AppController{
 		}
 	}
 
+	/**
+	 * Active user by email
+	 */
     public function active($id, $hash) {
         $usuario = new \KBackend\Model\User();
         if ($usuario->active($id, $hash)) {
@@ -33,5 +41,40 @@ class RegisterController extends \AppController{
             View::response('error');
         }
     }
-
+    
+    /**
+     * Hace una petición para cambiar la contraseña
+     */
+    public function forget(){
+		try{
+			if (Input::hasPost('forget')) {
+				$by = Input::post('forget');
+				$user = new \KBackend\Model\User();
+				$u = $user->find_first("email = '$by' OR login='$by'");
+				if(!$u)
+					throw new \Exception('Usuario o email no válido');
+				$u->forget();
+				Flash::valid("Los pasos para recuperar su contraseña han sido enviados a su correo");
+				$this->hidden = true;
+			}
+		}catch(Exception $e){
+			Flash::error($e->getMessage());
+		}
+	}
+	
+	/**
+	 * manda la nueva contraseña luego de validar el hash
+	 */
+	public function change($id=null, $hash=null){
+		try{
+			if($id && $hash){
+				$user = new \KBackend\Model\User();
+				$user->newpass($id, $hash);
+				Flash::valid("La nueva contraseña ha sido enviados a su correo");
+			}
+		}catch(Exception $e){
+			Flash::error($e->getMessage());
+		}
+		if($id && $hash)Redirect::to('register/change');
+	}
 }
