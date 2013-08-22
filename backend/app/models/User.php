@@ -90,6 +90,57 @@ class User extends \KBackend\Libs\ARecord {
         }
         return true;
     }
+    
+    /**
+     * Envia un link de recuperación
+     */
+    public function forget(){
+        $this->begin(); //iniciamos una transaccion
+        $this->created_at = date("Y-m-d G:i:s");
+        if ($this->save()) {
+            $hash = $this->hash();
+            $correo = new Email();
+            if ($correo->sendPass($this, $hash)) {
+                $this->commit();   
+            } else {
+				$this->rollback();
+				throw new \Exception($correo->getError());
+            }
+        } else {
+            $this->rollback();
+            throw new \Exception('Existen datos que no son válidos');
+        }
+        return true;
+	}
+	
+	 /**
+     * Permite generar una contraseña nueva al usuario y enviarla a su correo 
+     */
+    public function newpass($id, $hash){
+		if ($this->find_first((int) $id)) { //verificamos la existencia del user
+			if(!($this->hash() === $hash)){
+				throw new \Exception('Hash de validación no válido');
+				return false;
+			}
+			$this->begin(); //iniciamos una transaccion
+			$this->created_at = date("Y-m-d G:i:s");
+			$pass = substr( str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$@&'), 0, 8);
+			$this->password =  \KBackend\Libs\AuthACL::hash($pass);
+			if ($this->save()) {
+				$correo = new Email();
+				if ($correo->sendNewPass($this, $pass)) {
+					$this->commit();   
+				} else {
+					$this->rollback();
+					throw new \Exception($correo->getError());
+				}
+			} else {
+				$this->rollback();
+				throw new \Exception('Existen datos que no son válidos');
+			}
+		}
+        return true;
+    }
 
     /**
      * Activa un usaurio via correo
@@ -112,7 +163,7 @@ class User extends \KBackend\Libs\ARecord {
      * @return String
      */
     function hash() {
-        return sha1($this->login . $this->id . $this->clave);
+        return sha1($this->login . $this->id . $this->password. $this->created_at);
     }
 
     function auth($arg) {
