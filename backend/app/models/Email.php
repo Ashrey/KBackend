@@ -37,7 +37,7 @@ class Email {
      */
     public function enviarRegistro(User $u, $clave, $hash) {
         return $this->create('Tu cuenta ha sido creada con exito', $u->email, $u->login,
-			'register', NULL, array('user' => $u, 'clave'=>$clave, 'hash'=> $hash));
+			'register', array('user' => $u, 'clave'=>$clave, 'hash'=> $hash));
     }
     
      /**
