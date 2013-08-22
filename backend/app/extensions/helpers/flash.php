@@ -71,7 +71,7 @@ class Flash {
      * @param string $text
      */
     public static function valid($text) {
-        return self::show('alert-valid alert-success valid', $text);
+        return self::show('alert-success', $text);
     }
 
     /**
@@ -93,7 +93,7 @@ class Flash {
      * @deprecated  ahora Flash::valid()
      */
     public static function success($text) {
-        return self::show('alert-valid alert-success valid', $text);
+        return self::show('alert-success', $text);
     }
 
 }
