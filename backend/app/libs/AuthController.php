@@ -74,7 +74,7 @@ class AuthController extends \Controller
             return $this->_isAllow();
         } elseif (\Input::hasPost('login') && \Input::hasPost('clave')) {
             $this->_valid();
-            \Router::redirect();
+            \Redirect::toAction(\Router::get('action'));
         } else {
             \View::select(NULL, 'logueo');
             return FALSE;
