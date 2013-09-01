@@ -13,6 +13,7 @@ class User extends \KBackend\Libs\ARecord {
 
     protected function initialize() {
         $this->validates_presence_of('login', 'message: Debe escribir un <b>Login</b> para el Usuario');
+        $this->validates_format_of('login', '/^[a-zA-z0-9]+$/','message: Su login solo puede contener número y/o letras');
         $this->validates_presence_of('password', 'message: Debe escribir una <b>Contraseña</b>');
         $this->validates_presence_of('clave2', 'message: Debe volver a escribir la <b>Contraseña</b>');
         $this->validates_presence_of('email', 'message: Debe escribir un <b>correo electronico</b>');
@@ -27,7 +28,7 @@ class User extends \KBackend\Libs\ARecord {
 			if($data['password'] === $data['clave2']){
 				$this->password = \KBackend\Libs\AuthACL::hash($data['password']);
 			}else{
-				 \Flash::error('Las <strong>Claves</strong> no Coinciden...!!!');
+				 \Flash::error('Las <strong>Claves</strong> no coinciden');
 				return 'cancel';
 			}
         }
@@ -40,10 +41,9 @@ class User extends \KBackend\Libs\ARecord {
      * @return array          resultado de la consulta
      */
     public function paginar($cond) {
-        $arg = array_merge($cond, array('join: JOIN _role r ON r.id = role_id',
-            'columns: _user.id, _user.login, _user.email, r.role rol'
-        ));
-        return call_user_func_array(array($this, 'paginate'), $arg);
+        $cond['join'] =  ' JOIN _role r ON r.id = role_id';
+        $cond['columns'] = ' _user.id, _user.login, _user.email, r.role rol';
+        return $this->paginate($cond);
     }
 
     public function numAcciones($pagina = 1) {
