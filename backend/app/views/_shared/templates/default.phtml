@@ -25,14 +25,9 @@
 			</div>
 		</div>
         <div class="container">
-            <div id="contenido" class="content">
-                <?php View::content() ?>
-            </div>
-            <?php View::partial('backend/pie') ?>
+			<?php View::content() ?>
         </div>
-
-        <?php
-        echo Tag::js('zepto.kumbiaphp');
-        ?>
+        <?php View::partial('backend/pie');?>
+        <?php echo Tag::js('zepto.kumbiaphp');?>
     </body>
 </html>
