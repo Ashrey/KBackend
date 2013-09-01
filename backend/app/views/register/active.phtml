@@ -1,5 +1,27 @@
 <div class="page-header">
-    <h1>Activación de la Cuenta</h1>
+    <h1>Activación de la Cuenta/login</h1>
 </div>
 <?php View::content(); ?>
-<div class="alert alert-success">Felicidades <strong><?php eh($user->login) ?></strong> tu cuenta ha sido activada con exito</div>
+<div class="alert alert-success">¡Felicidades! tu cuenta ha sido activada con éxito. Puedes
+usar el formulario de abajo para iniciar sesión</div>
+
+<div class="col-md-4 col-md-offset-4">
+	<?php echo Form::open(Config::get('backend.app.login'), 'post', 'class="well"') ?>
+	<h2 class="form-signin-heading">Iniciar Sesión</h2>
+	<div class="form-group">
+		<label for="login"><i class="icon-user"></i></label>
+		<?php echo Form::text('login', 'placeholder="Usuario" class="form-control"') ?>
+	</div>
+	
+	<div class="form-group">
+	<label class="control-label" for="clave"><i class="icon-key"></i> </label>
+		<?php echo Form::pass('clave', 'placeholder="Contraseña" class="form-control"') ?>
+	 </div>
+	<div class="btn-group">
+		<button class="btn-lg btn btn-primary" type="submit"><i class="icon-signin"></i> Ingresar</button>
+		<?php if (Config::get('backend.app.registro')): ?>
+			<?php echo Html::link('registro', 'Registro <i class=" icon-folder-open"></i>', 'class="btn btn-info"') ?>
+		<?php endif; ?>
+	</div>
+	<?php echo Form::close() ?>
+</div>

@@ -14,6 +14,10 @@ class User extends \KBackend\Libs\ARecord {
     protected function initialize() {
         $this->validates_presence_of('login', 'message: Debe escribir un <b>Login</b> para el Usuario');
         $this->validates_format_of('login', '/^[a-zA-z0-9]+$/','message: Su login solo puede contener número y/o letras');
+        $this->validates_length_of('login', 20, 4,
+			'too_long: El <strong>login</strong> debe tener maximo 20 caracteres', 
+			'too_short: El <strong>login</strong> debe tener mínimo 4 caracteres'
+        );
         $this->validates_presence_of('password', 'message: Debe escribir una <b>Contraseña</b>');
         $this->validates_presence_of('clave2', 'message: Debe volver a escribir la <b>Contraseña</b>');
         $this->validates_presence_of('email', 'message: Debe escribir un <b>correo electronico</b>');

@@ -29,6 +29,7 @@ class RegisterController extends \AppController{
 				$user = new \KBackend\Model\User(Input::post('user'));
 				$user->register();
 				Flash::valid("Usuario Registrado, revise su correo para continuar");
+				$this->hidden = true;
 			}
 			Session::set('captcha', $captcha->getAswer());
 		}catch(Exception $e){
@@ -44,13 +45,15 @@ class RegisterController extends \AppController{
 	/**
 	 * Active user by email
 	 */
-    public function active($id, $hash) {
-        $usuario = new \KBackend\Model\User();
-        if ($usuario->active($id, $hash)) {
-            $this->user = $usuario;
-        } else {
-            View::response('error');
-        }
+    public function active($id=null, $hash=null) {
+		$usuario = new \KBackend\Model\User();
+		if(!is_null($id) ||  !is_null($hash)){
+			if ($usuario->active($id, $hash)) {
+				Redirect::toAction('active');
+			} else {
+				View::response('error');
+			}			
+		}
     }
     
     /**
