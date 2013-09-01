@@ -71,6 +71,12 @@ class User extends \KBackend\Libs\ARecord {
      * @return boolean true si la operación fué exitosa.
      */
     public function register() {
+		$data = \Input::post('user');
+		if(!($data['captcha'] === \Session::get('captcha'))){
+			\Flash::info($data['captcha']);
+			var_dump(\Session::get('captcha'));
+			throw new \Exception('La letra introducida no es válida');
+		}
         $clave = $this->password;
         $this->begin(); //iniciamos una transaccion
         $this->enable = '0';//por defecto las cuentas están desactivadas

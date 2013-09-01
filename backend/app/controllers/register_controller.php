@@ -19,15 +19,26 @@ class RegisterController extends \AppController{
 	 * Register new user
 	 */
 	public function index() {
+		
 		try{
+			$str = array('primera', 'segunda', 'tercera', 'cuarta', 'última');
+			$captcha = new  \KBackend\Libs\Captcha();
+			$this->captcha = $str[$captcha->getKey()];
+			$this->text = $captcha->getCaptcha();	
 			if (Input::hasPost('user')) {
 				$user = new \KBackend\Model\User(Input::post('user'));
 				$user->register();
 				Flash::valid("Usuario Registrado, revise su correo para continuar");
 			}
+			Session::set('captcha', $captcha->getAswer());
 		}catch(Exception $e){
+			/*On error erase value*/
+			unset($_POST['user']['captcha']);
+			unset($_POST['user']['clave']);
 			Flash::error($e->getMessage());
 		}
+		Session::set('captcha', $captcha->getAswer());
+
 	}
 
 	/**

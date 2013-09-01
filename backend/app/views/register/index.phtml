@@ -27,5 +27,13 @@
         <?php echo Form::text('user.email', 'class="form-control"') ?>
     </div>
 </div>
+<div class="form-group">
+    <label for="user_email" class="col-sm-4 control-label">Escriba la <em><?php echo $captcha?></em> letra del siguiente texto: <em><?php echo $text?></em></label>
+    <div class="col-sm-8">
+        <?php echo Form::text('user.captcha', 'class="form-control" maxlength="1" pattern="[a-zA-Z]{1}" required') ?>
+    </div>
+</div>
+
+
 <?php View::partial('backend/submit') ?>
 <?php echo Form::close() ?>
