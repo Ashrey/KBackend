@@ -49,5 +49,11 @@ class ARecord extends \KumbiaActiveRecord implements \ArrayAccess {
         }
         return $this->alias;
 	}
+	
+	public function paginate($arg){
+        $arg = is_array($arg)? $arg : func_get_args();
+        array_unshift($arg, $this);
+        return  \KBackend\Libs\Paginate::paginate($arg);
+    }
 
 }

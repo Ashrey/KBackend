@@ -1,3 +1,4 @@
+<?php $filter = \KBackend\Libs\SQLFilter::get();?>
 <div class="page-header">
     <h1><?php echo $title ?></h1>
 </div>
@@ -10,7 +11,8 @@
 		<?php $head = current($result->items); ?>
 		<thead>
 			<?php foreach ($cols as $key): ?>
-			<th><?php echo Html::linkAction("cond/order/$key", $head->get_alias($key)) ?><i class="icon-sort"></i></th>
+			<?php $href = $filter->getURL(array('order' => $key));?>
+			<th><?php echo Html::linkAction($href, $head->get_alias($key)) ?><i class="icon-sort"></i></th>
 		<?php endforeach ?>
 		<?php if (!empty($action)):?>
 			<th>Acciones</th>

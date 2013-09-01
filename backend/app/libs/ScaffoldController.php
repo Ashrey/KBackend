@@ -1,5 +1,4 @@
 <?php
-
 namespace KBackend\Libs;
 
 /**
@@ -98,28 +97,18 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
         $this->title = empty($this->_title) ? ucwords($this->_model) : $this->_title;
         $this->use_filter = $this->_use_filter;
     }
-
-    public function cond($cmd = null, $value = null) {
-        $filter = SQLFilter::getFilter($this->_model);
-        if (is_null($cmd)) {
-            $filter->request();
-        } elseif ($cmd == 'order') {
-            $filter->setOrder($value);
-        }
-        \Router::redirect();
-    }
-
-    public function index($page = 1) {
+    
+    public function index() {
         try {
             $_model = new $this->_model();
             /*captura los filtros*/
-            $filter = SQLFilter::getFilter($this->_model);
-            $filter->pagination($page, \Config::get('backend.app.per_page'));
+            $filter = SQLFilter::get();
+            $filter->per_page = 1;// \Config::get('backend.app.per_page'));
             /*llama a la funcion de resultados*/
             $args =  $filter->getArray();
             $this->result = method_exists($_model, $this->_index) ?
                     call_user_func(array($_model, $this->_index), $args) :
-                    call_user_func_array(array($_model, 'paginate'), $args);
+                    call_user_func(array($_model, 'paginate'), $args);
             /* asigna columnas a mostrar */
             $col = current($this->result->items);
             $this->cols = $col ? array_keys(get_object_vars($col)) : array();
@@ -235,7 +224,7 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
     protected function useCRUD() {
         $this->action('ver', \Html::linkAction('view/%id%', '<i class="icon-eye-open"></i>',  'class="btn btn-default"'));
         $this->action('editar', \Html::linkAction('edit/%id%', '<i class="icon-edit"></i>', 'class="btn btn-default"'));
-        $this->action('borrar', \Html::linkAction('delete/%id%', '<i class="icon-trash"></i>', 'class="js-confirm btn btn-default" data-msg="¿Desea Eliminar?"'));
+        $this->action('borrar', \Html::linkAction('delete/%id%', '<i class="icon-trash"></i>', 'class="js-confirm btn btn-danger" data-msg="¿Desea Eliminar?"'));
     }
 
 }
