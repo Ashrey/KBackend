@@ -1,7 +1,5 @@
 <?php
 namespace KBackend\Model;
-require APP_PATH.'libs/phpmailer/class.phpmailer.php';
-require APP_PATH.'libs/phpmailer/class.smtp.php';
 
 /**
  * KBackend
@@ -16,7 +14,7 @@ class Email {
     protected $_error = 'error';
 
     public function __construct() {
-        $this->_mail = new \PHPMailer();
+        $this->_mail = new \KBackend\Libs\PHPMailer();
         $this->_mail->IsSMTP();
         $this->_mail->SMTPAuth = TRUE;
         $this->_mail->SMTPSecure = \Config::get('backend.email.security');
