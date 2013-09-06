@@ -19,7 +19,7 @@ class SQLFilter {
 	/**
 	 * Singleton
 	 */
-	function get(){
+	static public function get(){
 		static $obj;
 		return is_object($obj) ? $obj:new self();
 	}

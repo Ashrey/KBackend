@@ -41,7 +41,7 @@ class ARecord extends \KumbiaActiveRecord implements \ArrayAccess {
 		return call_user_func_array(array($obj, $name), $args);
     }
     
-    public function get_alias($key){
+    public function get_alias($key=null){
 		 if ($key && array_key_exists($key, $this->alias)) {
             return $this->alias[$key];
         } else {
@@ -50,7 +50,7 @@ class ARecord extends \KumbiaActiveRecord implements \ArrayAccess {
         return $this->alias;
 	}
 	
-	public function paginate($arg){
+	public function paginate($arg=null){
         $arg = is_array($arg)? $arg : func_get_args();
         array_unshift($arg, $this);
         return  \KBackend\Libs\Paginate::paginate($arg);

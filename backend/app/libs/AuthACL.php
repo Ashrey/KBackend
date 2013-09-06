@@ -47,7 +47,7 @@ class AuthACL {
     /**
      * Devuelve un objeto de Autenticación y Permisos
      */
-    public function getAuth() {
+    static public function getAuth() {
         self::$_obj = self::$_obj ? self::$_obj:
                 new self();
         return self::$_obj;
