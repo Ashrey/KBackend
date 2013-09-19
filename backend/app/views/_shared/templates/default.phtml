@@ -5,20 +5,20 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Inicio - <?php echo Config::get('backend.app.nombre') ?></title>
         <?php
-        Tag::css('bootstrap.min');
+        Tag::css('style');
         echo Html::includeCss();
         ?>
     </head>
     <body>
-        <div id='cabecera' class="navbar">
+        <div class="navbar">
 			<div class="container">
 				<?php echo Html::link('', Config::get('backend.app.nombre'), 'class="navbar-brand"') ?>
-				<?php echo Form::open("user", 'post', 'class="navbar-form navbar-right"');?>
+				<?php echo Form::open("user", 'post', 'class="inline"');?>
 					<div class="form-group">
-					  <input type="text" placeholder="usuario" class="form-control" name="login">
+					  <input type="text" placeholder="usuario" class="control" name="login">
 					</div>
 					<div class="form-group">
-					  <input type="password" placeholder="Password" class="form-control" name="clave">
+					  <input type="password" placeholder="Password" class="control" name="clave">
 					</div>
 					<button type="submit" class="btn btn-default">Entrar</button>
 				</form>
