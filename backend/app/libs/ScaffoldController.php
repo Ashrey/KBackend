@@ -1,6 +1,5 @@
 <?php
 namespace KBackend\Libs;
-
 /**
  * KBackend
  * PHP version 5
@@ -21,12 +20,6 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
      * @var String
      */
     protected $_model;
-
-    /**
-     * Nombre del paginador a usar
-     * @var String
-     */
-    protected $_paginator = 'backend';
 
     /**
      * Establece si se usan o no filtros
@@ -103,7 +96,7 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
             $_model = new $this->_model();
             /*captura los filtros*/
             $filter = SQLFilter::get();
-            $filter->per_page = 1;// \Config::get('backend.app.per_page'));
+            $filter->per_page =  \Config::get('backend.app.per_page');
             /*llama a la funcion de resultados*/
             $args =  $filter->getArray();
             $this->result = method_exists($_model, $this->_index) ?
@@ -116,8 +109,6 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
             $this->action = $this->_action;
             /* Mostrar la barra de acciones */
             $this->show_bar = $this->_show_bar;
-            /* Envia el paginador */
-            $this->paginator = $this->_paginator;
         } catch (KumbiaException $e) {
             \View::excepcion($e);
         }
@@ -146,7 +137,7 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
                 }
             }
             // Solo es necesario para el autoForm
-            $this->{$this->_model} = new $this->_model();
+            $this->{$this->model} = new $this->_model();
         } catch (KumbiaException $e) {
             Flash::error($e);
         }
@@ -161,7 +152,8 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
          */
         if (\Input::hasPost($this->model)) {
             $data = \Input::post($this->model);
-            $obj = call_user_func(array($this->_model, '_find_first'), $id);
+            $m = new $this->_model();
+            $obj = $m->find_first($id);
             if (is_object($obj)) {
                 if (!$obj->update($data)) {
                     //se hacen persistente los datos en el formulario
@@ -177,7 +169,8 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
             }
         }
         //Aplicando la autocarga de objeto, para comenzar la edición
-        $this->{$this->model} = (new $this->_model())->find((int) $id);
+        $obj = new $this->_model();
+        $this->{$this->model} = $obj->find((int) $id);
     }
 
     /**
@@ -222,8 +215,8 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
      * Asigna acciones básicas para el CRUD 
      */
     protected function useCRUD() {
-        $this->action('ver', \Html::linkAction('view/%id%', '<i class="icon-eye-open"></i>',  'class="btn btn-default"'));
-        $this->action('editar', \Html::linkAction('edit/%id%', '<i class="icon-edit"></i>', 'class="btn btn-default"'));
+        $this->action('ver', \Html::linkAction('view/%id%', '<i class="icon-eye-open"></i>',  'class="btn btn-info"'));
+        $this->action('editar', \Html::linkAction('edit/%id%', '<i class="icon-edit"></i>', 'class="btn btn-warning"'));
         $this->action('borrar', \Html::linkAction('delete/%id%', '<i class="icon-trash"></i>', 'class="js-confirm btn btn-danger" data-msg="¿Desea Eliminar?"'));
     }
 
