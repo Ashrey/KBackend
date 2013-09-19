@@ -1,14 +1,12 @@
-<div class="page-header">
+<header>
     <h1>
         Auditorias del Sistema 
         <small>Usuario: <?php eh(strtoupper($usuario->login)) ?></small>
     </h1>
-</div>   
+</header>   
     <?php View::content() ?>
-<table class="table table-bordered table-condensed table-hover">
-
+<table class="t bordered condensed hover">
     <thead>
-		
 		<tr>
 			<th>Fecha</th>
 			<th>Tipo</th>
@@ -26,5 +24,5 @@
     </tr>
 <?php endforeach ?>
 </table>
-<?php View::partial("paginators/simple", false, array('page' => $result, 'url' =>$url));?>
+<?php View::partial("paginators/backend", false, array('page' => $result, 'url' =>$url));?>
 

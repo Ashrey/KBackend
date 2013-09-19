@@ -1,28 +1,29 @@
-<div class="page-header">
+<header>
     <h1><?php eh($title) ?></h1>
-</div>
-<div class="conteiner">
+</header>
+<div class="container">
+	<div class="col-8 offset-2">
         <div id="res-form-ajax"><?php View::content() ?></div>
-        <?php echo Ajax::form('res-form-ajax', NULL, 'form-horizontal') ?>
+        <?php echo Ajax::form('res-form-ajax', NULL, 'horizontal') ?>
         <?php echo Form::hidden('resource.id') ?>
         <div class="form-group">
-                <label for="resource_modulo" class="col-sm-4 control-label">Módulo : </label>
-                <div class="col-sm-8"><?php echo Form::text('resource.module', 'class="form-control"') ?></div>
+                <label for="resource_modulo" class="col-4 control-label">Módulo : </label>
+                <div class="col-8"><?php echo Form::text('resource.module', 'class="control"') ?></div>
         </div>
         <div class="form-group">
-			<label for="resource_controlador" class="col-sm-4 control-label">Controlador :</label>
-            <div class="col-sm-8"><?php echo Form::text('resource.controller', 'class="form-control"') ?></div>
+			<label for="resource_controlador" class="col-4 control-label">Controlador :</label>
+            <div class="col-8"><?php echo Form::text('resource.controller', 'class="control"') ?></div>
         </div>
         
          <div class="form-group">
-			<label for="resource_accion" class="col-sm-4 control-label">Accion  : </label>
-            <div class="col-sm-8"><?php echo Form::text('resource.action', 'class="form-control"') ?></div>
+			<label for="resource_accion" class="col-4 control-label">Accion  : </label>
+            <div class="col-8"><?php echo Form::text('resource.action', 'class="control"') ?></div>
         </div>
-
          <div class="form-group">
-			<label for="resource_enable" class="col-sm-4 control-label">Activo: </label>
-            <div class="col-sm-8"><?php echo Form::select('resource.enable', array('1' => 'Si', '0' => 'No'), 'class="form-control"') ?></div>
+			<label for="resource_enable" class="col-4 control-label">Activo: </label>
+            <div class="col-8"><?php echo Form::select('resource.enable', array('1' => 'Si', '0' => 'No'), 'class="control"') ?></div>
         </div>
         <?php View::partial('backend/submit')?>
         <?php echo Form::close() ?>
+    </div>
 </div>
