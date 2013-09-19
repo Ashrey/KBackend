@@ -28,6 +28,7 @@ class User extends \KBackend\Libs\ARecord {
 
     protected function before_save() {
         if (\Input::hasPost('user')){
+			if(!isset($data['pasword']))return;
 			$data = \Input::post('user');
 			if($data['password'] === $data['clave2']){
 				$this->password = \KBackend\Libs\AuthACL::hash($data['password']);
