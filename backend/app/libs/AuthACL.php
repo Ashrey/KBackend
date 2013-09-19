@@ -70,7 +70,7 @@ class AuthACL {
      * Devuelve verdadero si el usuario está logueado
      * @return boolean
      */
-    public function isLogin() {
+    public static function isLogin() {
 		$a = \Auth2::factory('object');
         return $a->isValid();
     }
