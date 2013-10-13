@@ -7,15 +7,14 @@ namespace KBackend\Libs;
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team
  */
-class SQLFilter {
-	
+class FilterSQL {
 	/**
 	 * Argumentos del PAGINATE
 	 */
 	protected $_arg = array();
 	
-	protected $_valid = array('page', 'order'); 
-	
+	protected $_valid = array('page', 'order', 'per_page'); 
+
 	/**
 	 * Singleton
 	 */
@@ -27,9 +26,10 @@ class SQLFilter {
 	private function __construct() {
         foreach($_GET as $key => $val){
 			if(in_array($key, $this->_valid)){
-				$this->_arg[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_ENCODED);
+				$this->_arg[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_STRING);
 			}
 		}
+		if(!isset($this->_arg['page']))$this->_arg['page']=1;
     }
 	
 
@@ -37,10 +37,16 @@ class SQLFilter {
         return $this->_arg;
     }
     
+	static function getSQL($data){
+		$sql = isset($data['order'])?"ORDER BY {$data['order']}":'';
+		return $sql;
+	}
+    
     function getURL($arg){
 		$arg = array_merge($this->_arg, $arg);
 		asort($arg);
-		return '?'.http_build_query($arg);
+		$action=implode('/', \Router::get('parameters'));
+		return "/$action?".http_build_query($arg);
 	}
 
     /**
