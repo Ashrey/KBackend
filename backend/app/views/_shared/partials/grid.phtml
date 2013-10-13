@@ -1,0 +1,29 @@
+<?php if($result):?>
+	<table class="t bordered condensed hover">
+		<thead>
+			<?php foreach ($header as $key => $value): ?>
+				<?php $href = \Router::get('action'). $filter->getURL(array('order' => $key));?>
+				<th><?php echo Html::linkAction($href, $value) ?> <i class="icon-sort"></i></th>
+			<?php endforeach ?>
+			<?php if (!empty($action)):?>
+				<th>Acciones</th>
+			<?php endif; ?>
+		</thead>
+
+
+	<?php foreach ($result as $item): ?>
+		<tr>
+			<?php foreach ($item as $key => $val): ?>
+				<td><?php echo $grid->getCol($key, $val) ?></td>
+			<?php endforeach ?>
+
+			<td><?php foreach ($action as $val): ?>
+				<?php echo str_replace(array('%id%'), array($item->id), $val) ?>
+			<?php endforeach ?></td>
+		</tr>
+	<?php endforeach ?>
+	</table>
+	<?php View::partial("paginators/backend", false, array('page' => $result));?>
+<?php else:?>
+	No hay datos para mostrar
+<?php endif;?>
