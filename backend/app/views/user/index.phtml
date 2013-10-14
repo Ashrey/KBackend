@@ -1,6 +1,7 @@
 <?php 
 Block::start('result');
 	$result->header(array('id', 'Login', 'Correo', 'Rol'));
+	$result->useCRUD();
 	echo $result;
 Block::end();
 ?>
