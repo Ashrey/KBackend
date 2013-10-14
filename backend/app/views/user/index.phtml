@@ -1,0 +1,7 @@
+<?php 
+Block::start('result');
+	$result->header(array('id', 'Login', 'Correo', 'Rol'));
+	echo $result;
+Block::end();
+?>
+<?php View::extend('_shared/scaffolds/backend/index')?>
