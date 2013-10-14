@@ -46,12 +46,6 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
     protected $_view = 'view';
 
     /**
-     * Acciones disponibles
-     * @var Array 
-     */
-    protected $_action = array();
-
-    /**
      * Mostrar la barra de acciones
      * @var boolean 
      */
@@ -71,13 +65,7 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
          */
         $last = explode('\\', $this->_model);
         $this->model = strtolower(end($last));
-        if (method_exists($this, 'init')) {
-            call_user_func(array($this, 'init'));
-        }
-    }
-
-    protected function init() {
-        $this->useCRUD();
+        
     }
 
     protected function after_filter() {
@@ -95,18 +83,11 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
         try {
             $_model = new $this->_model();
             /*captura los filtros*/
-            $filter = SQLFilter::get();
+            $filter = FilterSQL::get();
             $filter->per_page =  \Config::get('backend.app.per_page');
+            $paginator = new Paginator($_model,  $filter->getArray());
             /*llama a la funcion de resultados*/
-            $args =  $filter->getArray();
-            $this->result = method_exists($_model, $this->_index) ?
-                    call_user_func(array($_model, $this->_index), $args) :
-                    call_user_func(array($_model, 'paginate'), $args);
-            /* asigna columnas a mostrar */
-            $col = current($this->result->items);
-            $this->cols = $col ? array_keys(get_object_vars($col)) : array();
-            /* Acciones a mostrar */
-            $this->action = $this->_action;
+            $this->result = new \Grid($paginator);
             /* Mostrar la barra de acciones */
             $this->show_bar = $this->_show_bar;
         } catch (KumbiaException $e) {
@@ -201,23 +182,4 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
         /* asigna columnas a mostrar */
         $this->cols = array_keys(get_object_vars($this->result));
     }
-
-    /**
-     * Permite añadir una acción
-     * @param string $action identificador de la accion
-     * @param type $html HTML para la acción 
-     */
-    protected function action($action, $html) {
-        $this->_action[$action] = $html;
-    }
-
-    /**
-     * Asigna acciones básicas para el CRUD 
-     */
-    protected function useCRUD() {
-        $this->action('ver', \Html::linkAction('view/%id%', '<i class="icon-eye-open"></i>',  'class="btn btn-info"'));
-        $this->action('editar', \Html::linkAction('edit/%id%', '<i class="icon-edit"></i>', 'class="btn btn-warning"'));
-        $this->action('borrar', \Html::linkAction('delete/%id%', '<i class="icon-trash"></i>', 'class="js-confirm btn btn-danger" data-msg="¿Desea Eliminar?"'));
-    }
-
 }
