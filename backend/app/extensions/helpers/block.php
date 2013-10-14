@@ -42,15 +42,23 @@ class Block {
 	
 	/**
 	 * Finaliza un bloque
-	 * @return void 
+	 * @param  boolean $overwrite permite sobreescribir un bloque
+	 * @return [type]             [description]
 	 */
-	static function end(){
+	static function end($overwrite = true){
 		if(is_null(self::$bcurrent))
 			throw new KumbiaException('Se ha intentado cerrar un bloque no abierto');
-		self::$block[self::$bcurrent] = ob_get_clean();
+		//solo sobreescribe si esta permitido
+		if(!isset(self::$block[self::$bcurrent] ) or $overwrite){
+			self::$block[self::$bcurrent] = ob_get_clean();
+		}else{
+			ob_end_clean();
+		}
+		//establece de nuevo a null
 		self::$bcurrent = null;
 	}
 	
+
 	/**
 	 * Devuelve el contenido de un bloque, en caso de no existir
 	 * devuelve lo estableciod en default
