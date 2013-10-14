@@ -50,7 +50,7 @@ if ($page->current <= $half) {
     $start = $page->current - $half;
 }
 
-$filter = \KBackend\Libs\SQLFilter::get();
+$filter = \KBackend\Libs\FilterSQL::get();
 ?>
 
 <?php if($page->total != 1):?>
