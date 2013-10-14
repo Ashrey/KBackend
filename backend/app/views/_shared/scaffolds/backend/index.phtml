@@ -1,38 +1,15 @@
-<?php $filter = \KBackend\Libs\SQLFilter::get();?>
 <header>
     <h1><?php echo $title ?></h1>
 </header>
-<?php View::content() ?>
-<?php if ($show_bar): ?>
-    <?php View::partial('backend/top') ?>
-<?php endif; ?>
-<?php if($result->items):?>
-	<table class="t bordered condensed hover">
-		<?php $head = current($result->items); ?>
-		<thead>
-			<?php foreach ($cols as $key): ?>
-			<?php $href = $filter->getURL(array('order' => $key));?>
-			<th><?php echo Html::linkAction($href, $head->get_alias($key)) ?> <i class="icon-sort"></i></th>
-		<?php endforeach ?>
-		<?php if (!empty($action)):?>
-			<th>Acciones</th>
-		<?php endif; ?>
-	</thead>
-
-	<?php foreach ($result->items as $item): ?>
-		<tr>
-			<?php foreach ($item as $key => $val): ?>
-				<td><?php eh(ModelForm::fieldValue($key, $item)) ?></td>
-			<?php endforeach ?>
-
-			<td><?php foreach ($action as $val): ?>
-				<?php echo str_replace(array('%id%'), array($item->id), $val) ?>
-			<?php endforeach ?></td>
-		</tr>
-	<?php endforeach ?>
-	</table>
-	<?php View::partial("paginators/backend", false, array('page' => $result));?>
-<?php else:?>
-	No hay datos para mostrar
-<?php endif;?>
+<?php 
+View::content();
+ if ($show_bar): 
+	View::partial('backend/top');
+endif;
+//bloque por defecto
+Block::start('result');
+	echo $result;
+Block::end(false);
+Block::get('result');
+?>
 
