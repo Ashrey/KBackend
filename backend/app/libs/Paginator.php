@@ -99,9 +99,10 @@ class Paginator implements \Iterator, \ArrayAccess
      * @param int $per_page cantidad de items por pagina
      * @param array $values valores
      */
-    public function __construct($model, $sql, $args, $values = null)
+    public function __construct($model, $args, $values = null)
     {
         extract($args);
+        $sql = method_exists($model, 'getSQL') ? $model->getSql(): "SELECT * FROM {$model->source}";
         //var_dump($args);die;
         //Si la página o por página es menor de 1 (0 o negativo)
         if ($page < 1 || $per_page < 1) {
