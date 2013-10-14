@@ -35,4 +35,24 @@ class View extends KumbiaView {
         throw new KumbiaException(NULL, 'no_controller');
     }
 
+    /**
+     * Permite "extender" una vista
+     *
+     * @param string $partial vista a extender
+     * @return string
+     * @throw KumbiaException
+     */
+    public static function extend($partial)
+    {
+        //Verificando el partials en el dir app
+        $__file = APP_PATH . "views/$partial.phtml";
+
+         // carga los parametros en el scope
+        extract(self::getVar(), EXTR_OVERWRITE);
+
+        // carga la vista parcial
+        if (!include $__file)
+            throw new KumbiaException('Vista para extender "' . $__file . '" no se encontró');
+    }
+
 }
