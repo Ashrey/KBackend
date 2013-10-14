@@ -40,15 +40,11 @@ class User extends \KBackend\Libs\ARecord {
     }
 
     /**
-     * Devuelve los usuarios de la bd Paginados.
-     * 
-     * @param  integer $pagina numero de pagina a mostrar
-     * @return array          resultado de la consulta
+     * Devuelve el SQL para paginación
+     * @return string sql
      */
-    public function paginar($cond) {
-        $cond['join'] =  ' JOIN _role r ON r.id = role_id';
-        $cond['columns'] = ' _user.id, _user.login, _user.email, r.role rol';
-        return $this->paginate($cond);
+    public function getSQL() {
+        return  "SELECT _user.id, _user.login, _user.email, r.role rol FROM _user JOIN _role r ON r.id = role_id";
     }
 
     public function numAcciones($pagina = 1) {
@@ -57,18 +53,6 @@ class User extends \KBackend\Libs\ARecord {
         $group = '_user.' . join(',_user.', $this->fields);
         $sql = "SELECT $cols FROM $this->source $join GROUP BY $group";
         return $this->paginate_by_sql($sql, "page: $pagina", 'per_page: ' . \Config::get('backend.app.per_page'));
-    }
-
-    /**
-     * Realiza un cambio de clave de usuario.
-     * 
-     * @param  array $datos datos del formulario
-     * @return boolean devuelve verdadero si se realizó el update
-     */
-    public function cambiarClave(array $datos) {
-        $this->clave = $datos['nueva_clave'];
-        $this->clave2 = $datos['nueva_clave2'];
-        return $this->update();
     }
 
     /**
