@@ -17,9 +17,14 @@
 				<td><?php echo $grid->getCol($key, $val) ?></td>
 			<?php endforeach ?>
 
-			<td><?php foreach ($action as $val): ?>
-				<?php echo str_replace(array('%id%'), array($item->id), $val) ?>
-			<?php endforeach ?></td>
+			
+			<?php if (!empty($action)):?>
+				<td>
+				<?php foreach ($action as $val): ?>
+					<?php echo str_replace(array('%id%'), array($item->id), $val) ?>
+				<?php endforeach ?>
+				</td>
+			<?php endif;?>
 		</tr>
 	<?php endforeach ?>
 	</table>
