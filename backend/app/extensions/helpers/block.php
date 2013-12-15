@@ -26,8 +26,12 @@ class Block {
 	 * @var array
 	 */
 	static protected $block = array();
+
+	static protected $sblock = null;
 	
 	static protected $bcurrent = null;
+
+	static public $_extends = false;
 
 	/**
 	 * Comienza un bloque
@@ -37,39 +41,35 @@ class Block {
 	static function start($key){
 		self::$bcurrent = $key;
 		ob_start();
-	
 	}
 	
 	/**
 	 * Finaliza un bloque
-	 * @param  boolean $overwrite permite sobreescribir un bloque
 	 * @return [type]             [description]
 	 */
-	static function end($overwrite = true){
+	static function end(){
 		if(is_null(self::$bcurrent))
 			throw new KumbiaException('Se ha intentado cerrar un bloque no abierto');
-		//solo sobreescribe si esta permitido
-		if(!isset(self::$block[self::$bcurrent] ) or $overwrite){
+		/*Estoy en la extensión*/
+		if(self::$_extends){
 			self::$block[self::$bcurrent] = ob_get_clean();
-		}else{
-			ob_end_clean();
+		}else{ /*estoy en la base*/
+			if(isset(self::$block[self::$bcurrent])){ ;
+				$block = self::$bcurrent;
+				echo str_replace("{&[#(@$block@)#]&}", ob_get_clean(),self::$block[self::$bcurrent]);
+			}else{
+				echo ob_get_clean();
+			} 
 		}
 		//establece de nuevo a null
 		self::$bcurrent = null;
 	}
 	
-
-	/**
-	 * Devuelve el contenido de un bloque, en caso de no existir
-	 * devuelve lo estableciod en default
-	 * @param  string $key     Nombre del bloque
-	 * @param  string $default Texto por defecto
-	 * @return String          Contenido del bloque
-	 */
-	static function get($key, $default = ''){
-		echo isset(self::$block[$key]) ? self::$block[$key] :  $default;
+	static function super(){
+		$block = self::$bcurrent;
+		return "{&[#(@$block@)#]&}";
 	}
-	
+
 	/**
 	 * Establece el valor de un bloque
 	 * @param string $key   Nombre del Bloque
@@ -77,6 +77,26 @@ class Block {
 	 */
 	static function set($key, $value){
 		self::$block[$key] = $value;
+	}
+
+	/**
+	 * Comienza extension 
+	 */
+	static function child(){
+		self::$_extends = true;
+	}
+
+	/**
+	 * Extender el archivo
+	 */
+	static function extend($file){
+		self::$_extends = false;
+		extract(get_object_vars(View::get('controller')), EXTR_OVERWRITE);
+	    $__file = APP_PATH . "views/_shared/$file.phtml";
+        // carga la vista
+        if (!include $__file)
+            throw new KumbiaException('Vista "' . $__file. '" no encontrada', 'no_view');
+
 	}
 
 }
