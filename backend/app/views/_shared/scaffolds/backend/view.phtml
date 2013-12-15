@@ -3,7 +3,7 @@
 </div>
 <div class="row">
     <?php if ($result) : ?>
-        <div class="col-md-4 col-md-offset-4">
+        <div class="col-4 offset-4">
             <dl class="dl-horizontal">
                 <?php foreach ($cols as $field) : ?>
                     <dt><?php echo $result->alias[$field] ?></dt>
@@ -14,7 +14,7 @@
                 <div class="btn-group ">
                     <?php echo Html::LinkAction('create', 'Crear <i class="icon-plus"></i>', ' class="btn btn-primary"') ?>
                     <?php echo Html::LinkAction("edit/$result->id", 'Editar <i class="icon-edit"></i>', ' class="btn btn-warning"') ?>
-                    <?php echo Html::LinkAction("delete/$result->id", 'Borrar <i class="icon-remove"></i>', ' class="btn btn-danger js-confirm" title="Está seguro?"') ?>
+                    <?php echo Html::LinkAction("delete/$result->id", 'Borrar <i class="icon-trash"></i>', ' class="btn btn-danger js-confirm" title="Está seguro?"') ?>
                     <?php echo Html::LinkAction('', 'Listar  <i class="icon-list"></i>', ' class="btn btn-info"') ?>
                 </div>
             <?php endif; ?>

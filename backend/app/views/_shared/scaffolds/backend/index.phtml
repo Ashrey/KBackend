@@ -1,15 +1,16 @@
+<?php Block::start('header');?>
 <header>
     <h1><?php echo $title ?></h1>
 </header>
-<?php 
-View::content();
- if ($show_bar): 
+<?php Block::end();?>
+
+<?php View::content(); ?>
+<?php if ($show_bar): 
 	View::partial('backend/top');
 endif;
+
 //bloque por defecto
 Block::start('result');
 	echo $result;
-Block::end(false);
-Block::get('result');
+Block::end();
 ?>
-
