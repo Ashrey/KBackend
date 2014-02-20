@@ -89,7 +89,6 @@ class AuthController extends \Controller
      */
     protected function _isAllow()
     {
-        \View::template('backend');
         $acl = AuthACL::getAuth();
         if (!$acl->check()) {
             \Flash::error('no posees privilegios para acceder a <b>' . \Router::get('route') . '</b>');
