@@ -7,7 +7,6 @@ class Haanga_Extension_Tag_Exec
 
     static function generator($cmp, $args, $assign=NULL)
     {
-        
         if (!$cmp->getOption('allow_exec')) {
             $cmp->Error("Tag exec is disabled for security reasons");
         }

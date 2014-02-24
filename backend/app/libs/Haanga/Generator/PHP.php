@@ -470,7 +470,6 @@ class Haanga_Generator_PHP
             }
             $key   = key($op[$i]);
             $value = current($op[$i]); 
-           
             switch ($key) {
             case 'array':
                 $code .= "Array(";
@@ -479,7 +478,6 @@ class Haanga_Generator_PHP
                 break;
             case 'function':
             case 'exec':
-
                 if (strlen($code) != 0 && $code[strlen($code) -1] != $concat) {
                     $code .= $concat;
                 }

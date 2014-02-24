@@ -9,6 +9,7 @@ class Haanga_Extension_Tag_Buffer
         if (count($args) != 2) {
             $cmp->Error("buffer filter must have one parameter");
         }
+
         /* get new code object */
         $code = hcode();
         /* redirect buffer to $args[1] */
