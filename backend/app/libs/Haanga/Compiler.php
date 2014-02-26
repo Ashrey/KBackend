@@ -267,6 +267,16 @@ class Haanga_Compiler
             unset($parsed[0]);
         }
 
+        /**
+         * Add the namespace
+         */
+        if(($ns=Haanga::getUse())){
+
+            foreach ($ns as $namespace) {
+                $body->declare_use($namespace);
+            }
+        }
+
         if (defined('HAANGA_VERSION')) {
             $body->decl('HAANGA_VERSION', HAANGA_VERSION);
         }
@@ -1016,7 +1026,6 @@ class Haanga_Compiler
                     // this section is resolved on the parser.y
                     return array('var' => $variable);
                 }
-
                 for ($i=1; $i < count($variable); $i++) {
                     $var_part = array_slice($variable, 0, $i);
                     $def_arr  = TRUE;

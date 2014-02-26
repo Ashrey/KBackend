@@ -63,7 +63,17 @@ class Haanga
     protected static $hash_filename = TRUE;
     protected static $compiler = array();
 
+    /**
+     * Store all use to declare on file
+     * example: use \ANamespace\MyClass;
+     */
+    protected static $uses = array();
+
     public static $has_compiled;
+
+
+
+
 
     private function __construct()
     {
@@ -435,6 +445,22 @@ class Haanga
         return $callback($vars, $return, $blocks);
     }
     // }}}
+    // 
+    
+
+  /**
+     * Add new use to the list
+     */
+    static function addUse($ns){
+    	self::$uses[] = $ns;
+    }
+
+    /**
+     * Get the use array
+     */
+    static function getUse(){
+    	return self::$uses;
+    }
 
 }
 

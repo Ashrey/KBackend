@@ -461,6 +461,7 @@ class Haanga_Generator_PHP
     {
         $code = "";
 
+
         for ($i=0; $i < count($op); $i++) {
             if (!isset($op[$i])) {
                 continue;
@@ -471,6 +472,7 @@ class Haanga_Generator_PHP
             $key   = key($op[$i]);
             $value = current($op[$i]); 
             switch ($key) {
+
             case 'array':
                 $code .= "Array(";
                 $code .= $this->php_generate_list($value);
@@ -668,6 +670,17 @@ class Haanga_Generator_PHP
         return $code;
     }
     // }}}
+    // 
+    // 
+    
+    /**
+     * Implement PHP use for namespace
+     */
+    protected function php_use($op)
+    {
+        $code = "use {$op['name']};";
+        return $code;
+    }
 
 }
 

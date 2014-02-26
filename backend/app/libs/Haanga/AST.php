@@ -141,6 +141,12 @@ class Haanga_AST
         return $this;
     }
 
+    function declare_use($name)
+    {
+        $this->stack[] = array('op' => 'use', 'name' => $name);
+        return $this;
+    }
+
     function do_return($name)
     {
         $this->getValue($name, $expr);
@@ -224,7 +230,6 @@ class Haanga_AST
     static function getValue($obj, &$value, $get_all=FALSE)
     {
         $class = __CLASS__;
-
         if ($obj InstanceOf $class) {
             $value = $obj->getArray($get_all);
         } else if (is_string($obj)) {
@@ -255,7 +260,6 @@ class Haanga_AST
         } else if ($obj === NULL) {
             $value = array();
         } else {
-            var_Dump($obj);
             throw new Exception("Imposible to get the value of the object");
         }
     }
@@ -402,13 +406,23 @@ class Haanga_AST
         if (is_string($name)) {
             $name = hvar($name);
         }
+
         $this->getValue($name, $name);
+        
         $array = array('op' => 'declare', 'name' => $name['var']);
         foreach (func_get_args() as $id => $value) {
             if ($id != 0) {
                 $array[] = $value;
             }
         }
+        // fix for static calls {{{
+        if (isset($array[0]['exec']) && is_array($array[0]['exec'])) {
+            $end = $array[0]['exec'];
+            if (isset($end[1]['class'])) {
+                $array[0]['exec'][1]['class'] = substr($end[1]['class'], 1);
+            }
+        }
+        //}}}
         $this->stack[] = $array;
         return $this;
     }
