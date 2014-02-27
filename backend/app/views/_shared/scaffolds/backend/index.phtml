@@ -5,6 +5,7 @@
 	{% if show_bar %}
 		{% inline '_shared/scaffold_top.phtml'%}
 	{%endif%}
+	{%exec View::content %}
 	{% autoescape off %}
 		{%block result%}
 			{%exec result->useCRUD %}
