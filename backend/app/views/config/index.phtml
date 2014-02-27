@@ -1,28 +1,26 @@
-<div class="page-header">
-    <h1>Configurando <em><?php echo $config ?></em></h1>
-</div>
-<?php View::content() ?>
-<div class="row">
-    <div class="offset3 span6" >
-        <?php echo Form::open(NULL, 'post', 'class="horizontal"') ?>
-        <?php foreach ($values as $key => $val): ?>
+{% extends 'default.phtml'%}
+{%block title%}Configurando <em>{{config}}</em>{%endblock%}
+{%block content%}
+    <div class="offset-3 col-6" >
+        {%exec View::content %}
+        {%exec Form::open '', 'post'%}
+        {%for key, val in values%}
             <fieldset>
                 <legend><?php echo $key ?></legend>
-                <?php foreach ($val as $name => $value): ?>
-                    <div class="form-group">
-                        <label class="col-4 control-label" for="config_name"><?php echo ucwords(strtr($name, '_-', '  ')); ?>: </label>
-                        <div class="col-8">
-                            <?php if (in_array($value, array('On', 'Off'))): ?>
-                                <?php echo Form::check("config.{$key}.{$name}", 1, null, $value == 'On') ?>
-                            <?php else: ?>
-                                <?php echo Form::text("config.{$key}.{$name}", 'class="control"', $value) ?>
-                            <?php endif ?>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+                {%for  name, value in val %}
+                    <label class="col-4 control-label" for="config_name">{{name|Title}}: </label>
+                     {%buffer name%}config.{{key}}.{{name}}{%endbuffer%}
+                    {% if value == "On" OR value == 'Off'%}
+                        {%set check = (value == 'On')%}
+                        {%exec Form::check name, 1, 'class="control"', check %}
+                    {%else%}
+                        {%exec Form::text name, 'class="control"', value %}
+                    {%endif%}
+                {%endfor%}
             </fieldset>
-        <?php endforeach; ?>
-        <?php View::partial('backend/submit') ?>
-        <?php echo Form::close() ?>
+        {%endfor%}
+        {%inline '_shared/submit.phtml'%}
+        </form>
     </div>
 </div>
+{%endblock%}
