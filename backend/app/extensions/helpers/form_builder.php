@@ -154,4 +154,18 @@ class FormBuilder {
 		$html .= '<div class="btn-group">'. implode('', $this->_action). '</div>';
 		return "$html</form>";
 	}
+
+	public static function fieldValue($field, $result) {
+        /* permite llamar a las claves foraneas */
+        if (isset($field[3]) && strripos($field, '_id', -3)) {
+            $method = substr($field, 0, -3);
+            $t = $result->$method; 
+            $c = is_object($t) ? $t->non_primary[0]:null;
+            $value = is_null($c)? '' :h($t->$c);
+        } else {
+            $value = $result->$field;
+        }
+        return $value;
+    }
+
 }
