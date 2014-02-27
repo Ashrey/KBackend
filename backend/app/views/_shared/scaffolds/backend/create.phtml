@@ -1,9 +1,6 @@
-{%block header%}
-<header>
-	
-    <h1>{{title}} <small>{{action_name}}</small></h1>
-</header>
-{%endblock%}
+{% extends 'default.phtml'%}
+{%block title%}Create User{%endblock%}
+{%block content%}
 <div class="row">
     <div class="col-5 offset-3">
         {% autoescape off %}
@@ -14,3 +11,4 @@
         {% endautoescape %} 
     </div>
 </div>
+{%endblock%}

@@ -1,13 +1,13 @@
-{%block header%}
-<header>
-    <h1>{{title}}</h1>
-</header>
+{% extends 'default.phtml'%}
+{%block title%}{{title}}{%endblock%}
+
+{%block content%}
+	{% if show_bar %}
+		{% inline '_shared/scaffold_top.phtml'%}
+	{%endif%}
+	{% autoescape off %}
+		{%block result%}
+			{{result}}
+		{%endblock%}
+	{% endautoescape %}
 {%endblock%}
-{% if show_bar %}
-	{% inline '_shared/partials/backend/top.phtml'%}
-{%endif%}
-{% autoescape off %}
-	{%block result%}
-		{{result}}
-	{%endblock%}
-{% endautoescape %}

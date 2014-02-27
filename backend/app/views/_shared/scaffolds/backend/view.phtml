@@ -1,20 +1,21 @@
-{% set isAjax = Input::isAjax()%}
-<div class="page-header">
-    <h1>{{title}}</h1>
-</div>
+{% extends 'default.phtml'%}
+
+{%block title%}User Details{%endblock%}
+{%block content%}
 <div class="row">
     {%if result %}
         <div class="col-5 offset-3">
             <dl class="dl-horizontal">
                 {%for i in cols %} 
                     <dt>{{result.alias[i]}}</dt>
-                    <dd>{%exec ModelForm::fieldValue i, result %}</dd>
+                    <dd>{%exec FormBuilder::fieldValue i, result %}</dd>
                 {%endfor%}
             </dl>
+            {% set isAjax = Input::isAjax()%}
             {%if !isAjax %}
                 {%buffer editURL%}edit/{{result.id}}{%endbuffer%}
                 {%buffer deleteURL%}delete/{{result.id}}{%endbuffer%}
-                <div class="btn-group ">
+                <div class="btn-group">
                     {%exec Html::LinkAction 'create', 'Crear <i class="fa fa-plus"></i>', ' class="btn btn-primary"'%}
                     {%exec Html::LinkAction editURL, 'Editar <i class="fa fa-edit"></i>', ' class="btn btn-warning"' %}
                     {%exec Html::LinkAction deleteURL, 'Borrar <i class="fa fa-trash-o"></i>', ' class="btn btn-danger js-confirm" title="Está seguro?"' %}
@@ -27,3 +28,4 @@
         <div class="alert alert-block alert-danger">No se ha encontrado el registro buscado</div>
     {%endif%}
 </div>
+{%endblock%}
