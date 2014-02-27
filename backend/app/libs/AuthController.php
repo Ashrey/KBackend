@@ -76,7 +76,7 @@ class AuthController extends \Controller
             $this->_valid();
             \Redirect::toAction(\Router::get('action'));
         } else {
-            \View::select(NULL, 'logueo');
+            \View::select('logueo');
             return FALSE;
         }
 

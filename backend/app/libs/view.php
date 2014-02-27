@@ -82,10 +82,12 @@ class View extends KumbiaView {
             // Renderizar vista
             if ($view = self::$_view) {
                 $file =  self::getPath();
-                if (!is_file(APP_PATH ."views/$file") && $scaffold) {
-                    $file = "_shared/scaffolds/$scaffold/$view.phtml";
-
+               
+                if (!is_file(APP_PATH ."views/$file")){
+                    $file = $scaffold && !is_file(APP_PATH ."views/$view.phtml")? "_shared/scaffolds/$scaffold/$view.phtml": "$view.phtml";
                 }
+                
+
                 self::$_content = Haanga::Load($file, $vars, true);
                 // si esta en produccion y se cachea la vista
                 if (PRODUCTION && self::$_cache['type'] == 'view') {
@@ -95,18 +97,16 @@ class View extends KumbiaView {
         } else {
             ob_clean();
         }
-
-        // Renderizar template
-        if ($template = self::$_template) {
-            self::$_content = Haanga::Load("_shared/templates/{$template}.phtml", $vars, true, array('content' => self::$_content ));
-             // si esta en produccion y se cachea template
-            if (PRODUCTION && self::$_cache['type'] == 'template') {
-                Cache::driver()->save(self::$_content, self::$_cache['time'], $_url, "kumbia.templates");
-            }
-        }
         echo self::$_content;
+    }
 
-
+    public static function content()
+    {
+        if (isset($_SESSION['KUMBIA.CONTENT'])) {
+            return $_SESSION['KUMBIA.CONTENT'];
+            unset($_SESSION['KUMBIA.CONTENT']);
+        }
+        return self::$_content;
     }
 
     static function aclGet($key){
