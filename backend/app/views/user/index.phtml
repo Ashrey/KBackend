@@ -1,10 +1,5 @@
-<?php Block::child()?>
-
-<?php 
-Block::start('result');
-	$result->header(array('id', 'login'=>'Login', 'email'=>'Correo', 'Rol'));
-	$result->useCRUD();
-	echo $result;
-Block::end();
-?>
-<?php Block::extend('scaffolds/backend/index')?>
+{% extends '_shared/scaffolds/backend/index.phtml'%}
+{%block result%}
+	{%exec result->useCRUD %}
+	{{block.parent}}
+{%endblock%}
