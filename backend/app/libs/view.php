@@ -103,8 +103,9 @@ class View extends KumbiaView {
     public static function content()
     {
         if (isset($_SESSION['KUMBIA.CONTENT'])) {
-            return $_SESSION['KUMBIA.CONTENT'];
+            $content = $_SESSION['KUMBIA.CONTENT'];
             unset($_SESSION['KUMBIA.CONTENT']);
+            return $content;
         }
         return self::$_content;
     }
