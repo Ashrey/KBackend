@@ -1,10 +1,7 @@
-<header>
-    <h1>
-        Auditorias del Sistema 
-        <small>Usuario: <?php eh(strtoupper($usuario->login)) ?></small>
-    </h1>
-</header>   
-    <?php View::content() ?>
+{% extends 'default.phtml'%}
+{%block title%}Acciones realizadas por <em>{{usuario.login}}</em>{%endblock%}
+{%block content%}
+	 {%exec View::content %}
 <table class="t bordered condensed hover">
     <thead>
 		<tr>
@@ -14,15 +11,13 @@
 			<th>IP</th>
 		</tr>
 	</thead>
-
-<?php foreach ($result->items as $item): ?>
+	{%for item in result.items%}
     <tr>
-		<td><?php echo  $item->date_at?></td>
-		<td><?php echo  $item->type?></td>
-		<td><?php echo  $item->action?></td>
-		<td><?php echo  $item->ip()?></td>
+		<td>{{item.date_at}}</td>
+		<td>{{item.type}}</td>
+		<td>{{item.action}}</td>
+		<td>{{item.ip()}}</td>
     </tr>
-<?php endforeach ?>
+    {%endfor%}
 </table>
-<?php View::partial("paginators/backend", false, array('page' => $result, 'url' =>$url));?>
-
+{%endblock%}
