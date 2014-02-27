@@ -1,39 +1,13 @@
-
-<div class="page-header">
-    <h1>Privilegios para <em><?php echo $rol->role; ?></em></h1>
-</div>
-<?php View::content() ?>
-<?php if (isset($results)) : ?>
-    <?php echo Form::open('access/assign') ?>
-    <?php View::partial('backend/submit') ?>
-    <?php echo Form::hidden("rol", null, $rol->id) ?>
-    <table class="t bordered condensed hover">
-        <thead>
-            <tr>
-                <th>Módulo</th>
-                <th>Controlador</th>
-                <th>Accion</th>
-                <th>Asignar</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($results->items as $item) : ?>
-                <tr>
-					<td><?php eh($item->module) ?></td>
-                    <td><?php eh($item->controller) ?></td>
-                    <td><?php eh($item->action) ?></td>
-                    <td><?php echo Form::check("priv.", $item->id, NULL, in_array($item->id, $privilegios)) ?>
-                        <?php echo Form::hidden("todo.", null, $item->id) ?>
-                    </td>
-
-                </tr>
-            <?php endforeach ?>
-        </tbody>
-    </table>
-    <?php View::partial('paginators/backend', false, array('page' => $results,
-        'url' => Router::get('controller_path') . "/allow/{$rol->id}")); ?>
-
-<?php else : // Si no hay items?>
-    <h2>No hay ningún registro</h2>
-<?php endif ?>
-<?php echo Form::close() ?>
+{% extends 'default.phtml'%}
+{%block title%}Privilegios para <em>{{rol.role}}</em>{%endblock%}
+{%block content%}
+    {%exec View::content %}
+    {% if result %}
+        {%exec Form::open 'access/assign' %}
+        {%inline '_shared/submit.phtml' %}
+        {%exec  Form::hidden "rol", FALSE, rol.id %}
+       {% autoescape off %} {{result}}{% endautoescape %} 
+    {%else%}
+        <h2>No hay ningún registro</h2>
+    {%endif%}
+{%endblock%}

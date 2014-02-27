@@ -1,8 +1,10 @@
-<div class="page-header">
-    <h1>Privilegios de Roles</h1>
-</div>
+{% extends 'default.phtml'%}
+{%block title%}Privilegios de Roles{%endblock%}
+{%block content%}
 <ul>
-<?php foreach($roles as $r):?>
-    <li><?php echo Html::linkAction("allow/$r->id", $r->role)?></li>
-<?php endforeach?>
+	{%for r in roles%}
+		{%buffer url %}allow/{{r.id}}{%endbuffer%}
+    	<li>{%exec Html::linkAction url, r.role %}</li>
+	{%endfor%}
 </ul>
+{%endblock%}
