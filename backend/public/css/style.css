@@ -592,12 +592,16 @@ form.horizontal .form-group:after {
 .btn {
   display: inline-block;
   text-decoration: none;
+  margin-top: 0;
+  margin-bottom: 0;
   color: #fff;
+  border: 1px solid transparent;
   border-radius: 6px;
-  border-width: 1px;
   line-height: 1.5;
   padding: 6px 12px;
   font-weight: bold;
+  font-size: 15px;
+  vertical-align: middle;
 }
 .btn:hover {
   text-decoration: none;
@@ -705,24 +709,19 @@ form.horizontal .form-group:after {
 }
 /* Group  */
 .btn-group {
+  position: relative;
   display: inline-block;
-  margin-right: 2px;
-  vertical-align: bottom;
+  vertical-align: middle;
 }
-.btn-group:before,
-.btn-group:after {
-  content: " ";
-  /* 1 */
-  display: table;
-  /* 2 */
-}
-.btn-group:after {
-  clear: both;
-}
-.btn-group > .btn,
-.btn-group > input {
+.btn-group > .btn {
+  position: relative;
   float: left;
   border-radius: 0;
+}
+.btn-group .btn + .btn,
+.btn-group .btn + .btn-group,
+.btn-group .btn-group + .btn,
+.btn-group .btn-group + .btn-group {
   margin-left: -1px;
 }
 .btn-group > .btn:first-child {
@@ -742,24 +741,8 @@ form.horizontal .form-group:after {
 .btn-group > .input-search:last-child {
   border-radius: 0 15px 15px 0;
 }
-.btn-append,
 .btn-group .btn {
   padding: 7px 1.1em 6px 1.1em;
-}
-/* Append  */
-.btn-append {
-  position: relative;
-  top: -1px;
-  margin-left: -2px;
-  border-radius: 0 4px 4px 0;
-}
-/* FF fix */
-@-moz-document url-prefix("http://") {
-  input[type=submit].btn::-moz-focus-inner,
-  button.btn::-moz-focus-inner {
-    border: 0;
-    padding: 0;
-  }
 }
 .nav {
   margin-bottom: 0;
