@@ -1,19 +1,17 @@
+{%set login = AuthACL::isLogin() %}
 <div class="navbar">
-	<?php /*.navbar-toggle is used as the toggle for collapsed navbar content */?>
 	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
       <i class="icon-cogs"></i>
     </button>
-	
 	<a class="navbar-brand">Administración</a>
 	<div class="collapse navbar-collapse">
 		<ul class="nav navbar-nav">
-			<?php echo Menu::render(1) ?>
-			<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php eh(\KBackend\Libs\AuthACL::get('login')) ?><b class="caret"></b></a>
-				<ul class="dropdown-menu">
-					<li><?php echo Html::link('index/logout', 'Salir') ?></li>
-				</ul>
-			</li>
+		{%if login%}
+			{%exec  Menu::render 1 %}
+			<li>{%exec Html::link 'index/logout', 'Salir' %}</li>
+		{%else%}
+			<li>{%exec Html::link 'user', 'Entrar' %}</li>
+		{%endif%}
 		</ul>
 	</div>
 </div>

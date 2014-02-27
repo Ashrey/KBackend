@@ -1,16 +1,13 @@
-<?php Block::start('header');?>
+{%block header%}
 <header>
-    <h1><?php echo $title ?></h1>
+    <h1>{{title}}</h1>
 </header>
-<?php Block::end();?>
-
-<?php View::content(); ?>
-<?php if ($show_bar): 
-	View::partial('backend/top');
-endif;
-
-//bloque por defecto
-Block::start('result');
-	echo $result;
-Block::end();
-?>
+{%endblock%}
+{% if show_bar %}
+	{% inline '_shared/partials/backend/top.phtml'%}
+{%endif%}
+{% autoescape off %}
+	{%block result%}
+		{{result}}
+	{%endblock%}
+{% endautoescape %}

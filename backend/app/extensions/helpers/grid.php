@@ -104,9 +104,9 @@ class Grid {
      * Asigna acciones básicas para el CRUD 
     */
     public function useCRUD() {
-        $this->action('ver', \Html::linkAction('view/%id%', '<i class="icon-eye-open"></i>',  'class="btn btn-info"'));
-        $this->action('editar', \Html::linkAction('edit/%id%', '<i class="icon-edit"></i>', 'class="btn btn-warning"'));
-        $this->action('borrar', \Html::linkAction('delete/%id%', '<i class="icon-trash"></i>', 'class="js-confirm btn btn-danger" data-msg="¿Desea Eliminar?"'));
+        $this->action('ver', \Html::linkAction('view/%id%', '<i class="fa fa-eye"></i>',  'class="btn btn-info"'));
+        $this->action('editar', \Html::linkAction('edit/%id%', '<i class="fa fa-edit"></i>', 'class="btn btn-warning"'));
+        $this->action('borrar', \Html::linkAction('delete/%id%', '<i class="fa fa-trash-o"></i>', 'class="js-confirm btn btn-danger" data-msg="¿Desea Eliminar?"'));
     }
 
 	/**
