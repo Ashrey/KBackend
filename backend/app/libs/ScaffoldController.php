@@ -109,7 +109,6 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
                     \Flash::error('Falló Operación');
                     //se hacen persistente los datos en el formulario
                     $this->{$this->model} = $obj;
-                    return;
                 } else {
                     \Flash::success('Agregegado correctamente');
                     if (!\Input::isAjax()) {
@@ -118,7 +117,7 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
                 }
             }
             // Solo es necesario para el autoForm
-            $this->{$this->model} = new $this->_model();
+            $this->form = new \FormBuilder(new $this->_model());
         } catch (KumbiaException $e) {
             Flash::error($e);
         }
@@ -151,7 +150,7 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
         }
         //Aplicando la autocarga de objeto, para comenzar la edición
         $obj = new $this->_model();
-        $this->{$this->model} = $obj->find((int) $id);
+        $this->form = new \FormBuilder($obj->find((int) $id));
     }
 
     /**
