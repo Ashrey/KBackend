@@ -4,6 +4,7 @@
 {%exec View::content %}
 <div class="row">
     <div class="col-5 offset-3">
+    	{%exec View::content%}
         {% autoescape off %}
             {%block result%}
                 {%exec form.useDefaultBtn %}
