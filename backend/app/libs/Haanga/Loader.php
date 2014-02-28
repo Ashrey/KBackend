@@ -42,6 +42,7 @@ spl_autoload_register(function ($class) {
   'haanga_extension_filter_substr' => '/Extension/Filter/Substr.php',
   'haanga_extension_filter_upper' => '/Extension/Filter/Upper.php',
   'haanga_extension_filter_isarray' => '/Extension/Filter/Isarray.php',
+  'haanga_extension_filter_inarray' => '/Extension/Filter/Inarray.php',
   'haanga_extension_filter_empty' => '/Extension/Filter/Empty.php',
   'haanga_extension_filter_trim' => '/Extension/Filter/Trim.php',
   'haanga_extension_filter_hostname' => '/Extension/Filter/Hostname.php',
