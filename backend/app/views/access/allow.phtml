@@ -6,7 +6,31 @@
         {%exec Form::open 'access/assign' %}
         {%inline '_shared/submit.phtml' %}
         {%exec  Form::hidden "rol", FALSE, rol.id %}
-       {% autoescape off %} {{result}}{% endautoescape %} 
+
+       <table class="t bordered condensed hover">
+        <thead>
+            <tr>
+                <th>Módulo</th>
+                <th>Controlador</th>
+                <th>Accion</th>
+                <th>Asignar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for item in result%}
+                <tr>
+					<td>{{item.module|default:'-'}}</td>
+                    <td>{{item.controller|default:'-'}}</td>
+                    <td>{{item.action|default:'-'}}</td>
+                    {% set i = item.id|inArray:privilegios %}
+                    <td>{%exec Form::check "priv.", item.id, FALSE, i %}
+                        {%exec Form::hidden "todo.", FALSE, item.id%} 
+                    </td>
+
+                </tr>
+            {%endfor%}
+        </tbody>
+    </table>
     {%else%}
         <h2>No hay ningún registro</h2>
     {%endif%}

@@ -11,16 +11,21 @@ class AccessController extends  \KBackend\Libs\AuthController{
     public function index(){
         $this->roles = \KBackend\Model\Role::_find();
     }
-    
 
     public function allow($rol, $page=1) {
+
         try {
                 $this->rol =  \KBackend\Model\Role::_find((int)$rol);
-                $this->results = \KBackend\Model\Resource::_paginate("page: $page",
-                        'per_page: '.Config::get('backend.app.per_page'));
+                $_model = new \KBackend\Model\Resource();
+                 /*captura los filtros*/
+                 $filter = \KBackend\Libs\FilterSQL::get();
+                 $filter->per_page =  \Config::get('backend.app.per_page');
+                $this->result  = new \KBackend\Libs\Paginator($_model,  $filter->getArray());
+                 /*llama a la funcion de resultados*/
                 $this->privilegios = \KBackend\Model\RoleResource::_access((int)$rol);
             
         } catch (KumbiaException $e) {
+            die;
             View::excepcion($e);
         }
     }
