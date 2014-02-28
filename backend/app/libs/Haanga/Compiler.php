@@ -686,6 +686,7 @@ class Haanga_Compiler
                     /* to avoid double cleaning */
                     $this->var_is_safe = TRUE;
                 }
+                
                 $args = array(isset($exec) ? $exec : $target);
                 $exec = $this->do_filtering($func_name, $args);
             }
@@ -711,7 +712,6 @@ class Haanga_Compiler
                 throw new Exception("Invalid variable name {$variable[0]}");
             }
         }
-
         return $details;
     }
     // }}}
@@ -1233,7 +1233,8 @@ class Haanga_Compiler
     {
         $var = $this->generate_variable_name($details['var']);
         $this->check_expr($details['expr']);
-        $body->decl_raw($var, $details['expr']);
+        /*user filter allow */
+        $body->decl_raw($var, is_object($details['expr']) ? $details['expr']->getArray(): $details['expr'] );
         $body->decl($this->getScopeVariable($var['var']), $var);
     }
 
@@ -1480,6 +1481,7 @@ class Haanga_Compiler
 
         $args = array_merge(array($fnc), $args);
         $exec = call_user_func_array('hexec', $args);
+        
         
         return $exec;
     }
