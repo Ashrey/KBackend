@@ -46,21 +46,11 @@ class ObjectAuth extends Auth2
      */
 	
 	protected function _check($username, $password){
-        // TODO $_SERVER['HTTP_HOST'] puede ser una variable por si quieren ofrecer autenticacion desde cualquier host indicado
-        if (strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) === FALSE) {
-            self::log('INTENTO HACK IP ' . $_SERVER['HTTP_REFERER']);
-            $this->setError('Intento de Hack!');
-            return FALSE;
-        }
-        
         if(empty($this->obj)){
 			throw new KumbiaException('No se a establecido el objeto');
 		}
         
-        //$username = addslashes($username);
         $username = filter_var($username, FILTER_SANITIZE_MAGIC_QUOTES);
-		
-		
 		
 		/*instancia al objeto*/
 		$obj = new $this->obj();
