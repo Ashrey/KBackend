@@ -134,7 +134,7 @@ class AuthController extends \Controller
     public function logout()
     {
         AuthACL::logout();
-        return Router::redirect('/');
+        return \Router::redirect('/');
     }
 
     /**

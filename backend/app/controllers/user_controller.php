@@ -56,11 +56,4 @@ class UserController extends \KBackend\Libs\ScaffoldController{
         }
         return Router::toAction('');
     }
-    
-    public function logout(){
-		\KBackend\Libs\MyAuth::finish();
-		Router::redirect();
-		die();
-	}
-
 }

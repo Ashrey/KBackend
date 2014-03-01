@@ -2,7 +2,7 @@
 	<table class="t bordered condensed hover">
 		<thead>
 			<?php foreach ($header as $key => $value): ?>
-				<?php $href = \Router::get('action'). $filter->getURL(array('order' => $key));?>
+				<?php $href = \Router::get('action'). $filter->getURL(array('order' => $key + 1));?>
 				<th><?php echo Html::linkAction($href, $value) ?> <i class="fa fa-sort"></i></th>
 			<?php endforeach ?>
 			<?php if (!empty($action)):?>
