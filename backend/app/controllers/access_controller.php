@@ -42,12 +42,12 @@ class AccessController extends  \KBackend\Libs\AuthController{
                 } else {
                     Flash::warning('No se pudo editar los privilegios');
                 }
-                return Router::toAction("allow/$rol");
+                return Redirect::toAction("allow/$rol");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction();
+        return Redirect::toAction();
     }
 
 }

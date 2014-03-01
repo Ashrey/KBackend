@@ -33,7 +33,7 @@ class UserController extends \KBackend\Libs\ScaffoldController{
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction('');
+        return Redirect::toAction('');
     }
 
     /**
@@ -54,6 +54,6 @@ class UserController extends \KBackend\Libs\ScaffoldController{
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction('');
+        return Redirect::toAction('');
     }
 }

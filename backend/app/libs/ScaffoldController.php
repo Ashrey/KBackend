@@ -112,7 +112,7 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
                 } else {
                     \Flash::success('Agregegado correctamente');
                     if (!\Input::isAjax()) {
-                        \Router::toAction('');
+                        \Redirect::toAction('');
                     }
                 }
             }
@@ -141,7 +141,7 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
                 } else {
                     \Flash::success('Edición hecha');
                     if (!\Input::isAjax()) {
-                        \Router::toAction('');
+                        \Redirect::toAction('');
                     }
                 }
             } else {
@@ -164,7 +164,7 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
 				\Flash::error('Falló Operación');
 			}
 			//enrutando al index
-			\Router::redirect();
+			\Redirect::to();
 		} catch (Exception $e) {
             Flash::error($e);
         }

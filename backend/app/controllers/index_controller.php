@@ -15,7 +15,7 @@ class IndexController extends AppController {
     
     public function logout() {
 		\KBackend\Libs\AuthACL::logout();
-		return Router::redirect();
+		return Redirect::to();
     }
     
     

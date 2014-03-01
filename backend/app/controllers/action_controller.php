@@ -26,7 +26,7 @@ class ActionController extends  \KBackend\Libs\AuthController{
             $this->result = $aud->byUser($id, $pagina);
             if (!$this->result->items) {
                 \Flash::info('Este usuario no ha realizado ninguna acción en el sistema');
-                return Router::redirect();
+                return Redirect::to();
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
