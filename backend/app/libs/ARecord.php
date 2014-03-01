@@ -47,6 +47,5 @@ class ARecord extends \KumbiaActiveRecord implements \ArrayAccess {
         } else {
             return ucfirst($key);
         }
-        return $this->alias;
 	}
 }

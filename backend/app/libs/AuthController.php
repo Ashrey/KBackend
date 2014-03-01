@@ -116,10 +116,9 @@ class AuthController extends \Controller
             \Logger::debug('Login correcto');
             return $this->_isAllow();
         } else {
-            \Input::delete();
             \Logger::error('Login errado');
             \Flash::warning('Datos de acceso  no válidos');
-            \View::select(NULL, 'backend/logueo');
+            \View::select('logueo');
             return FALSE;
         }
     }

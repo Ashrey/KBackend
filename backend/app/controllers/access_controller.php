@@ -12,8 +12,7 @@ class AccessController extends  \KBackend\Libs\AuthController{
         $this->roles = \KBackend\Model\Role::_find();
     }
 
-    public function allow($rol, $page=1) {
-
+    public function allow($rol) {
         try {
                 $this->rol =  \KBackend\Model\Role::_find((int)$rol);
                 $_model = new \KBackend\Model\Resource();
@@ -25,7 +24,6 @@ class AccessController extends  \KBackend\Libs\AuthController{
                 $this->privilegios = \KBackend\Model\RoleResource::_access((int)$rol);
             
         } catch (KumbiaException $e) {
-            die;
             View::excepcion($e);
         }
     }

@@ -19,7 +19,6 @@ class ResourceController extends \KBackend\Libs\ScaffoldController{
                 //para obtener los valores de los nuevos controladores
                 $recurso->obtener_recursos_nuevos($pagina);
                 if ($recurso->guardar_nuevos()) {
-                    Input::delete();
                     Flash::valid('Recursos Guardados Exitosamente');
                 } else {
                     Flash::warning('Complete los datos requeridos e intente nuevamente');
