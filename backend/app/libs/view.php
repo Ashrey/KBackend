@@ -40,9 +40,8 @@ class View extends KumbiaView {
      * Renderiza la vista
      * @overload
      * @param Controller $controller
-     * @param string $url url a renderizar
      */
-    public static function render(/* Controller */ $controller, /* Router */  $_url)
+    public static function render($controller)
     {
         /*Establece las configuraciones de haanga*/
         Haanga::configure(array(

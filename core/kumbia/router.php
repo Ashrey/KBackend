@@ -231,14 +231,11 @@ final class Router
      * ej.
      * <code>Router::get()</code>
      *
-     * @param ninguno
-     * @return array con todas los atributos y sus valores
-     *
      * ej.
      * <code>Router::get('controller')</code>
      *
-     * @param string  un atributo: route, module, controller, action, parameters o routed
-     * @return string con el valor del atributo
+     * @param string  (opcional) un atributo: route, module, controller, action, parameters o routed
+     * @return array|string con el valor del atributo
      */
     public static function get($var = null)
     {

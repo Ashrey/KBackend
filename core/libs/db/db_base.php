@@ -52,7 +52,7 @@ class DbBase
      *
      * @var string
      */
-    private $last_query;
+    protected $last_query;
 
     /**
      * Hace un select de una forma mas corta, listo para usar en un foreach
@@ -178,7 +178,7 @@ class DbBase
      */
     public function insert($table, $values, $fields=null)
     {
-        $insert_sql = "";
+        //$insert_sql = "";
         if (is_array($values)) {
             if (!count($values)) {
                 new KumbiaException("Imposible realizar inserci&oacute;n en $table sin datos");
@@ -295,7 +295,7 @@ class DbBase
     protected function debug($sql)
     {
         if ($this->debug) {
-            Flash::notice($sql);
+            Flash::info($sql);
         }
     }
 

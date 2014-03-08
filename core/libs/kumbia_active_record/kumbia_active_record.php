@@ -514,13 +514,11 @@ class KumbiaActiveRecord
 
     /**
      * Se conecta a la base de datos y descarga los meta-datos si es necesario
-     *
-     * @param boolean $new_connection
      */
-    protected function _connect($new_connection = false)
+    protected function _connect()
     {
-        if (!is_object($this->db) || $new_connection) {
-            $this->db = Db::factory($this->database, $new_connection);
+        if (!is_object($this->db)) {
+            $this->db = Db::factory($this->database);
         }
         $this->db->debug = $this->debug;
         $this->db->logger = $this->logger;
@@ -547,7 +545,7 @@ class KumbiaActiveRecord
         if ($this->_dumped) {
             return false;
         }
-        $a = array();
+        //$a = array();
         if ($this->source) {
             $this->source = str_replace(";", '', strtolower($this->source));
         } else {
@@ -564,7 +562,6 @@ class KumbiaActiveRecord
             if (!count($this->primary_key)) {
                 if (!$this->is_view) {
                     throw new KumbiaException("No se ha definido una llave primaria para la tabla '$table' esto imposibilita crear el ActiveRecord para esta entidad");
-                    return false;
                 }
             }
         } else {
@@ -646,7 +643,6 @@ class KumbiaActiveRecord
         } else {
             throw new KumbiaException("No se pudo obtener el Alias, porque el key: \"$key\" no existe.");
         }
-        return $this->alias;
     }
 
     /**
