@@ -15,7 +15,7 @@
  * @category   Kumbia
  * @package    Db
  * @subpackage Adapters 
- * @copyright  Copyright (c) 2005-2012 Kumbia Team (http://www.kumbiaphp.com)
+ * @copyright  Copyright (c) 2005-2014 Kumbia Team (http://www.kumbiaphp.com)
  * @license    http://wiki.kumbiaphp.com/Licencia     New BSD License
  */
 /**
@@ -343,7 +343,7 @@ abstract class DbPDO extends DbBase implements DbPDOInterface
     /**
      * Devuelve el ultimo id autonumerico generado en la BD
      *
-     * @return false|string
+     * @return string
      */
     public function last_insert_id($table='', $primary_key='')
     {
