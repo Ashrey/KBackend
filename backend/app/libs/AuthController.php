@@ -42,11 +42,17 @@ class AuthController extends \Controller
     protected $_checkAuthByDefault = TRUE;
 
     /**
+     * @var Object Objeto encargado de hacer el auth
+     */
+    protected $_authACL = null;
+
+    /**
      * Función que hace las veces de contructor de la clase.
      * 
      */ 
     protected function initialize()
     {
+        $this->_authACL = AuthACL::getInstance();
         if ( $this->_checkAuthByDefault ){
             if ( $this->_protectedActions === TRUE    || ( is_array($this->_protectedActions) &&
                  in_array($this->action_name , $this->_protectedActions) ) ){  
@@ -69,8 +75,7 @@ class AuthController extends \Controller
      * 
      */ 
     protected function checkAuth(){
-        $auth = AuthACL::getAuth();
-        if ($auth->isLogin()) {
+        if ($this->_authACL->isLogin()) {
             return $this->_isAllow();
         } elseif (\Input::hasPost('login') && \Input::hasPost('clave')) {
             $this->_valid();
@@ -89,10 +94,9 @@ class AuthController extends \Controller
      */
     protected function _isAllow()
     {
-        $acl = AuthACL::getAuth();
-        if (!$acl->check()) {
-            \Flash::error('no posees privilegios para acceder a <b>' . \Router::get('route') . '</b>');
-            \View::select(NULL);
+        if (!$this->_authACL->check()) {
+            \Flash::error('No posees privilegios para acceder a ' . \Router::get('route'));
+            \View::select('forbidden');
             return FALSE;
         } else {
             return TRUE;
@@ -110,9 +114,8 @@ class AuthController extends \Controller
      */ 
     protected function _valid()
     {
-        $auth = AuthACL::getAuth();
-        $auth->login(\Input::post('login'), \Input::post('clave'));
-        if ($auth->isLogin()) {
+        $this->_authACL->login(\Input::post('login'), \Input::post('clave'));
+        if ($this->_authACL->isLogin()) {
             \Logger::debug('Login correcto');
             return $this->_isAllow();
         } else {
@@ -132,8 +135,8 @@ class AuthController extends \Controller
      */ 
     public function logout()
     {
-        AuthACL::logout();
-        return Redirect::to('/');
+        $this->_authACL->logout();
+        return \Redirect::to('/');
     }
 
     /**

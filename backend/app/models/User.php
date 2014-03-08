@@ -163,7 +163,7 @@ class User extends \KBackend\Libs\ARecord {
 
     function auth($arg) {
         $clave = $arg['password'];
-        $user = $arg['login'];
+        $user = $arg['user'];
         return $this->find_first("password = '$clave' AND login = '$user' AND enable='1'");
     }
 
