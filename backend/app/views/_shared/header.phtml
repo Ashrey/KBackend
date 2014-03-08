@@ -8,7 +8,7 @@
 		<ul class="nav navbar-nav">
 		{%if login%}
 			{%exec  Menu::render 1 %}
-			<li>{%exec Html::link 'index/logout', 'Salir' %}</li>
+			<li>{%exec Html::link 'user/logout', 'Salir' %}</li>
 		{%else%}
 			<li>{%exec Html::link 'user', 'Entrar' %}</li>
 		{%endif%}
