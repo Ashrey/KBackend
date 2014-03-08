@@ -567,6 +567,9 @@ textareatextarea.control {
 .form-group {
   margin-bottom: 15px;
 }
+form.horizontal {
+  padding-top: 6px;
+}
 form.horizontal .form-group {
   margin-left: -15px;
   margin-right: -15px;
@@ -581,11 +584,8 @@ form.horizontal .form-group:after {
 form.horizontal .form-group:after {
   clear: both;
 }
-.form-horizontal {
-  padding-top: 6px;
-}
 @media (min-width: 768px) {
-  form.horizontal .control-label {
+  form.horizontal label.control {
     text-align: right;
   }
 }
@@ -1370,7 +1370,7 @@ form.horizontal .form-group:after {
   -webkit-transition: height 0.35s ease;
   transition: height 0.35s ease;
 }
-.hero {
+.jumbotron {
   padding: 30px;
   margin-bottom: 30px;
   font-size: 22.5px;
@@ -1380,19 +1380,19 @@ form.horizontal .form-group:after {
   background-color: #eeeeee;
   border-radius: 6px;
 }
-.hero h1 {
+.jumbotron h1 {
   line-height: 1;
   color: inherit;
 }
-.hero p {
+.jumbotron p {
   line-height: 1.4;
 }
 @media screen and (min-width: 768px) {
-  .hero {
+  .jumbotron {
     padding-top: 50px;
     padding-bottom: 50px;
   }
-  .hero h1 {
+  .jumbotron h1 {
     font-size: 67.5px;
   }
 }
