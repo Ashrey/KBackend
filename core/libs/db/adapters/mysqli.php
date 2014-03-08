@@ -113,7 +113,7 @@ class DbMySQLi extends DbBase implements DbBaseInterface
      * Hace una conexión a la base de datos de MySQL
      *
      * @param array $config
-     * @return resource_connection
+     * @return bool
      */
     public function connect($config)
     {
@@ -130,7 +130,7 @@ class DbMySQLi extends DbBase implements DbBaseInterface
     /**
      * Efectua operaciones SQL sobre la base de datos
      *
-     * @param string $sqlQuery
+     * @param string $sql_query
      * @return resource or false
      */
     public function query($sql_query)
@@ -194,9 +194,6 @@ class DbMySQLi extends DbBase implements DbBaseInterface
      */
     public function num_rows($result_query='')
     {
-        if (!$this->id_connection) {
-            return false;
-        }
         if (!$result_query) {
             $result_query = $this->last_result_query;
             if (!$result_query) {
@@ -252,7 +249,6 @@ class DbMySQLi extends DbBase implements DbBaseInterface
         if (($success = mysqli_data_seek($result_query, $number)) !== false) {
             return $success;
         } else {
-            $this->lastError = $this->error();
             throw new KumbiaException($this->error());
         }
     }
@@ -304,9 +300,6 @@ class DbMySQLi extends DbBase implements DbBaseInterface
      */
     public function last_insert_id($table='', $primary_key='')
     {
-        if (!$this->id_connection) {
-            return false;
-        }
         return mysqli_insert_id($this->id_connection);
     }
 
@@ -354,7 +347,7 @@ class DbMySQLi extends DbBase implements DbBaseInterface
      * Borra una tabla de la base de datos
      *
      * @param string $table
-     * @return boolean
+     * @return resource
      */
     public function drop_table($table, $if_exists=true)
     {
@@ -376,7 +369,7 @@ class DbMySQLi extends DbBase implements DbBaseInterface
      *
      * @param string $table
      * @param array $definition
-     * @return boolean
+     * @return resource
      */
     public function create_table($table, $definition, $index=array())
     {
