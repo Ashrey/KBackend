@@ -33,7 +33,7 @@ class FormBuilder {
 	 * Almacena todo los campos
 	 * @var Array
 	 */
-	protected $field = array();
+	protected $fields = array();
 
 	/**
 	 * Almacena las opciones del campo
@@ -56,9 +56,20 @@ class FormBuilder {
 	
 	
 	function __construct($model){
-		$this->option = method_exists($model, 'getForm') ? $model->getForm():array();
-		$this->fields =   array_diff($model->fields, $model->_at, $model->_in, $model->primary_key);
 		$this->model = $model;
+		if(method_exists($model, 'getForm')){
+			$this->options =  $model->getForm();
+			$this->fields = array_keys($this->options);
+		}else{
+			$this->options =  array();
+			$this->fields =  $this->allFields();
+		}
+	}
+
+	protected function allFields(){
+		return array_diff($this->model->fields, $this->model->_at,
+			$this->model->_in, $this->model->primary_key);
+
 	}
 
 	/**
@@ -71,8 +82,7 @@ class FormBuilder {
 	}
 	
 	function getMeta($key){
-		$type = trim(preg_replace('/(\(.*\))/', '', $this->model->_data_type[$key]));
-		
+		return trim(preg_replace('/(\(.*\))/', '', $this->model->_data_type[$key]));	
 	}
 
 	static function getType($key){
@@ -97,7 +107,7 @@ class FormBuilder {
            	case'tinytext': case 'text': case 'mediumtext': case 'longtext':
             case 'blob': case 'mediumblob': case 'longblob': // Usar textarea
                     $type = 'textarea';
-                    break;
+              	break;
 		}
 		return $type;
 	}
@@ -114,6 +124,7 @@ class FormBuilder {
 	}
 	/**
 	 * Return name of the form
+	 * @return string name of the form
 	 */
 	function getNameForm(){
 		$name = strtolower(get_class($this->model));
@@ -126,8 +137,8 @@ class FormBuilder {
      * Permite usar los botones predeterminados
     */
     public function useDefaultBtn() {
-        $this->action('submit', '<button type="submit" class="btn btn-primary"><i class=" fa fa-ok"></i> Ok</button> ');
-        $this->action('calcel', \Html::linkAction('', '<i class=" icon-remove"></i>Cancelar', 'class="btn btn-danger js-confirm" data-msg="¿Está seguro?"'));
+        $this->action('submit', '<button type="submit" class="btn btn-primary"><i class=" fa fa-check"></i> Ok</button> ');
+        $this->action('calcel', \Html::linkAction('', '<i class="fa fa-times"></i> Cancelar', 'class="btn btn-danger js-confirm" data-msg="¿Está seguro?"'));
     }
 
 	/**
