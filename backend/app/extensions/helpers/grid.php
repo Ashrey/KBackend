@@ -109,20 +109,20 @@ class Grid {
         $this->action('borrar', \Html::linkAction('delete/%id%', '<i class="fa fa-trash-o"></i>', 'class="js-confirm btn btn-danger" data-msg="¿Desea Eliminar?"'));
     }
 
-	/**
-	 * sobrecarga toString 
-	 */
-	function __toString(){
+	function render(){
 		$filter = KBackend\Libs\FilterSQL::get();
 		$header = empty($this->_header)?array_keys(get_object_vars($this->pag[0])):$this->_header;
-		ob_start();
-		View::partial('grid', FALSE, array(
+		return Haanga::Load('_shared/grid.phtml', array(
+			'href' => \Router::get('action'). $filter->getURL(array('order' => '-_order_-')),
 			'grid' => $this,
 			'result' => $this->pag,
 			'filter'=>$filter,
 			'action'=>$this->_action,
 			'header'=>$header
-		));
-		return ob_get_clean();
+		), true);
+	}
+
+	function __toString(){
+		return $this->render();
 	}
 }

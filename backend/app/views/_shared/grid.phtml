@@ -1,0 +1,33 @@
+{% if result %}
+	<table class="t bordered condensed hover">
+		<thead>
+			{%for value in header %}
+				{%buffer url%}{%exec str_replace '-_order_-', value, href%}{%endbuffer%}
+				{%buffer label%}{{value}} <i class="fa fa-sort"></i>{%endbuffer%}
+				<th>{%exec Html::linkAction url, label %} </th>
+			{%endfor%}
+			{% if action %}
+				<th>Acciones</th>
+			{% endif %}
+		</thead>
+
+	{%for item in result%}
+		<tr>
+			{% for key, val in item %}
+				<td>{%exec grid.getCol key, val %}</td>
+			{% endfor %}
+
+			{% if action %}
+				<td>
+				{%for val in action %}
+					{%exec str_replace '%id%', item.id, val%}
+				{%endfor%}
+				</td>
+			{% endif %}
+		</tr>
+	{%endfor%}
+	</table>
+	{%autoescape off%}{{result}}{%endautoescape%}
+{%else%}
+	No hay datos para mostrar
+{%endif%}
