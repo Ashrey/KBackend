@@ -1,4 +1,5 @@
 <?php
+
 namespace KBackend\Libs;
 /**
  * KBackend
@@ -8,7 +9,8 @@ namespace KBackend\Libs;
  * @author KumbiaPHP Development Team
  */
 require_once CORE_PATH . 'kumbia/controller.php';
-
+/*carga las configuraciones del backend*/
+\KBackend\Libs\Config::read('backend');
 class AuthController extends \Controller
 {
 
@@ -81,7 +83,7 @@ class AuthController extends \Controller
             $this->_valid();
             \Redirect::toAction(\Router::get('action'));
         } else {
-            \View::select('logueo');
+            \View::select(null, 'logueo');
             return FALSE;
         }
 
@@ -96,7 +98,7 @@ class AuthController extends \Controller
     {
         if (!$this->_authACL->check()) {
             \Flash::error('No posees privilegios para acceder a ' . \Router::get('route'));
-            \View::select('forbidden');
+            \View::select(null, 'forbidden');
             return FALSE;
         } else {
             return TRUE;
@@ -121,7 +123,7 @@ class AuthController extends \Controller
         } else {
             \Logger::error('Login errado');
             \Flash::warning('Datos de acceso  no válidos');
-            \View::select('logueo');
+            \View::select(null,'logueo');
             return FALSE;
         }
     }

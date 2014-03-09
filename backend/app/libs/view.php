@@ -53,10 +53,11 @@ class View extends KumbiaView {
             ),
         ));
 
+
         /*Si no hay nada termina el proceso y descarga el buffer*/
         if (!self::$_view && !self::$_template)
             return ob_end_flush();
-        
+         
         // Guarda el controlador
         self::$_controller = $controller;
         /*Captura el posible scaffold*/
@@ -78,21 +79,19 @@ class View extends KumbiaView {
         if (!PRODUCTION || $scaffold || !self::$_content) {
             // Carga el contenido del buffer de salida
             self::$_content = ob_get_clean();
-            // Renderizar vista
-            if ($view = self::$_view) {
-                $file =  self::getPath();
-               
-                if (!is_file(APP_PATH ."views/$file")){
-                    $file = $scaffold && !is_file(APP_PATH ."views/$view.phtml")? "_shared/scaffolds/$scaffold/$view.phtml": "$view.phtml";
-                }
-                
-
-                self::$_content = Haanga::Load($file, $vars, true);
-                // si esta en produccion y se cachea la vista
-                if (PRODUCTION && self::$_cache['type'] == 'view') {
-                    Cache::driver()->save(self::$_content, self::$_cache['time'], $_url, self::$_cache['group']);
-                }
+            $file = self::getPath();
+            if (!is_file(APP_PATH ."views/$file")){
+                $view = self::$_view;
+                $file = ( $scaffold && $view ) ?
+                    "_shared/scaffolds/$scaffold/$view.phtml":
+                    self::$_template. '.phtml';
             }
+            self::$_content = Haanga::Load($file, $vars, true);
+            // si esta en produccion y se cachea la vista
+            if (PRODUCTION && self::$_cache['type'] == 'view') {
+                Cache::driver()->save(self::$_content, self::$_cache['time'], $_url, self::$_cache['group']);
+            }
+            
         } else {
             ob_clean();
         }
