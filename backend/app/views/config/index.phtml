@@ -3,19 +3,23 @@
 {%block content%}
     <div class="offset-3 col-6" >
         {%exec View::content %}
-        {%exec Form::open '', 'post'%}
+        {%exec Form::open '', 'post', 'class="horizontal"'%}
         {%for key, val in values%}
             <fieldset>
-                <legend><?php echo $key ?></legend>
+                <legend>{{key|Title}}</legend>
                 {%for  name, value in val %}
-                    <label class="col-4 control-label" for="config_name">{{name|Title}}: </label>
+                <div class="form-group">
+                    <label class="col-4 control" for="config_name">{{name|Title}}: </label>
                      {%buffer name%}config.{{key}}.{{name}}{%endbuffer%}
+                    <div class="col-6">
                     {% if value == "On" OR value == 'Off'%}
                         {%set check = (value == 'On')%}
-                        {%exec Form::check name, 1, 'class="control"', check %}
+                        {%exec Form::check name, 1, '', check %}
                     {%else%}
                         {%exec Form::text name, 'class="control"', value %}
                     {%endif%}
+                    </div>
+                </div>
                 {%endfor%}
             </fieldset>
         {%endfor%}

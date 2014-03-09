@@ -52,7 +52,7 @@ class FormBuilder {
 	/**
 	 * Template for generate label-input group
 	 */
-	protected $tpl = '<div class="form-group">{{label}}{{input}}</div>';
+	protected $tpl = '<div class="form-group">{{label}}<div class="col-6">{{input}}</div></div>';
 	
 	
 	function __construct($model){
@@ -92,10 +92,10 @@ class FormBuilder {
 			case 'datetime': case 'timestamp': // Usar el js de datetime
                 $type = 'datetime';
                 break;
-                case 'enum': case 'set':
+            case 'enum': case 'set':
                     $type = 'select';
-                case'tinytext': case 'text': case 'mediumtext': case 'longtext':
-                case 'blob': case 'mediumblob': case 'longblob': // Usar textarea
+           	case'tinytext': case 'text': case 'mediumtext': case 'longtext':
+            case 'blob': case 'mediumblob': case 'longblob': // Usar textarea
                     $type = 'textarea';
                     break;
 		}
@@ -139,19 +139,19 @@ class FormBuilder {
 		$model_name = $this->getNameForm();
 		//form init
 		$action = ltrim(Router::get('route'), '/');
-        $html .= Form::open($action, 'post');
+        $html .= Form::open($action, 'post', 'class="horizontal"');
 		foreach($this->fields as $field){
 			$attr = $this->getAttrs($field);
 			$type = $attr['type'];//form type
 			$forAttr = $model_name . '_' . $field;//HTML for atributte
 			$name = "$model_name.$field"; //HTML name atributte
 			/*HTML generator*/
-			$add = str_replace('{{label}}',Form::label($attr['alias'], $forAttr), $this->tpl);
+			$add = str_replace('{{label}}',Form::label($attr['alias'], $forAttr, 'class="control col-5"'), $this->tpl);
 			$add = str_replace('{{input}}',call_user_func_array(array('Form', $type), array($name, 'class="control"', $this->model->$field)), $add);
 			$html .= $add;
 		}
 		//add button
-		$html .= '<div class="btn-group">'. implode('', $this->_action). '</div>';
+		$html .= '<div class="text-center"><div class="btn-group">'. implode('', $this->_action). '</div></div>';
 		return "$html</form>";
 	}
 
