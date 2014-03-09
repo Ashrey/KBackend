@@ -5,10 +5,11 @@
 <div class="row">
     {%if result %}
         <div class="col-5 offset-3">
-            <dl class="dl-horizontal">
-                {%for i in cols %} 
-                    <dt>{{result.alias[i]}}</dt>
-                    <dd>{%exec FormBuilder::fieldValue i, result %}</dd>
+            <dl class="horizontal">
+                {%for i, j in cols %} 
+                    <dt>{{j| title}}</dt>
+                    {%buffer value%}{%exec FormBuilder::fieldValue j, result %}{%endbuffer%}
+                    <dd>{{value | default:'-'}}</dd>
                 {%endfor%}
             </dl>
             {% set isAjax = Input::isAjax()%}

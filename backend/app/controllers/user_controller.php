@@ -9,11 +9,6 @@
 class UserController extends \KBackend\Libs\ScaffoldController{
 	
 	protected $_model = '\KBackend\Model\User';
-	
-	protected $_index = 'paginar';
-	
-	protected $_title = 'User';
-
 
     /**
      * Activa un usuario desde el backend

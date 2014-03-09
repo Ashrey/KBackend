@@ -34,12 +34,6 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
     public $title = '';
 
     /**
-     * Nombre del método a la hora de indexar los registros
-     * @var String 
-     */
-    protected $_index = 'index';
-
-    /**
      * Nombre del método a la hora de mostrar un registro específico
      * @var String 
      */
@@ -173,7 +167,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
     public function view($id) {
         $_model = new $this->_model();
         $this->result = method_exists($_model, 'view') ?
-                call_user_func_array(array($_model, $this->_index), array($id)) :
+                call_user_func_array(array($_model, 'view'), array((int)$id)) :
                 $_model->find_first((int) $id);
         /* asigna columnas a mostrar */
         $this->cols = array_keys(get_object_vars($this->result));

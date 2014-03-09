@@ -47,6 +47,16 @@ class User extends \KBackend\Libs\ARecord {
         return  "SELECT _user.id, _user.login, _user.email, r.role rol FROM _user JOIN _role r ON r.id = role_id";
     }
 
+    /**
+     * Get the row for user with id = $id
+     * @param int $id id of user
+     * @return Object
+     */
+    function view($id) {
+        return $this->find_by_sql("SELECT _user.id, login, email, role from _user JOIN _role ON _role.id = role_id
+                                  where _user.id = '$id' limit 1");
+    }
+
     public function numAcciones($pagina = 1) {
         $cols = "_user.*,COUNT(_action.id) as total";
         $join = "LEFT JOIN _action ON _user.id = _action.user_id";
