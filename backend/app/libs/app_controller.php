@@ -1,5 +1,4 @@
 <?php
-use \KBackend\Libs\Config;
 /**
  * Todas las controladores heredan de esta clase en un nivel superior
  * por lo tanto los metodos aqui definidos estan disponibles para
@@ -11,7 +10,7 @@ use \KBackend\Libs\Config;
 // @see Controller nuevo controller
 require_once CORE_PATH . 'kumbia/controller.php';
 /*carga las configuraciones del backend*/
-Config::read('backend');
+\KBackend\Libs\Config::read('backend');
 /*Carga el namespace*/
 Haanga::addUse('\KBackend\Libs\AuthACL');
 class AppController extends Controller {
