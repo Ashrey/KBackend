@@ -5,9 +5,9 @@ namespace KBackend\Libs;
  * PHP version 5
  * @package Controller
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
- * @author KumbiaPHP Development Team
+ * @author KumbiaPHP Development Team   
  */
-class ScaffoldController extends \KBackend\Libs\AuthController {
+abstract class ScaffoldController extends \KBackend\Libs\AuthController {
 
     /**
      * Decide el scaffold a usar
@@ -21,17 +21,19 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
      */
     protected $_model;
 
+
+
     /**
      * Establece si se usan o no filtros
      * @var boolean 
      */
-    protected $_use_filter = false;
+    public $use_filter = false;
 
     /**
      * Establece el titulo
      * @var String
      */
-    protected $_title = '';
+    public $title = '';
 
     /**
      * Nombre del método a la hora de indexar los registros
@@ -49,7 +51,7 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
      * Mostrar la barra de acciones
      * @var boolean 
      */
-    protected $_show_bar = true;
+    public $show_bar = true;
 
     /**
      * Añade la funcionalidad de iniciación
@@ -65,7 +67,6 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
          */
         $last = explode('\\', $this->_model);
         $this->model = strtolower(end($last));
-        
     }
 
     protected function after_filter() {
@@ -75,8 +76,8 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
     }
 
     protected function before_filter() {
-        $this->title = empty($this->_title) ? ucwords($this->_model) : $this->_title;
-        $this->use_filter = $this->_use_filter;
+        /*Set the model name if not title*/
+        $this->title = empty($this->title) ? ucwords($this->model) : $this->title;
     }
     
     public function index() {
@@ -88,8 +89,6 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
             $paginator = new Paginator($_model,  $filter->getArray());
             /*llama a la funcion de resultados*/
             $this->result = new \Grid($paginator);
-            /* Mostrar la barra de acciones */
-            $this->show_bar = $this->_show_bar;
         } catch (KumbiaException $e) {
             \View::excepcion($e);
         }
@@ -110,7 +109,7 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
                     //se hacen persistente los datos en el formulario
                     $this->{$this->model} = $obj;
                 } else {
-                    \Flash::success('Agregegado correctamente');
+                    \Flash::valid('Agregegado correctamente');
                     if (!\Input::isAjax()) {
                         \Redirect::toAction('');
                     }
@@ -139,7 +138,7 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
                     //se hacen persistente los datos en el formulario
                     $this->{$this->_model} = $data;
                 } else {
-                    \Flash::success('Edición hecha');
+                    \Flash::valid('Edición hecha');
                     if (!\Input::isAjax()) {
                         \Redirect::toAction('');
                     }
@@ -159,7 +158,7 @@ class ScaffoldController extends \KBackend\Libs\AuthController {
     public function delete($id) {
         try {
 			if (call_user_func(array($this->_model, '_delete'), (int) $id)) {
-				\Flash::success('Borrado correctamente');
+				\Flash::valid('Borrado correctamente');
 			} else {
 				\Flash::error('Falló Operación');
 			}
