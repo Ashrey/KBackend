@@ -2,15 +2,18 @@
 // Bootstrap de la aplicacion para personalizarlo
 // Para cargar cambia en public/index.php el require del bootstrap a app
 function autoload_kbackend($name) {
+    $path = dirname(dirname(__FILE__));
     if (strncmp($name, 'KBackend', 7) == 0 ) {
         $split = explode('\\', $name);
         $class = $split[2];
         if ($split[1] == 'Model') {
-            if (!include APP_PATH . "models/$class.php") {
+            if (!include  "$path/models/$class.php") {
+                die("$path/models/$class.php");
                 throw new KumbiaException("Clase $class no encontrada");
             }
         } elseif ($split[1] == 'Libs') {
-            if (!include APP_PATH . "libs/$class.php"){
+            if (!include "$path/libs/$class.php"){
+                die("$path/models/$class.php");
                 throw new KumbiaException("Clase $class no encontrada");
             }
         }
@@ -18,7 +21,7 @@ function autoload_kbackend($name) {
 		/**
 		 * Esto es necesario para no dar problemas con el logger
 		 */
-		 include APP_PATH . "libs/Logger.php";
+		 include  "$path/libs/Logger.php";
     }
 }
 
