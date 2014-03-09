@@ -8,12 +8,10 @@ function autoload_kbackend($name) {
         $class = $split[2];
         if ($split[1] == 'Model') {
             if (!include  "$path/models/$class.php") {
-                die("$path/models/$class.php");
                 throw new KumbiaException("Clase $class no encontrada");
             }
         } elseif ($split[1] == 'Libs') {
             if (!include "$path/libs/$class.php"){
-                die("$path/models/$class.php");
                 throw new KumbiaException("Clase $class no encontrada");
             }
         }
