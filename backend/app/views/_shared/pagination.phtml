@@ -1,0 +1,47 @@
+{% if pag.total != 1 %}
+<div class="text-center">
+	<ul class="pagination">
+		{%if ! pag.prev | null%}
+			{# previous page #}
+			{%buffer href%}{%exec str_replace '-_page_-', pag.prev, url%}{%endbuffer%}
+			<li class="prev">{%exec Html::link href, 'Anterior', 'title="Ir a la pág. anterior"' %}</li>
+		{% else %}
+			<li class="prev  disabled"><a title="Ir a la pág. anterior" href="#">Anterior</a></li>
+		{%endif%}
+		
+		{#se coloca el link sin numero de pagina para la pagina 1#}
+		{%buffer href%}{%exec str_replace '-_page_-', 1, url%}{%endbuffer%}
+		
+		{%if pag.current == 1%}
+			<li class="active"><a href="#">1</a><li>
+		{%else%}
+			<li>{%exec Html::link href, '1' %}</li>
+		{%endif%}
+		
+		{%if start > 2 %}<li><a href="#">...</a></li>{% endif %}
+		
+		{# each page link #}
+		{%for i in range %} 
+			{%buffer href%}{%exec str_replace '-_page_-', i, url%}{%endbuffer%}
+			{%if i == pag.current %}
+				<li class="active"><a href='#'>{{i}}</a><li>
+			{% else %}
+				<li>{%exec Html::link href, i %}</li>
+			{% endif %}
+		{% endfor %}
+		
+		{%if pag.total > i %}
+			<li><a href="#">...</a></li>
+			{%buffer href%}{%exec str_replace '-_page_-', pag.next, pag.total%}{%endbuffer%}
+			<li>{%exec Html::link href, pag.total %}</li>
+		{% endif %}
+		
+		{% if ! pag.next | null %}
+			{%buffer href%}{%exec str_replace '-_page_-', pag.next, url%}{%endbuffer%}
+			<li class="prev">{% exec Html::link href, 'Siguiente', 'title="Ir a la pág. siguiente" class="nextprev"' %}</li>
+		{% else %}
+			<li class="prev disabled"><a title="Ir a la pág. siguiente" href="#">Siguiente</a></li>
+		{% endif %}
+	</ul>
+</div>
+{% endif %}

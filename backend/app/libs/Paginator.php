@@ -1,5 +1,8 @@
 <?php
 namespace KBackend\Libs;
+use \Router;
+use \Haanga;
+use \ArrayIterator;
 /**
  * KumbiaPHP web & app Framework
  *
@@ -23,7 +26,7 @@ namespace KBackend\Libs;
  * Implementación de paginador
  * 
  */
-class Paginator implements \Iterator, \ArrayAccess
+class Paginator implements \IteratorAggregate, \ArrayAccess
 {
 	/**
 	 * Items de pagina
@@ -76,19 +79,7 @@ class Paginator implements \Iterator, \ArrayAccess
      */
     public $per_page;
     
-    /**
-     * Número de items recorridos
-     * 
-     * @var int
-     */
-    private $_position = 0;
     
-    /**
-     * Cantidad de items ha recorrer
-     * 
-     * @var int
-     */
-    private $_rowCount = 0;
     
     /**
      * Constructor
@@ -132,48 +123,9 @@ class Paginator implements \Iterator, \ArrayAccess
         $this->per_page = $per_page;
 	}
 	
-	public function rewind(){
-		$this->_position = 0;
-	}
 
-	/**
-	 * Obtiene el item actual
-	 * 
-	 * @return mixed
-	 */
-    public function current() 
-    {
-        return $this->items[$this->_position];
-    }
-
-	/**
-	 * Obtiene key
-	 * 
-	 * @return int
-	 */
-    public function key() 
-    {
-        return $this->_position;
-    }
-
-	/**
-	 * Avanza iterador
-	 * 
-	 * @return mixed
-	 */
-    public function next() 
-    {
-		$this->_position++;
-    }
-
-	/**
-	 * Verifica si es valida la iteracion
-	 * 
-	 * @return boolean
-	 */
-    public function valid() 
-    {
-        return $this->_position < $this->_rowCount;
+    public function getIterator() {
+        return new ArrayIterator($this->items);
     }
     
     public function offsetExists ($i){
@@ -185,4 +137,49 @@ class Paginator implements \Iterator, \ArrayAccess
 	}
 	public function offsetSet ($offset , $value ){}
 	public function offsetUnset ( $offset ){}
+
+    /*function for render paginator*/
+    protected static function generateURL(){
+        $filter = FilterSQL::get();
+        $controller = Router::get('controller');
+        $action     = Router::get('action');
+        return "$controller/$action". $filter->getURL(array('page' => '-_page_-'));
+    }
+
+
+    function start($half){
+        if ($this->current <= $half) {
+            $start = 1;
+        }elseif (($this->total - $this->current) < $half) {
+            $start = $this->total - $show + 1;
+            if ($start < 1)
+                $start = 1;
+        } else {
+            $start = $this->current - $half;
+        }
+        return $start;
+    }
+
+    
+    function render(){
+        $show  = 10;
+        $half  = floor($show / 2);
+        $start = $this->start($half);
+        if($start == 1){
+            $start = 2;
+            $show -= 1;
+        }
+
+        return Haanga::Load('_shared/pagination.phtml', array(
+            'url' => self::generateURL(),
+            'show' => $show,
+            'pag' => $this,
+            'start' => $start,
+            'range' => range($start, min($this->total, ($start + $show))),
+        ), true);
+    }
+
+    function __toString(){
+        return $this->render();
+    }
 }
