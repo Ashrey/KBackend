@@ -68,7 +68,7 @@ class Logger {
                 /*No audito select, ni describe*/
                 if ($t === 'SELECT' ||    $t === 'DESCRIBE')
                     return;
-                if (\Config::get('backend.app.logger') == true) {
+                if (Config::get('backend.app.logger') == true) {
                     $auditoria = new \KBackend\Model\Action();
                     $auditoria->user_id = \KBackend\Libs\AuthACL::isLogin()?  \KBackend\Libs\AuthACL::get('id') : NULL;
                     $auditoria->action = $t;

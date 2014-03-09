@@ -1,5 +1,5 @@
 <?php
-
+use \KBackend\Libs\Config;
 /**
  * Todas las controladores heredan de esta clase en un nivel superior
  * por lo tanto los metodos aqui definidos estan disponibles para

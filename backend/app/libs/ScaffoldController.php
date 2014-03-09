@@ -21,8 +21,6 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
      */
     protected $_model;
 
-
-
     /**
      * Establece si se usan o no filtros
      * @var boolean 
@@ -85,7 +83,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
             $_model = new $this->_model();
             /*captura los filtros*/
             $filter = FilterSQL::get();
-            $filter->per_page =  \Config::get('backend.app.per_page');
+            $filter->per_page =  Config::get('backend.app.per_page');
             $paginator = new Paginator($_model,  $filter->getArray());
             /*llama a la funcion de resultados*/
             $this->result = new \Grid($paginator);

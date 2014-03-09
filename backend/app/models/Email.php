@@ -17,13 +17,13 @@ class Email {
         $this->_mail = new \KBackend\Libs\PHPMailer();
         $this->_mail->IsSMTP();
         $this->_mail->SMTPAuth = TRUE;
-        $this->_mail->SMTPSecure = \Config::get('backend.email.security');
-        $this->_mail->Host =   \Config::get('backend.email.server');
-        $this->_mail->Port = \Config::get('backend.email.port');
-        $this->_mail->Username = \Config::get('backend.email.user');//escribir el correo
-        $this->_mail->Password = \Config::get('backend.email.password');//escribir la clave
-        $this->_mail->From = \Config::get('backend.email.user'); //escribir el remitente
-        $this->_mail->FromName = \Config::get('backend.email.from');
+        $this->_mail->SMTPSecure = Config::get('backend.email.security');
+        $this->_mail->Host =   Config::get('backend.email.server');
+        $this->_mail->Port = Config::get('backend.email.port');
+        $this->_mail->Username = Config::get('backend.email.user');//escribir el correo
+        $this->_mail->Password = Config::get('backend.email.password');//escribir la clave
+        $this->_mail->From = Config::get('backend.email.user'); //escribir el remitente
+        $this->_mail->FromName = Config::get('backend.email.from');
         $this->_mail->CharSet = 'UTF-8';
     }
 
@@ -67,7 +67,7 @@ class Email {
 		ob_start();
         \View::partial("email/$tpl", NULL, $var);
         $msg =  ob_get_clean();
-        $this->_mail->Subject = "$subject - " . \Config::get('backend.app.nombre');
+        $this->_mail->Subject = "$subject - " . Config::get('backend.app.name');
         $this->_mail->AltBody = strip_tags($msg);
         $this->_mail->MsgHTML($msg);
         $this->_mail->IsHTML(TRUE);

@@ -50,8 +50,8 @@ class AuthACL {
     static public function getInstance() {
         $tmp = self::$_obj; /*da error si uso el self en el if*/
         if(!($tmp instanceof self)){
-            $class = \Config::get('backend.security.auth');
-            $acl   = \Config::get('backend.security.acl');
+            $class = Config::get('backend.security.auth');
+            $acl   = Config::get('backend.security.acl');
             if(!class_exists($class)){
                 throw new \Exception("Class $class configured for Auth do not exists");   
             }

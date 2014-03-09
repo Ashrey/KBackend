@@ -52,7 +52,7 @@ class User extends \KBackend\Libs\ARecord {
         $join = "LEFT JOIN _action ON _user.id = _action.user_id";
         $group = '_user.' . join(',_user.', $this->fields);
         $sql = "SELECT $cols FROM $this->source $join GROUP BY $group";
-        return $this->paginate_by_sql($sql, "page: $pagina", 'per_page: ' . \Config::get('backend.app.per_page'));
+        return $this->paginate_by_sql($sql, "page: $pagina", 'per_page: ' . Config::get('backend.app.per_page'));
     }
 
     /**

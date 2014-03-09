@@ -29,7 +29,7 @@ class Action extends \KBackend\Libs\ARecord {
 	 */
     public function byUser($id, $pag = 1) {
         $where = "user_id = '$id'";
-        return $this->paginate("page: $pag", "conditions: $where", "order: id desc", 'per_page: ' . \Config::get('backend.app.per_page')
+        return $this->paginate("page: $pag", "conditions: $where", "order: id desc", 'per_page: ' . Config::get('backend.app.per_page')
         );
     }
 
