@@ -10,11 +10,26 @@ namespace KBackend\Libs;
  * @package Db
  * @subpackage ActiveRecord
  */
-
-class ARecord extends \KumbiaActiveRecord implements \ArrayAccess {
+ 
+require_once __DIR__ . '/ActiveRecord/ActiveRecord.php';
+class ARecord extends \ActiveRecord\ActiveRecord implements \ArrayAccess {
 
 
     protected $logger = true;
+
+    /**
+     * Obtiene nombre de tabla
+     * 
+     * @return string
+     */
+    public static function getTable()
+    {
+        $class = explode('\\', get_called_class());
+        $name = strtolower(end($class));
+        return "_$name";
+    }
+    
+
 
     public function offsetSet($indice, $valor) {
         if (!is_null($indice)) {
@@ -32,13 +47,6 @@ class ARecord extends \KumbiaActiveRecord implements \ArrayAccess {
 
     public function offsetGet($indice) {
         return $this->offsetExists($indice) ? $this->{$indice} : NULL;
-    }
-    
-    public static function __callStatic($name, $args){
-		$model = get_called_class();
-		$obj = new $model();
-		$name = substr($name, 1);
-		return call_user_func_array(array($obj, $name), $args);
     }
     
     public function get_alias($key=null){
