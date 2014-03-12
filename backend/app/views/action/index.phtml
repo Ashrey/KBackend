@@ -2,11 +2,23 @@
 {%block title%}Auditorias del Sistema{%endblock%}
 {%block content%}
 	{%exec View::content %}
-	<h3>Usuarios del Sistema</h3>
-	<ul>
-	{% for  r in user.items %} 
-	{%buffer url%}user/{{r.id}}{%endbuffer%}
-   	 <li>{%exec Html::linkAction url r.login %}</li>
+	<table class=" t bordered">
+	<summary>All User</summary>
+	<thead>
+		<tr>
+			<th>User</th>
+			<th>Number of Action</th>
+		</tr>
+	</thead>
+	{% for  r in user %}
+	<tr>
+		{%buffer url%}user/{{r.id}}{%endbuffer%}
+   		 <td>{%exec Html::linkAction url r.login %}</td>
+   		 <td>{{r.total}}</td>	
+	</tr>
 	{%endfor%}
 	</ul>
+		
+	</table>
+	
 {%endblock%}
