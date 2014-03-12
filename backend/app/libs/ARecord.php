@@ -50,10 +50,6 @@ class ARecord extends \ActiveRecord\ActiveRecord implements \ArrayAccess {
     }
     
     public function get_alias($key=null){
-		 if ($key && array_key_exists($key, $this->alias)) {
-            return $this->alias[$key];
-        } else {
-            return ucfirst($key);
-        }
+        return ucfirst(str_replace('_', ' ',$key));
 	}
 }

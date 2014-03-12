@@ -111,7 +111,7 @@ class Grid {
 
 	function render(){
 		$filter = KBackend\Libs\FilterSQL::get();
-		$header = empty($this->_header)?array_keys(get_object_vars($this->pag[0])):$this->_header;
+		$header = empty($this->_header)?$this->pag->getHeader():$this->_header;
 		return Haanga::Load('_shared/grid.phtml', array(
 			'href' => \Router::get('action'). $filter->getURL(array('order' => '-_order_-')),
 			'grid' => $this,

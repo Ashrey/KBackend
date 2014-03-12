@@ -67,8 +67,10 @@ class FormBuilder {
 	}
 
 	protected function allFields(){
-		return array_diff($this->model->fields, $this->model->_at,
-			$this->model->_in, $this->model->primary_key);
+		$model = $this->model;
+		$md = $model::metadata();
+		$metadata = array_diff($md->getFieldsList(), array($md->getPK()));
+		return $metadata;
 
 	}
 
@@ -82,7 +84,7 @@ class FormBuilder {
 	}
 	
 	function getMeta($key){
-		return trim(preg_replace('/(\(.*\))/', '', $this->model->_data_type[$key]));	
+		return trim(preg_replace('/(\(.*\))/', '', $key));	
 	}
 
 	static function getType($key){
@@ -116,9 +118,12 @@ class FormBuilder {
 	 * Genera los posibles atributos
 	 */
 	function getAttrs($field){
+		$model = $this->model;
+		$md = $model::metadata()->getFields();
+		$type = $this->getMeta($md[$field]['Type']);
 		return array(
-			'type' => self::getType($field),
-			'required' => in_array($field, $this->model->not_null),
+			'type' => self::getType($type),
+			//'required' => in_array($field, $this->model->not_null),
 			'alias' => isset($this->options[$field]) ? $this->options[$field] : $this->model->get_alias($field),
 		);
 	}

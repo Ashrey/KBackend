@@ -92,9 +92,9 @@ class AuthACL {
      * Establece los recursos a los que un rol tiene acceso
      */
     protected function _assignAccess() {
-         $rol = \KBackend\Model\Role::_find_first($this->_auth->get('role_id'));
+        $id = $this->_auth->get('role_id');
+        $recursos = \KBackend\Model\Role::getResource($id);
         //establecemos los recursos permitidos para el rol
-        $recursos = $rol->getRecursos();
         $urls = array();
         foreach ($recursos as $e) {
             $url = !empty($e->module) ? "$e->module/" : '';
@@ -103,8 +103,8 @@ class AuthACL {
             $urls[] = $url;
         }
          //damos permiso al rol de acceder al arreglo de recursos
-        $this->_acl->allow($rol->id, $urls);
-        $this->_acl->user($this->_auth->get('id'), array($rol->id));
+        $this->_acl->allow($id, $urls);
+        $this->_acl->user($this->_auth->get('id'), array($id));
     }
 
     /**
