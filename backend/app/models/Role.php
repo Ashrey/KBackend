@@ -8,7 +8,6 @@ namespace KBackend\Model;
  * @author KumbiaPHP Development Team
  */
 class Role extends \KBackend\Libs\ARecord {
-	protected $source = '_role';
 	
     protected function initialize() {
         //validaciones
@@ -22,12 +21,15 @@ class Role extends \KBackend\Libs\ARecord {
      * 
      * @return array 
      */
-    public function getRecursos(){
-        $columnas = "r.*";
+    public static function  getResource($id){
         $join = "INNER JOIN _role_resource as rr ON rr.role_id = _role.id ";
         $join .= "INNER JOIN _resource as r ON rr.resource_id = r.id ";
-        $where = "_role.id = '$this->id'";
-        return $this->find($where, "columns: $columnas" , "join: $join");
+        $param = array(
+            'JOIN' => $join,
+            'columns' => "r.*",
+            'where' => "_role.id = ?"
+        );
+        return self::all($param, array($id));
     }
 
 }

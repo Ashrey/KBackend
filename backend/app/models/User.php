@@ -1,5 +1,6 @@
 <?php
 namespace KBackend\Model;
+use \KBackend\Libs\Paginator;
 /**
  * KBackend
  * PHP version 5
@@ -8,8 +9,6 @@ namespace KBackend\Model;
  * @author KumbiaPHP Development Team
  */
 class User extends \KBackend\Libs\ARecord {
-
-    protected $source = '_user';
 
     protected function initialize() {
         $this->validates_presence_of('login', 'message: Debe escribir un <b>Login</b> para el Usuario');
@@ -43,7 +42,7 @@ class User extends \KBackend\Libs\ARecord {
      * Devuelve el SQL para paginación
      * @return string sql
      */
-    public function getSQL() {
+    public static function index() {
         return  "SELECT _user.id, _user.login, _user.email, r.role rol FROM _user JOIN _role r ON r.id = role_id";
     }
 
@@ -52,18 +51,15 @@ class User extends \KBackend\Libs\ARecord {
      * @param int $id id of user
      * @return Object
      */
-    function view($id) {
-        return $this->find_by_sql("SELECT _user.id, login, email, role from _user JOIN _role ON _role.id = role_id
-                                  where _user.id = '$id' limit 1");
+    static function view($id) {
+        $param = array(
+          'fields' => '_user.id, login, email, role',
+          'join' =>  'JOIN _role ON _role.id = role_id',
+          'where' => '_user.id = ? '
+        );
+        return self::first($param, array($id));
     }
 
-    public function numAcciones($pagina = 1) {
-        $cols = "_user.*,COUNT(_action.id) as total";
-        $join = "LEFT JOIN _action ON _user.id = _action.user_id";
-        $group = '_user.' . join(',_user.', $this->fields);
-        $sql = "SELECT $cols FROM $this->source $join GROUP BY $group";
-        return $this->paginate_by_sql($sql, "page: $pagina", 'per_page: ' . Config::get('backend.app.per_page'));
-    }
 
     /**
      * Realiza el proceso de registro de un usuario desde el frontend.
@@ -171,10 +167,28 @@ class User extends \KBackend\Libs\ARecord {
         return sha1($this->login . $this->id . $this->password. $this->created_at);
     }
 
-    function auth($arg) {
+    /**
+     * Make auth
+     * @param $arg Array
+     * @return bool Valid auth
+     */
+    public static function auth($arg) {
         $clave = $arg['password'];
         $user = $arg['user'];
-        return $this->find_first("password = '$clave' AND login = '$user' AND enable='1'");
+        $where = array('where' => 'password = :password AND login = :user AND enable=1');
+        return self::first($where, $arg);
     }
 
+    /**
+     * Paginate user with their number of action
+     * @param integer $page number of page
+     */
+    public static function actions($page = 1) {
+        $arg = array(
+            'fields' =>  '_user.*,COUNT(_action.id) as total',
+            'join'   =>  'LEFT JOIN _action ON _user.id = _action.user_id',
+            'group'  => '_user.id'
+        );
+        return self::paginate($arg,  $page, \Config::get('backend.app.per_page'));
+    }
 }

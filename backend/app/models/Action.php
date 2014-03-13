@@ -1,5 +1,6 @@
 <?php
 namespace KBackend\Model;
+use \Config;
 /**
  * KBackend
  * PHP version 5
@@ -16,7 +17,7 @@ class Action extends \KBackend\Libs\ARecord {
      */
     protected $logger = false;
 
-    protected function before_save() {
+    protected function _beforeSave() {
         $this->ip = ip2long($_SERVER['REMOTE_ADDR']);
     }
 
@@ -27,11 +28,16 @@ class Action extends \KBackend\Libs\ARecord {
 	/**
 	 * Return pagination action by user id
 	 */
-    public function byUser($id, $pag = 1) {
-        $where = "user_id = '$id'";
-        return $this->paginate("page: $pag", "conditions: $where", "order: id desc", 'per_page: ' . Config::get('backend.app.per_page')
+    public static function byUser($id, $pag = 1) {
+        $arg = array(
+            'where' => 'user_id = :id',
+            'order' => 'id desc',
         );
+        $param =  array(':id' => $id);
+        return  self::paginate( $arg, $pag, \Config::get('backend.app.per_page'), $param);
     }
+
+
 
 }
 
