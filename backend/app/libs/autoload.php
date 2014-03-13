@@ -24,3 +24,6 @@ function autoload_kbackend($name) {
 }
 
 spl_autoload_register('autoload_kbackend');
+
+require_once __DIR__ . '/ActiveRecord/lib/Kumbia/ActiveRecord/Autoloader.php';
+\Kumbia\ActiveRecord\Autoloader::register();

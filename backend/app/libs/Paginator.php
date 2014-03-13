@@ -26,8 +26,7 @@ use \ArrayIterator;
  * Implementación de paginador
  * 
  */
-require_once __DIR__ . '/ActiveRecord/Paginator.php';
-class Paginator extends \ActiveRecord\Paginator
+class Paginator extends \Kumbia\ActiveRecord\Paginator
 {
     
     /**
@@ -39,7 +38,7 @@ class Paginator extends \ActiveRecord\Paginator
      * @param int $per_page cantidad de items por pagina
      * @param array $values valores
      */
-    public function __construct(\ActiveRecord\ActiveRecord $model, $args)
+    public function __construct(\Kumbia\ActiveRecord\ActiveRecord $model, $args)
     {
         extract($args);
         $table = $model::getSource();

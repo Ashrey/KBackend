@@ -11,8 +11,7 @@ namespace KBackend\Libs;
  * @subpackage ActiveRecord
  */
  
-require_once __DIR__ . '/ActiveRecord/ActiveRecord.php';
-class ARecord extends \ActiveRecord\ActiveRecord implements \ArrayAccess {
+class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess {
 
 
     protected $logger = true;
