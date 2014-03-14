@@ -1,0 +1,11 @@
+{% extends 'default.phtml'%}
+{%block title%}{{title}} - Delete{%endblock%}
+
+{%block content%}
+	<div class="alert">
+		¿Esta seguro que desea borrar este {{title}}?
+		<form action="" method="post">
+		{%include '_shared/submit.phtml'%}
+		</form>
+	</div>
+{%endblock%}

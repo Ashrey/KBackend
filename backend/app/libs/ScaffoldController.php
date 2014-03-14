@@ -118,30 +118,26 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
      * Edit record 
      */
     public function edit($id) {
+        $model = $this->_model;
         /**
          * Date set in request
          */
         if (\Input::hasPost($this->model)) {
             $data = \Input::post($this->model);
-            $m = new $this->_model();
-            $obj = $m->find_first($id);
+            
+            $obj = $model::get($id);
             if (is_object($obj)) {
                 if (!$obj->update($data)) {
                     //se hacen persistente los datos en el formulario
                     $this->{$this->_model} = $data;
                 } else {
                     \Flash::valid('Edición hecha');
-                    if (!\Input::isAjax()) {
-                        \Redirect::toAction('');
-                    }
                 }
             } else {
                 \Flash::error('No existe este registro');
             }
         }
-        //Aplicando la autocarga de objeto, para comenzar la edición
-        $obj = new $this->_model();
-        $this->form = new \FormBuilder($obj->find((int) $id));
+        $this->form = new \FormBuilder($model::get((int) $id));
     }
 
     /**
@@ -149,13 +145,16 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
      */
     public function delete($id) {
         try {
-			if (call_user_func(array($this->_model, '_delete'), (int) $id)) {
-				\Flash::valid('Borrado correctamente');
-			} else {
-				\Flash::error('Falló Operación');
-			}
-			//enrutando al index
-			\Redirect::to();
+            $model = $this->_model;
+            $this->obj = $model::get((int) $id);
+            if(\Input::is('POST')){
+    			if ($model::delete($id)) {
+    				\Flash::valid('Borrado correctamente');
+                     \Redirect::to();
+    			} else {
+    				\Flash::error('Falló Operación');
+    			}
+            }
 		} catch (Exception $e) {
             Flash::error($e);
         }
@@ -165,10 +164,10 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
      * Ver un Registro
      */
     public function view($id) {
-        $_model = new $this->_model();
+        $_model = $this->_model;
         $this->result = method_exists($_model, 'view') ?
                 call_user_func_array(array($_model, 'view'), array((int)$id)) :
-                $_model->find_first((int) $id);
+                $_model::get((int) $id);
         /* asigna columnas a mostrar */
         $this->cols = array_keys(get_object_vars($this->result));
     }
