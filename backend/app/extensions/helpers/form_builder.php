@@ -13,9 +13,6 @@
  * obtain it through the world-wide-web, please send an email
  * to license@kumbiaphp.com so we can send you a copy immediately.
  *
- * Flash Es la clase standard para enviar advertencias,
- * informacion y errores a la pantalla
- * 
  * @category   Kumbia
  * @package    Form 
  * @copyright  Copyright (c) 2005-2013 Kumbia Team (http://www.kumbiaphp.com)
@@ -163,7 +160,8 @@ class FormBuilder {
 			$name = "$model_name.$field"; //HTML name atributte
 			/*HTML generator*/
 			$add = str_replace('{{label}}',Form::label($attr['alias'], $forAttr, 'class="control col-5"'), $this->tpl);
-			$add = str_replace('{{input}}',call_user_func_array(array('Form', $type), array($name, 'class="control"', $this->model->$field)), $add);
+			$value = isset($this->model->$field)?$this->model->$field:null;
+			$add = str_replace('{{input}}',call_user_func_array(array('Form', $type), array($name, 'class="control"', $value)), $add);
 			$html .= $add;
 		}
 		//add button
