@@ -1,38 +1,28 @@
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta charset="utf-8"> 
-        <title>Autenticación - {% exec Config::get 'backend.app.name' %}</title>
-        {% exec Tag::css 'style'%}
-        {% exec Html::includeCss %}
-    </head>
-    <body>
-		<div class="container">               
-           <div class="col-4 offset-4">
-                {% exec Form::open '', 'post', 'class="jumbotron"' %}
-				<h2 >Autenticación</h2>
-                {%exec View::content%}
-				<div class="form-group">
-					<label for="login"><i class="fa fa-group"></i></label>
-                    {% exec Form::text 'login', 'placeholder="Usuario" class="control"' %}
-				</div>
+{% extends 'default.phtml'%}
+{%block body%}
+	<div class="container">               
+       <div class="col-4 offset-4">
+            {% exec Form::open '', 'post', 'class="jumbotron"' %}
+			<h2 >Autenticación</h2>
+            {%exec View::content%}
+			<div class="form-group">
+				<label for="login"><i class="fa fa-group"></i></label>
+                {% exec Form::text 'login', 'placeholder="Usuario" class="control"' %}
+			</div>
 
-				<div class="form-group">
-                <label class="control-label" for="clave"><i class="fa fa-key"></i> </label>
-                    {% exec  Form::pass 'clave', 'placeholder="Contraseña" class="control"' %}
-                 </div>
+			<div class="form-group">
+            <label class="control-label" for="clave"><i class="fa fa-key"></i> </label>
+                {% exec  Form::pass 'clave', 'placeholder="Contraseña" class="control"' %}
+             </div>
 
-                <div class="btn-group">
-                    <button class="btn-lg btn btn-primary" type="submit"><i class="icon-signin"></i> Ingresar</button>
-                    {% buffer reg%}{%exec Config::get 'backend.app.registro'%}{% endbuffer %}
-                    {% if reg %}
-                        {%exec Html::link 'registro', 'Registro <i class=" icon-folder-open"></i>', 'class="btn btn-info"' %}
-                    {% endif %}
-                </div>
-                {% exec Form::close%}
+            <div class="btn-group">
+                <button class="btn-lg btn btn-primary" type="submit"><i class="icon-signin"></i> Ingresar</button>
+                {% buffer reg%}{%exec Config::get 'backend.app.registro'%}{% endbuffer %}
+                {% if reg %}
+                    {%exec Html::link 'registro', 'Registro <i class=" icon-folder-open"></i>', 'class="btn btn-info"' %}
+                {% endif %}
             </div>
+            {% exec Form::close%}
         </div>
-    </body>
-    
-</html>
+    </div>
+{%endblock%}

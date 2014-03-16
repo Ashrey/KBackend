@@ -9,6 +9,7 @@
         {%endblock%}
     </head>
     <body>
+        {%block body%}
         {% inline  '_shared/header.phtml' %}
         <div class="container">
             <div id="contenido" class="content">
@@ -22,6 +23,7 @@
             {%endblock%}
             </div>
         </div>
+        {%endblock%}
     </body>
     {%js 'zepto.kumbiaphp' %}
     {%js 'bootstrap' %}

@@ -1,18 +1,9 @@
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta charset="utf-8"> 
-        <title>Acceso Negado- {% exec Config::get 'backend.app.name' %}</title>
-        {% exec Tag::css 'style'%}
-        {% exec Html::includeCss %}
-    </head>
-    <body>
-		<div class="container">               
-           <div class="col-4 offset-4">
-				<h2>Acceso no permitido</h2>
-                {%exec View::content%}
-            </div>
-    </body>
-    
-</html>
+{% extends 'default.phtml'%}
+{%block body%}
+	<div class="container">               
+       <div class="col-4 offset-4">
+			<h2>Acceso no permitido</h2>
+            {%exec View::content%}
+        </div>
+    </div>
+{%endblock%}
