@@ -7,214 +7,48 @@
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team
  */
+use \KBackend\Libs\AuthACL;
 class Logger {
-
-    /**
-     * Indica si hay transaccion o no
-     *
-     * @var boolean
-     */
-    private static $transaction = false;
-
-    /**
-     * Array con mensajes de log en cola en una transsaccion
-     *
-     * @var array
-     */
-    private static $quenue = array();
-
-    /**
-     * Inicializa el Logger
-     */
-    public static function initialize($name = '') {
-        
-    }
-
-    /**
-     * Especifica el PATH donde se guardan los logs
-     *
-     * @param string $path
-     */
-    public static function set_path($path) {
-        
-    }
-
-    /**
-     * Obtener el path actual
-     *
-     * @return $path
-     */
-    public static function get_path() {
-        
-    }
-
     /**
      * Almacena un mensaje en el log
      *
      * @param string $type
      * @param string $msg
-     * @param string $name_log
      */
-    public static function log($type = 'DEBUG', $msg, $name_log) {
-        if (is_array($msg)) {
-            $msg = print_r($msg, true);
-        }
-        if (self::$transaction) {
-            self::$quenue[] = "[$date][$type] " . $msg;
-        } else {
-            try {
-                $tmp = explode(' ', trim($msg));
-                $t = isset($tmp[0]) && is_string($tmp[0]) ? strtoupper($tmp[0]) : 'UNKNOW';
-                /*No audito select, ni describe*/
-                if ($t === 'SELECT' ||    $t === 'DESCRIBE')
-                    return;
-                if (Config::get('backend.app.logger') == true) {
-                    $auditoria = new \KBackend\Model\Action();
-                    $auditoria->user_id = \KBackend\Libs\AuthACL::isLogin()?  \KBackend\Libs\AuthACL::get('id') : NULL;
-                    $auditoria->action = $t;
-                    $auditoria->type = $type;
-                    $auditoria->extra = $msg;
-                    $auditoria->date_at = date('Y-m-d H:i:s');
-                    $auditoria->save();
-                }
-            } catch (\KumbiaException $e) {
-                \View::excepcion($e);
-            }
+    public static function log($msg) {
+        $msg = static::getMessage($msg);
+        $action = static::getAction($msg);
+        /*No audito select, ni describe*/
+        if (in_array($action, array('SELECT', 'DESCRIBE')) ||  \Config::get('backend.app.logger') == true)
+            return;
+        try {
+            $log = new \KBackend\Model\Action();
+            $log->user_id = AuthACL::isLogin() ? AuthACL::get('id') : NULL;
+            $log->action = $t;
+            $log->extra = $msg;
+            $log->date_at = date('Y-m-d H:i:s');
+            $log->save();
+        } catch (\KumbiaException $e) {
+            \View::excepcion($e);
         }
     }
 
     /**
-     * Inicia una transacción
-     *
+     * Return Message String
+     * @param mixed $msg Message
+     * @return string String messsage
      */
-    public static function begin() {
-        self::$transaction = true;
+    protected static function getMessage($msg){
+        return is_array($msg) ? print_r($msg, true): trim($msg);
     }
 
     /**
-     * Deshace una transacción
-     *
+     * Return the action
+     * @param string $msg Message string
+     * @return string
      */
-    public static function rollback() {
-        self::$transaction = false;
-        self::$quenue = array();
+    protected static function getAction($msg){
+        $tmp = explode(' ', $msg);
+        $t = isset($tmp[0]) && is_string($tmp[0]) ? strtoupper($tmp[0]) : 'UNKNOW';
     }
-
-    /**
-     * Commit a una transacción
-     */
-    public static function commit() {
-        self::$transaction = false;
-        foreach (self::$quenue as $msg) {
-            self::log($msg);
-        }
-    }
-
-    /**
-     * Cierra el Logger
-     *
-     */
-    public static function close() {
-        
-    }
-
-    /**
-     * Genera un log de tipo WARNING
-     * 
-     * @return 
-     * @param string $msg
-     * @param string $name_log
-     */
-    public static function warning($msg, $name_log = '') {
-        self::log('WARNING', $msg, $name_log);
-    }
-
-    /**
-     * Genera un log de tipo ERROR
-     * 
-     * @return 
-     * @param string $msg
-     * @param string $name_log
-     */
-    public static function error($msg, $name_log = '') {
-        self::log('ERROR', $msg, $name_log);
-    }
-
-    /**
-     * Genera un log de tipo DEBUG
-     * 
-     * @return 
-     * @param string $msg
-     * @param string $name_log
-     */
-    public static function debug($msg, $name_log = '') {
-        self::log('DEBUG', $msg, $name_log);
-    }
-
-    /**
-     * Genera un log de tipo ALERT
-     * 
-     * @return 
-     * @param string $msg
-     * @param string $name_log
-     */
-    public static function alert($msg, $name_log = '') {
-        self::log('ALERT', $msg, $name_log);
-    }
-
-    /**
-     * Genera un log de tipo CRITICAL
-     * 
-     * @return 
-     * @param string $msg
-     * @param string $name_log
-     */
-    public static function critical($msg, $name_log = '') {
-        self::log('CRITICAL', $msg, $name_log);
-    }
-
-    /**
-     * Genera un log de tipo NOTICE
-     * 
-     * @return 
-     * @param string $msg
-     * @param string $name_log
-     */
-    public static function notice($msg, $name_log = '') {
-        self::log('NOTICE', $msg, $name_log);
-    }
-
-    /**
-     * Genera un log de tipo INFO
-     * 
-     * @return 
-     * @param string $msg
-     * @param string $name_log
-     */
-    public static function info($msg, $name_log = '') {
-        self::log('INFO', $msg, $name_log);
-    }
-
-    /**
-     * Genera un log de tipo EMERGENCE
-     * 
-     * @return 
-     * @param string $msg
-     * @param string $name_log
-     */
-    public static function emergence($msg, $name_log = '') {
-        self::log('EMERGENCE', $msg, $name_log);
-    }
-
-    /**
-     * Genera un log Personalizado
-     * 
-     * @param string $type
-     * @param string $msg
-     * @param string $name_log
-     */
-    public static function custom($type = 'CUSTOM', $msg, $name_log = '') {
-        self::log($type, $msg, $name_log);
-    }
-
 }

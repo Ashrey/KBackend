@@ -6,7 +6,6 @@
     <thead>
 		<tr>
 			<th>Fecha</th>
-			<th>Tipo</th>
 			<th>Acción</th>
 			<th>IP</th>
 		</tr>
@@ -14,7 +13,6 @@
 	{%for item in result%}
     <tr>
 		<td>{{item.date_at}}</td>
-		<td>{{item.type}}</td>
 		<td>{{item.action}}</td>
 		<td>{{item.ip()}}</td>
     </tr>

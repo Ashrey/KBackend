@@ -118,7 +118,7 @@ class AuthController extends \Controller
     {
         $this->_authACL->login(\Input::post('login'), \Input::post('clave'));
         if ($this->_authACL->isLogin()) {
-            \Logger::debug('Login correcto');
+            \Logger::log('Login correcto');
             return $this->_isAllow();
         } else {
             \Logger::error('Login errado');
