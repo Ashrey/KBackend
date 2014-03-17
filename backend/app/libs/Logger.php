@@ -49,6 +49,6 @@ class Logger {
      */
     protected static function getAction($msg){
         $tmp = explode(' ', $msg);
-        $t = isset($tmp[0]) && is_string($tmp[0]) ? strtoupper($tmp[0]) : 'UNKNOW';
+        return strtoupper($tmp[0]);
     }
 }
