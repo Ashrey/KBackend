@@ -65,7 +65,7 @@ class Paginator extends \Kumbia\ActiveRecord\Paginator
     }
 
 
-    function start($half){
+    function start($half, $show){
         if ($this->current <= $half) {
             $start = 1;
         }elseif (($this->total - $this->current) < $half) {
@@ -82,7 +82,7 @@ class Paginator extends \Kumbia\ActiveRecord\Paginator
     function render(){
         $show  = 10;
         $half  = floor($show / 2);
-        $start = $this->start($half);
+        $start = $this->start($half, $show);
         if($start == 1){
             $start = 2;
             $show -= 1;
