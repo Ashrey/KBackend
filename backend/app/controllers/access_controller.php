@@ -6,47 +6,45 @@
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team
  */
+use \KBackend\Model\Role;
+use \KBackend\Model\RoleResource;
 class AccessController extends  \KBackend\Libs\AuthController{
 
     public function index(){
-        $this->roles = \KBackend\Model\Role::_find();
+        $this->roles = Role::all();
     }
 
     public function allow($rol) {
         try {
-                $this->rol =  \KBackend\Model\Role::_find((int)$rol);
-                $_model = new \KBackend\Model\Resource();
-                 /*captura los filtros*/
-                 $filter = \KBackend\Libs\FilterSQL::get();
-                 $filter->per_page =  Config::get('backend.app.per_page');
-                $this->result  = new \KBackend\Libs\Paginator($_model,  $filter->getArray());
-                 /*llama a la funcion de resultados*/
-                $this->privilegios = \KBackend\Model\RoleResource::_access((int)$rol);
-            
-        } catch (KumbiaException $e) {
+            $this->rol =  Role::get($rol);
+            $_model = new \KBackend\Model\Resource();
+            /*captura los filtros*/
+            $filter = \KBackend\Libs\FilterSQL::get();
+            $filter->per_page =  Config::get('backend.app.per_page');
+            $this->result  = new \KBackend\Libs\Paginator($_model,  $filter->getArray());
+            $this->url = "access/assign/$rol";
+             /*llama a la funcion de resultados*/
+            $this->privilegios = RoleResource::access($rol);
+        } catch (\Exception $e) {
             View::excepcion($e);
         }
     }
 
-    public function assign() {
+    public function assign($rol) {
         try {
-            if (Input::hasPost('priv') && Input::hasPost('todo') && Input::hasPost('rol') ) {
-                $obj = new \KBackend\Model\RoleResource();
+            if (Input::hasPost('todo')) {
                 $priv = Input::post('priv');
                 $todo  = Input::post('todo');
-                $rol = Input::post('rol');
-                if ($obj->edit($rol, $priv ,$todo)) {
+                if (RoleResource::edit($rol, (array)$priv , $todo)) {
                     Flash::valid('Los privilegios fueron editados');
                 } else {
                     Flash::warning('No se pudo editar los privilegios');
                 }
-                return Redirect::toAction("allow/$rol");
             }
-        } catch (KumbiaException $e) {
+        } catch (\Exception $e) {
             View::excepcion($e);
         }
-        return Redirect::toAction();
+        return Redirect::toAction("allow/$rol");
     }
-
 }
 

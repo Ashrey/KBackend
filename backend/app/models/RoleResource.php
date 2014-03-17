@@ -7,33 +7,39 @@ namespace KBackend\Model;
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team
  */
-class RoleResource extends \KBackend\Libs\ARecord {
-	protected $source = '_role_resource';
-	
+class RoleResource extends \KBackend\Libs\ARecord {	
+    
     /**
-     * Add new record
+     * Add new access for a resource
      * @param  int $rol     id of role
      * @param  int  $recurso id of resource
      * @return boolean         
      */
-    public function add($rol, $resourse) {
-        if ($this->isCreated($rol,$resourse ))
+    public static function add($rol, $resourse) {
+
+        if (static::isCreated($rol,$resourse ))
             return TRUE;
-        return $this->create(array(
+        var_dump($resourse);
+        $new = new self();
+        return $new->create(array(
             'role_id' => $rol,
             'resource_id' => $resourse
         ));
     }
     
     /**
-     * Elimina un privilegio
+     * Deny access for a resource
      * 
      * @param  int $rol     id del rol
      * @param  int  $recurso id del recuro
      * @return boolean        
      */
-    public function deny($rol, $resource) {
-        return $this->delete_all("role_id = '$rol' AND resource_id = '$resource'");
+    public static function  deny($rol, $resource) {
+        /*If not created not deleted*/
+        if (!static::isCreated($rol,$resourse ))
+            return TRUE;
+        return static::deleteAll('role_id = :rol AND resource_id = :resource',
+            array(':rol'=> $rol, ':resource' => $resource));
     }
 
     /**
@@ -43,21 +49,21 @@ class RoleResource extends \KBackend\Libs\ARecord {
      * @param  string $all all alow for page
      * @return boolean  
      */
-    public function edit($rol, $priv, $all) {
-        $this->begin();
+    public static function edit($rol, $priv, $all) {
+        static::begin();
         foreach ($all as $e) {
             /*El privilegio ha sido asignado*/
-            if (in_array($e, $priv)) {
-                if(!$this->add($rol, $e)){
-                    $this->rollback();
+            if (in_array($e, $priv)){
+                if(!static::add($rol, $e)){
+                    static::rollback();
                     return false;
                 }
-            }else if(!$this->deny($rol, $e)){
-                $this->rollback();
+            }elseif(!static::deny($rol, $e)){
+                static::rollback();
                 return false;
             }
         }
-        $this->commit();
+        static::commit();
         return TRUE;
     }
 
@@ -68,20 +74,25 @@ class RoleResource extends \KBackend\Libs\ARecord {
      * @param  int $recurso id del recurso
      * @return boolean
      */
-    public function isCreated($rol, $resource) {
-        return $this->exists("role_id = '$rol' AND resource_id = '$resource'");
+    public static function isCreated($rol, $resource) {
+        return static::count('role_id = :rol AND resource_id = :resource',
+            array(':rol'=>$rol, ':resource' => $resource));
     }
     
     /**
      * Return allow access for role $id
      * @param int $id id of  rol
      */
-    public function access($id){
+    public static function access($id){
         $c = array();
-        $a = $this->find_all_by_role_id((int)$id);
+        $a = static::allBy('role_id', $id);
         foreach($a as $b)
             $c[] = $b->resource_id;
         return $c;
+    }
+
+    public static function getTable()  {
+        return '_role_resource';
     }
 
 }

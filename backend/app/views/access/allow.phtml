@@ -3,10 +3,8 @@
 {%block content%}
     {%exec View::content %}
     {% if result %}
-        {%exec Form::open 'access/assign' %}
+        {%exec Form::open url %}
         {%inline '_shared/submit.phtml' %}
-        {%exec  Form::hidden "rol", FALSE, rol.id %}
-
        <table class="t bordered condensed hover">
         <thead>
             <tr>
@@ -22,7 +20,7 @@
 					<td>{{item.module|default:'-'}}</td>
                     <td>{{item.controller|default:'-'}}</td>
                     <td>{{item.action|default:'-'}}</td>
-                    {% set i = item.id|inArray:privilegios %}
+                    {% set i = item.id|InArray:privilegios %}
                     <td>{%exec Form::check "priv.", item.id, FALSE, i %}
                         {%exec Form::hidden "todo.", FALSE, item.id%} 
                     </td>
