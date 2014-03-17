@@ -121,7 +121,6 @@ class User extends \KBackend\Libs\ARecord {
 		if ($this->find_first((int) $id)) { //verificamos la existencia del user
 			if(!($this->hash() === $hash)){
 				throw new \Exception('Hash de validación no válido');
-				return false;
 			}
 			$this->begin(); //iniciamos una transaccion
 			$this->created_at = date("Y-m-d G:i:s");
