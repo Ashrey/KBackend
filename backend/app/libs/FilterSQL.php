@@ -10,10 +10,17 @@ namespace KBackend\Libs;
 class FilterSQL {
 	/**
 	 * Argumentos del PAGINATE
+	 * @var array
 	 */
 	protected $_arg = array();
 	
-	protected $_valid = array('page', 'order', 'per_page'); 
+	protected $_valid = array('page', 'order', 'per_page');
+
+	/**
+	 * param for filter
+	 * @var array
+	 */
+	protected $_condition = array();
 
 	/**
 	 * Singleton
@@ -63,16 +70,16 @@ class FilterSQL {
      */
     protected function filter() {
         if (Input::post('clear')) {/* Elimina todos los filtros */
-            $this->condition = array();
+            $this->_condition = array();
             Flash::info('Filtros Borrados');
         } elseif (Input::post('add')) {/* Agrega un filtro */
             $nuevo = Input::post('filter');
             $nuevo['val'] = empty($nuevo['val']) && $nuevo['val'] !== '0' ?
                     'NULL' : '"' . addslashes($nuevo['val']) . '"';
-            $this->condition[uniqid()] = $nuevo;
+            $this->_condition[uniqid()] = $nuevo;
         } elseif (Input::post('remove')) {/* Remueve un filtro */
             $key = Input::post('remove');
-            unset($this->condition[$key]);
+            unset($this->_condition[$key]);
         }
     }
 
