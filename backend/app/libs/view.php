@@ -13,10 +13,9 @@ class View extends KumbiaView {
 
     /**
      * Muestra las excepciones generadas y crea un log de las mismas.
-     * 
-     * @param  KumbiaException $e [description]
+     * @param  Exception $e [description]
      */
-    public static function excepcion(KumbiaException $e) {
+    public static function excepcion(\Exception $e) {
         Flash::warning('Ha Ocurrido un error');
         if (Config::get('config.application.log_exception') || !PRODUCTION) {
             Flash::error($e->getMessage());
