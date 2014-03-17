@@ -81,7 +81,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
             $paginator = new Paginator($_model,  $filter->getArray());
             /*llama a la funcion de resultados*/
             $this->result = new \Grid($paginator);
-        } catch (KumbiaException $e) {
+        } catch (\Exception $e) {
             \View::excepcion($e);
         }
     }
@@ -109,7 +109,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
             }
             // Solo es necesario para el autoForm
             $this->form = new \FormBuilder(new $this->_model());
-        } catch (KumbiaException $e) {
+        } catch (\Exception $e) {
             Flash::error($e);
         }
     }

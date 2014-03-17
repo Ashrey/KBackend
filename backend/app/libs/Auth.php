@@ -66,7 +66,6 @@ class Auth implements iAuth
             Session::set('login', FALSE, $this->_key);
             $is_login = TRUE;
         }else{
-        	$this->setError('Error Login!');
         	$is_login = FALSE;
         }
         Session::set('login', $is_login, $this->_key);

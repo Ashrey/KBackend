@@ -38,9 +38,10 @@ class Paginator extends \Kumbia\ActiveRecord\Paginator
      * @param int $per_page cantidad de items por pagina
      * @param array $values valores
      */
-    public function __construct(\Kumbia\ActiveRecord\ActiveRecord $model, $args)
+    public function __construct(\Kumbia\ActiveRecord\ActiveRecord $model, Array $args)
     {
-        extract($args);
+        $page = $args['page'];
+        $per_page = $args['per_page'];
         $table = $model::getSource();
         $sql = method_exists($model, 'index') ? $model::index(): "SELECT * FROM $table";
         parent::__construct($model, $sql, $page, $per_page);
