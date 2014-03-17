@@ -74,7 +74,7 @@ class Logger {
                     $auditoria->action = $t;
                     $auditoria->type = $type;
                     $auditoria->extra = $msg;
-                    $auditoria->date_at = time();
+                    $auditoria->date_at = date('Y-m-d H:i:s');
                     $auditoria->save();
                 }
             } catch (\KumbiaException $e) {
