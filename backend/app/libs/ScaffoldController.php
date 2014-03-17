@@ -155,7 +155,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
     				\Flash::error('Falló Operación');
     			}
             }
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
             Flash::error($e);
         }
     }
