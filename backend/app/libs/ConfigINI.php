@@ -57,7 +57,7 @@ class ConfigINI{
             }
         }
 		if(is_writable($this->_file)){
-			\Logger::alert("CONFIG archivo {$this->_file}.ini modificado");
+			Logger::log("CONFIG archivo {$this->_file}.ini modificado");
 			return file_put_contents($this->_file, $html);
 		}else{
 			$this->_lastError = '';

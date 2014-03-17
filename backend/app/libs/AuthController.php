@@ -118,10 +118,10 @@ class AuthController extends \Controller
     {
         $this->_authACL->login(\Input::post('login'), \Input::post('clave'));
         if ($this->_authACL->isLogin()) {
-            \Logger::log('Login correcto');
+            Logger::log('Login correcto');
             return $this->_isAllow();
         } else {
-            \Logger::error('Login errado');
+            Logger::log('Login errado');
             \Flash::warning('Datos de acceso  no válidos');
             \View::select(null,'logueo');
             return FALSE;
