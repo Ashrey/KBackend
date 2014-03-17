@@ -24,7 +24,7 @@ class View extends KumbiaView {
         if (!PRODUCTION) {
             Flash::error($e->getTraceAsString());
         }
-        Logger::critical($e); //comentar en caso de error de que no se pueda escribir en los logs.
+        Logger::log("Exception $e");
         Flash::info('Si el problema persiste por favor informe al administrador del sistema');
     }
 
