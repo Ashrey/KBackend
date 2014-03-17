@@ -44,8 +44,8 @@ class Paginator extends \Kumbia\ActiveRecord\Paginator
         $per_page = $args['per_page'];
         $table = $model::getSource();
         $sql = method_exists($model, 'index') ? $model::index(): "SELECT * FROM $table";
-        parent::__construct($model, $sql, $page, $per_page);
-        $sql .= " ". FilterSQL::getSQL($args);
+        $sql .= ' '. FilterSQL::getSQL($args);
+        parent::__construct($model, $sql, $page, $per_page);   
 	}
 
     function getHeader(){
