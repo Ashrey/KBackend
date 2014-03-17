@@ -28,7 +28,7 @@ class Logger {
             $log->extra = $msg;
             $log->date_at = date('Y-m-d H:i:s');
             $log->save();
-        } catch (\KumbiaException $e) {
+        } catch (\Exception $e) {
             \View::excepcion($e);
         }
     }
