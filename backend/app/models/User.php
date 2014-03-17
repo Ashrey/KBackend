@@ -172,8 +172,6 @@ class User extends \KBackend\Libs\ARecord {
      * @return bool Valid auth
      */
     public static function auth($arg) {
-        $clave = $arg['password'];
-        $user = $arg['user'];
         $where = array('where' => 'password = :password AND login = :user AND enable=1');
         return self::first($where, $arg);
     }
