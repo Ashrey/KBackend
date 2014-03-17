@@ -80,33 +80,31 @@ class FormBuilder {
 		$this->_action[$action] = $html;
 	}
 	
-	function getMeta($key){
+	static function getMeta($key){
 		return trim(preg_replace('/(\(.*\))/', '', $key));	
 	}
 
+	/**
+	 * Return type of field
+	 * @param $key type of col
+	 * @return string
+	 */
 	static function getType($key){
 		$type = 'text';
-		switch ($key) {
-			case 'tinyint': case 'smallint': case 'mediumint':case 'integer': case 'int':
-			case 'bigint': case 'float': case 'double': case 'precision': case 'real':
-			case 'decimal': case 'numeric': case 'year': case 'day': case 'int unsigned': 
-			    $type = 'number';
-                break;
-            case 'date':
-                $type = 'date';
-                break;
-			case 'time':
-				$type= 'time';
-                break;
-			case 'datetime': case 'timestamp': // Usar el js de datetime
-                $type = 'datetime';
-                break;
-            case 'enum': case 'set':
-                    $type = 'select';
-           	case'tinytext': case 'text': case 'mediumtext': case 'longtext':
-            case 'blob': case 'mediumblob': case 'longblob': // Usar textarea
-                    $type = 'textarea';
-              	break;
+		if(in_array($key, array('tinyint',  'smallint',  'mediumint', 'integer',  'int', 
+			'bigint',  'float',  'double',  'precision',  'real', 'decimal',  'numeric',  'year',  'day',  'int unsigned'))){
+			$type = 'number';
+		}elseif($key == 'date'){
+            $type = 'date';
+        }elseif($key ==	'time'){
+			$type= 'time';
+        }elseif(in_array($key, array('datetime',  'timestamp'))){
+            $type = 'datetime';
+        }elseif(in_array($key, array('enum',  'set'))){ 
+            $type = 'select';
+        }elseif(in_array($key, array('tinytext', 'text',  'mediumtext',  'longtext', 
+            'blob',  'mediumblob',  'longblob'))){
+            $type = 'textarea';
 		}
 		return $type;
 	}
