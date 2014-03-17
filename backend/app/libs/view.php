@@ -38,6 +38,7 @@ class View extends KumbiaView {
     /**
      * Renderiza la vista
      * @overload
+     * @todo add the cache
      * @param Controller $controller
      */
     public static function render($controller)
@@ -64,15 +65,6 @@ class View extends KumbiaView {
         
         /*extrae las variables del controllador*/
         $vars = get_object_vars($controller);
-
-        // si se encuentra en produccion
-        if (PRODUCTION) {
-            // si se cachea vista
-            if (self::$_cache['type'] == 'view') {
-                // el contenido permanece nulo si no hay nada cacheado o la cache expiro
-                self::$_content = Cache::driver()->get($_url, self::$_cache['group']);
-            }
-        }
         
          // carga la vista si no esta en produccion o se usa scaffold o no hay contenido cargado
         if (!PRODUCTION || $scaffold || !self::$_content) {
@@ -86,11 +78,6 @@ class View extends KumbiaView {
                     self::$_template. '.phtml';
             }
             self::$_content = Haanga::Load($file, $vars, true);
-            // si esta en produccion y se cachea la vista
-            if (PRODUCTION && self::$_cache['type'] == 'view') {
-                Cache::driver()->save(self::$_content, self::$_cache['time'], $_url, self::$_cache['group']);
-            }
-            
         } else {
             ob_clean();
         }
