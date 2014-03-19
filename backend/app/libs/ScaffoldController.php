@@ -127,7 +127,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
             
             $obj = $model::get($id);
             if (is_object($obj)) {
-                if (!$obj->update($data)) {
+                if (!$obj->save($data)) {
                     //se hacen persistente los datos en el formulario
                     $this->{$this->_model} = $data;
                 } else {
