@@ -10,7 +10,7 @@ namespace KBackend\Libs;
  * @package Db
  * @subpackage ActiveRecord
  */
- 
+use \Validate;
 class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess {
 
 
@@ -26,6 +26,23 @@ class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess 
         $class = explode('\\', get_called_class());
         $name = strtolower(end($class));
         return "_$name";
+    }
+
+    protected function _beforeSave(){
+        $rules = $this->_rules();
+        $val = new Validate($this, $rules);
+        if($val->exec()){
+            return true;
+        }else{
+            $error = $val->getMessages();
+            foreach ($error as $value)
+                \Flash::error($value);
+            return false;
+        }
+    }
+
+    public function unique($field){
+        return static::count("$field = ?",$this->$field);
     }
     
 
