@@ -9,11 +9,14 @@ namespace KBackend\Model;
  */
 class Role extends \KBackend\Libs\ARecord {
 	
-    protected function initialize() {
-        //validaciones
-        $this->validates_presence_of('rol','message: Debe escribir el <b>Nombre del Rol</b>');
-        $this->validates_uniqueness_of('rol','message: Este Rol <b>ya existe</b> en el sistema');
-    }
+    protected function _rules() {
+        return array(
+            'role' => array(
+                'required',
+                '@unique'
+            )
+        );
+     }
 
     /**
      * Devuelve los recursos a los que un rol tiene acceso 
