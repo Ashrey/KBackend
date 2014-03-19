@@ -1,5 +1,5 @@
 <?php
-//namespace KBackend\Libs;
+namespace KBackend\Libs;
 /**
  * KBackend
  * PHP version 5
@@ -7,7 +7,6 @@
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team
  */
-use \KBackend\Libs\AuthACL;
 class Logger {
     /**
      * Almacena un mensaje en el log

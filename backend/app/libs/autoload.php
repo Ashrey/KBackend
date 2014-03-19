@@ -15,11 +15,6 @@ function autoload_kbackend($name) {
                 throw new KumbiaException("Clase $class no encontrada");
             }
         }
-    }elseif ($name == 'Logger'){
-		/**
-		 * Esto es necesario para no dar problemas con el logger
-		 */
-		 include  KBACKEND_PATH."/libs/Logger.php";
     }
 }
 
