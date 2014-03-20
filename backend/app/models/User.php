@@ -10,7 +10,7 @@ use \KBackend\Libs\Paginator;
  */
 class User extends \KBackend\Libs\ARecord {
 
-    protected function _rules() {
+    public static function _rules() {
         return array(
             'login' => array(
                 'required' => array('error' =>'Debe escribir un <strong>Login</strong>'),
@@ -22,6 +22,10 @@ class User extends \KBackend\Libs\ARecord {
                 'email',
             )
         );
+    }
+
+    public static function _formFields(){
+        return array('login', 'password', 'email', 'role_id', 'enable');
     }
 
     protected function before_save() {
@@ -188,7 +192,5 @@ class User extends \KBackend\Libs\ARecord {
         return self::paginate($arg,  $page, \Config::get('backend.app.per_page'));
     }
 
-    public static function getFields(){
-        return array('login', 'password', 'email', 'role_id', 'enable');
-    }
+
 }
