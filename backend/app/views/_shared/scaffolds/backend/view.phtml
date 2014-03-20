@@ -14,16 +14,14 @@
                 <div class="btn-group">
                     {%exec Html::LinkAction 'create', 'Crear <i class="fa fa-plus"></i>', ' class="btn btn-primary"'%}
                     {%exec Html::LinkAction editURL, 'Editar <i class="fa fa-edit"></i>', ' class="btn btn-warning"' %}
-                    {%exec Html::LinkAction deleteURL, 'Borrar <i class="fa fa-trash-o"></i>', ' class="btn btn-danger js-confirm" title="Está seguro?"' %}
+                    {%exec Html::LinkAction deleteURL, 'Borrar <i class="fa fa-trash-o"></i>', 'class="btn btn-danger"' %}
                     {%exec Html::LinkAction '', 'Listar  <i class="fa fa-list"></i>', ' class="btn btn-info"' %}
                 </div>
             {%endif%}
         {%endblock%}
-        
             <dl class="horizontal">
-                {%for i, j in cols %} 
-                    <dt>{{j| title}}</dt>
-                    {%buffer value%}{%exec FormBuilder::fieldValue j, result %}{%endbuffer%}
+                {%for col, value in result %} 
+                    <dt>{{col| title}}</dt>
                     <dd>{{value | default:'-'}}</dd>
                 {%endfor%}
             </dl>

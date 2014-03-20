@@ -123,8 +123,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
          * Date set in request
          */
         if (\Input::hasPost($this->model)) {
-            $data = \Input::post($this->model);
-            
+            $data = \Input::post($this->model); 
             $obj = $model::get($id);
             if (is_object($obj)) {
                 if (!$obj->save($data)) {
@@ -145,8 +144,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
      */
     public function delete($id) {
         try {
-            $model = $this->_model;
-            $this->obj = $model::get((int) $id);
+            $this->view($id);
             if(\Input::is('POST')){
     			if ($model::delete($id)) {
     				\Flash::valid('Borrado correctamente');
@@ -168,7 +166,5 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
         $this->result = method_exists($_model, 'view') ?
                 call_user_func_array(array($_model, 'view'), array((int)$id)) :
                 $_model::get((int) $id);
-        /* asigna columnas a mostrar */
-        $this->cols = array_keys(get_object_vars($this->result));
     }
 }
