@@ -13,7 +13,6 @@ class Role extends \KBackend\Libs\ARecord {
         return array(
             'role' => array(
                 'required',
-                '@unique'
             )
         );
      }
