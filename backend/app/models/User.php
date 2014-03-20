@@ -59,7 +59,10 @@ class User extends \KBackend\Libs\ARecord {
      * @return string sql
      */
     public static function index() {
-        return  "SELECT _user.id, _user.login, _user.email, r.role rol FROM _user JOIN _role r ON r.id = role_id";
+        return  array(
+            'fields' => '_user.id, _user.login, _user.email, r.role rol',
+            'join'   => 'JOIN _role r ON r.id = role_id',
+        );
     }
 
     /**

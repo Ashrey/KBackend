@@ -74,11 +74,11 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
     
     public function index() {
         try {
-            $_model = new $this->_model();
-            /*captura los filtros*/
+            $model = $this->_model;
             $filter = FilterSQL::get();
             $filter->per_page =  Config::get('backend.app.per_page');
-            $paginator = new Paginator($_model,  $filter->getArray());
+            $param = method_exists($this->_model, 'index') ? $model::index():array();
+            $paginator = new Paginator($this->_model, array_merge($filter->getArray(), $param));
             /*llama a la funcion de resultados*/
             $this->result = new \Grid($paginator);
         } catch (\Exception $e) {
