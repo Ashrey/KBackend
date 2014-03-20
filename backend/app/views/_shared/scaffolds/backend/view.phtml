@@ -4,14 +4,9 @@
 {%block content%}
 <div class="row">
     {%if result %}
-        <div class="col-5 offset-3">
-            <dl class="horizontal">
-                {%for i, j in cols %} 
-                    <dt>{{j| title}}</dt>
-                    {%buffer value%}{%exec FormBuilder::fieldValue j, result %}{%endbuffer%}
-                    <dd>{{value | default:'-'}}</dd>
-                {%endfor%}
-            </dl>
+    <div class="col-5 offset-3">
+        {%block msg%}{%endblock%}
+        {%block bar%}
             {% set isAjax = Input::isAjax()%}
             {%if !isAjax %}
                 {%buffer editURL%}edit/{{result.id}}{%endbuffer%}
@@ -23,6 +18,16 @@
                     {%exec Html::LinkAction '', 'Listar  <i class="fa fa-list"></i>', ' class="btn btn-info"' %}
                 </div>
             {%endif%}
+        {%endblock%}
+        
+            <dl class="horizontal">
+                {%for i, j in cols %} 
+                    <dt>{{j| title}}</dt>
+                    {%buffer value%}{%exec FormBuilder::fieldValue j, result %}{%endbuffer%}
+                    <dd>{{value | default:'-'}}</dd>
+                {%endfor%}
+            </dl>
+
         </div>
     {%else%}
         {%exec header "HTTP/1.0 404 Not Found"  %}
