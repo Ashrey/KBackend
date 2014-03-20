@@ -16,10 +16,8 @@ class RoleResource extends \KBackend\Libs\ARecord {
      * @return boolean         
      */
     public static function add($rol, $resourse) {
-
         if (static::isCreated($rol,$resourse ))
             return TRUE;
-        var_dump($resourse);
         $new = new self();
         return $new->create(array(
             'role_id' => $rol,
@@ -34,7 +32,7 @@ class RoleResource extends \KBackend\Libs\ARecord {
      * @param  int  $recurso id del recuro
      * @return boolean        
      */
-    public static function  deny($rol, $resource) {
+    public static function  remove($rol, $resource) {
         /*If not created not deleted*/
         if (!static::isCreated($rol,$resourse ))
             return TRUE;
@@ -58,7 +56,7 @@ class RoleResource extends \KBackend\Libs\ARecord {
                     static::rollback();
                     return false;
                 }
-            }elseif(!static::deny($rol, $e)){
+            }elseif(!static::remove($rol, $e)){
                 static::rollback();
                 return false;
             }
