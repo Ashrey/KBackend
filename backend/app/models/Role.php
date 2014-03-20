@@ -9,7 +9,7 @@ namespace KBackend\Model;
  */
 class Role extends \KBackend\Libs\ARecord {
 	
-    protected function _rules() {
+    public static function _rules() {
         return array(
             'role' => array(
                 'required',
@@ -32,6 +32,10 @@ class Role extends \KBackend\Libs\ARecord {
             'where' => "_role.id = ?"
         );
         return self::all($param, array($id));
+    }
+
+    public function __toString(){
+        return $this->role;
     }
 
 }

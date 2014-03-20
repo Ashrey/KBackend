@@ -18,7 +18,7 @@
  * @copyright  Copyright (c) 2005-2013 Kumbia Team (http://www.kumbiaphp.com)
  * @license    http://wiki.kumbiaphp.com/Licencia     New BSD License
  */
-class FormBuilder extends Form{
+class FormBuilder{
 	/**
 	 * Acciones disponibles
 	 * @var Array 
@@ -49,7 +49,6 @@ class FormBuilder extends Form{
 		$this->model  = $model;
 		$this->fields = static::allFields($model);
 		$this->options = static::getOption($model);
-		var_dump($this->options);
 	}
 
 	/**
@@ -96,6 +95,9 @@ class FormBuilder extends Form{
 	 * @return string
 	 */
 	protected function getType($field){
+		if(static::haveType( $field, $this->options)){
+			return $this->options[$field]['type'];
+		}
 		$model = $this->model;
 		$md = $model::metadata()->getFields();
 		$key = $this->getMeta($md[$field]['Type']);
@@ -108,6 +110,7 @@ class FormBuilder extends Form{
 	function getAttrs($field){
 		return array(
 			'required' => $this->isRequired($field, $this->options),
+			'class' => 'control'
 		);
 	}
 
@@ -158,9 +161,10 @@ class FormBuilder extends Form{
 			$type = $this->getType($field);
 			$id   = "{$model_name}_{$field}";//HTML for atributte
 			$name = "$model_name.$field"; //HTML name atributte
+			$data = static::getData($field, $this->options);
 			/*HTML generator*/
 			$value = isset($this->model->$field)?$this->model->$field:null;
-			$add   = call_user_func_array(array('Form', $type), array($name, "class=\"control\" $attr", $value));
+			$add   = call_user_func_array(array('Field', $type), array($name, $attr, $value, $data));
 			$html .= Haanga::Safe_Load('_shared/field.phtml', array(
 					'label' => $this->getLabel($field),
 					'id'   => $id,
@@ -168,7 +172,7 @@ class FormBuilder extends Form{
 				), true);
 		}
 		//add button
-		$html .= '<div class="text-center"><div class="btn-group">'. implode('', $this->_action). '</div></div>';
+		$html .=  Haanga::Safe_Load('_shared/submit.phtml',array(), true);
 		return "$html</form>";
 	}
 
@@ -228,6 +232,38 @@ class FormBuilder extends Form{
 				in_array('email', $option[$field]) ||
 				 array_key_exists('email', $option[$field]
 			));
+	}
+
+	/**
+	 * Return if is email field
+	 * @param string $field name
+	 * @param array $options
+	 * @return array
+	 */
+	protected static function getData($field, Array $option){
+		return isset($option[$field]) 
+			&& (
+				in_array('data', $option[$field]) ||
+				 array_key_exists('data', $option[$field]
+			)) ?
+				call_user_func_array(
+					$option[$field]['data'],
+					isset($option[$field]['dataparam']) ?
+						$option[$field]['dataparam']:
+						array()
+				):
+				array();
+	}
+
+	/**
+	 * Return if is have type field
+	 * @param string $field name
+	 * @param array $options
+	 * @return bool
+	 */
+	protected static function haveType($field, Array $option){
+		return isset($option[$field]) 
+			&& array_key_exists('type', $option[$field]);
 	}
 
 

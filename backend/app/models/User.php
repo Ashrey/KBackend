@@ -20,6 +20,19 @@ class User extends \KBackend\Libs\ARecord {
             'email' => array(
                 'required',
                 'email',
+            ),   
+        );
+    }
+
+    public static function _formOption(){
+        return array(
+            'enable' => array(
+                'type'    => 'check',
+                
+            ),
+            'role_id' => array(
+                'type' => 'select',
+                'data' => array('\KBackend\Model\Role', 'all')
             )
         );
     }
