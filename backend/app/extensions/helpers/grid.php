@@ -1,5 +1,4 @@
 <?php
-
 /**
  * KumbiaPHP web & app Framework
  *
@@ -90,7 +89,7 @@ class Grid {
 		if(isset($this->_cb[$name])){
 			return call_user_func($this->_cb[$name], $val);
 		}
-		return $val;
+		return empty($val)?'—':$val;
 	}
 	/**
 	 * Set header
