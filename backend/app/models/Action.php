@@ -9,13 +9,6 @@ use \Config;
  * @author KumbiaPHP Development Team
  */
 class Action extends \KBackend\Libs\ARecord {
-	protected $source = '_action';
-    /**
-     * DANGER!!!!!
-     * protege de un ciclo infinito 
-     * DON'T REMOVE
-     */
-    protected $logger = false;
 
     protected function _beforeSave() {
         $this->ip = ip2long($_SERVER['REMOTE_ADDR']);
