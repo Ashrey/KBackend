@@ -101,7 +101,7 @@ class FormBuilder{
 		$model = $this->model;
 		$md = $model::metadata()->getFields();
 		$key = $this->getMeta($md[$field]['Type']);
-		return static::isEmail($field, $this->options) ? 'email': static::defaultType($field);
+		return static::isEmail($field, $this->options) ? 'email': static::defaultType($key);
 	}
 	
 	/**

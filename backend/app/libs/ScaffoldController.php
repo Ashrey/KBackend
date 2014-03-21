@@ -143,6 +143,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
      * Borra un Registro
      */
     public function delete($id) {
+        $model = $this->_model;
         try {
             $this->view($id);
             if(\Input::is('POST')){

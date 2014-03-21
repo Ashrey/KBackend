@@ -42,7 +42,6 @@ class Paginator extends \Kumbia\ActiveRecord\Paginator
     {
         $page = $param['page'];
         $per_page = $param['per_page'];
-        $table = $model::getSource();
         unset($param['limit'], $param['offset']);
         $sql = \Kumbia\ActiveRecord\QueryGenerator::select($model::getSource(), $model::getDriver(), $param);
         parent::__construct($model, $sql, $page, $per_page, $values);   
