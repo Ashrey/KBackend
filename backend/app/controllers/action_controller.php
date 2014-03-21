@@ -20,13 +20,13 @@ class ActionController extends  \KBackend\Libs\AuthController{
         }
     }
 
-    public function user($id, $pagina = 1) {
+    public function user($id) {
         $this->url = "action/user/$id";
         try {
             $id = (int)$id;
             $this->usuario = User::get($id);
-            $this->result =  Action::byUser($id, $pagina);
-            if (!$this->result) {
+            $this->result = Action::byUser($id);
+            if (!$this->result || !$this->usuario) {
                 \Flash::info('Este usuario no ha realizado ninguna acción en el sistema');
                 return Redirect::to();
             }

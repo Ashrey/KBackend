@@ -38,15 +38,14 @@ class Paginator extends \Kumbia\ActiveRecord\Paginator
      * @param int $per_page cantidad de items por pagina
      * @param array $values valores
      */
-    public function __construct($model, Array $param)
+    public function __construct($model, Array $param, Array $values = array())
     {
         $page = $param['page'];
         $per_page = $param['per_page'];
         $table = $model::getSource();
         unset($param['limit'], $param['offset']);
         $sql = \Kumbia\ActiveRecord\QueryGenerator::select($model::getSource(), $model::getDriver(), $param);
-        $sql .= ' '. FilterSQL::getSQL($param);
-        parent::__construct($model, $sql, $page, $per_page);   
+        parent::__construct($model, $sql, $page, $per_page, $values);   
 	}
 
     function getHeader(){

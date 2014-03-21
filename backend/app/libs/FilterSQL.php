@@ -14,7 +14,7 @@ class FilterSQL {
 	 */
 	protected $_arg = array();
 	
-	protected $_valid = array('page', 'order', 'per_page');
+	protected $_valid = array('page', 'order', 'per_page', 'desc');
 
 	/**
 	 * param for filter
@@ -43,11 +43,13 @@ class FilterSQL {
     function getArray() {
         return $this->_arg;
     }
-    
-	static function getSQL($data){
-		$sql = isset($data['order'])?"ORDER BY {$data['order']}":'';
-		return $sql;
-	}
+
+    function getSQLParam(){
+    	$param = $this->_arg;
+    	unset($param['per_page']);
+    	unset($param['page']);
+    	return $param;
+    }
     
     function getURL($arg){
 		$arg = array_merge($this->_arg, $arg);

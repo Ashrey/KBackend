@@ -21,16 +21,18 @@ class Action extends \KBackend\Libs\ARecord {
 	/**
 	 * Return pagination action by user id
 	 */
-    public static function byUser($id, $pag = 1) {
-        $arg = array(
-            'where' => 'user_id = :id',
-            'order' => 'id desc',
-        );
-        $param =  array(':id' => $id);
-        return  self::paginate( $arg, $pag, \Config::get('backend.app.per_page'), $param);
+    public static function byUser($id) { 
+        $filter = \KBackend\Libs\FilterSQL::get();
+        $filter->per_page =  Config::get('backend.app.per_page');
+        $param = array_merge(
+            array(
+                'where' => 'user_id = :id',
+                'fields' => 'id, date_at, ip, action',
+                'order' =>  'date_at DESC'
+            ),
+            $filter->getArray());
+        $paginator = new \KBackend\Libs\Paginator('\KBackend\Model\Action', $param , array(':id' => $id));
+        return  new \Grid($paginator);
     }
-
-
-
 }
 
