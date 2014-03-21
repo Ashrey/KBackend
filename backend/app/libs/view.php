@@ -8,6 +8,7 @@
  * */
 // @see KumbiaView
 require_once CORE_PATH . 'kumbia/kumbia_view.php';
+use \KBackend\Libs\Logger;
 
 class View extends KumbiaView {
 
