@@ -8,18 +8,16 @@
        <table class="t bordered condensed hover">
         <thead>
             <tr>
-                <th>Módulo</th>
-                <th>Controlador</th>
-                <th>Accion</th>
+                <th>Name</th>
+                <th>URL</th>
                 <th>Asignar</th>
             </tr>
         </thead>
         <tbody>
             {%for item in result%}
                 <tr>
-					<td>{{item.module|default:'-'}}</td>
-                    <td>{{item.controller|default:'-'}}</td>
-                    <td>{{item.action|default:'-'}}</td>
+					<td>{{item.name}}</td>
+                    <td>{{item.url}}</td>
                     {% set i = item.id|InArray:privilegios %}
                     <td>{%exec Form::check "priv.", item.id, FALSE, i %}
                         {%exec Form::hidden "todo.", FALSE, item.id%} 
