@@ -42,9 +42,9 @@ class RoleResource extends \KBackend\Libs\ARecord {
 
     /**
      * Edit access for user id
-     *  @param int $role id 
+     * @param int $role id 
      * @param  array $priv allows
-     * @param  string $all all alow for page
+     * @param  array $all all allow for page
      * @return boolean  
      */
     public static function edit($rol, $priv, $all) {
