@@ -18,7 +18,7 @@ class Logger {
         $msg = static::getMessage($msg);
         $action = static::getAction($msg);
         /*No audito select, ni describe*/
-        if (in_array($action, array('SELECT', 'DESCRIBE')) ||  Config::get('backend.app.logger') == true)
+        if (in_array($action, array('SELECT', 'DESCRIBE')) ||  Config::get('backend.app.logger') != true)
             return;
         try {
             $log = new \KBackend\Model\Action();
@@ -26,7 +26,7 @@ class Logger {
             $log->action = $action;
             $log->extra = $msg;
             $log->date_at = date('Y-m-d H:i:s');
-            $log->save();
+            if(!$log->save()) throw new \Exception("Error Processing Request");
         } catch (\Exception $e) {
             \View::excepcion($e);
         }
