@@ -51,12 +51,4 @@ class UserController extends \KBackend\Libs\ScaffoldController{
         }
         return Redirect::toAction('');
     }
-
-    /**
-     * hace el logout
-     */
-    public function logout() {
-        parent::logout();
-    }
-    
 }
