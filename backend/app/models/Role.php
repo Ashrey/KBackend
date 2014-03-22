@@ -20,8 +20,7 @@ class Role extends \KBackend\Libs\ARecord {
     /**
      * Devuelve los recursos a los que un rol tiene acceso 
      * y además están activos
-     * 
-     * @return array 
+     * @return Obejct
      */
     public static function  getResource($id){
         $join = "INNER JOIN _role_resource as rr ON rr.role_id = _role.id ";
@@ -34,6 +33,9 @@ class Role extends \KBackend\Libs\ARecord {
         return self::all($param, array($id));
     }
 
+    /**
+     * Return the role name
+     */
     public function __toString(){
         return $this->role;
     }
