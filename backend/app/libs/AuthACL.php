@@ -97,7 +97,7 @@ class AuthACL {
         //establecemos los recursos permitidos para el rol
         $urls = array();
         while (($e = $res->fetch())) {
-            $urls[] = empty($e->url)?null: $e->url;
+            $urls[] = $e->url;
         }
          //damos permiso al rol de acceder al arreglo de recursos
         $this->_acl->allow($id, $urls);
