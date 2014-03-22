@@ -28,25 +28,21 @@ class AuthController extends \Controller
      *                          'eliminar',
      *                          'activar',
      *                      );
-     * 
      * </code>
      * 
-     * @va boolean|array
+     * @var array
      */ 
-    protected $_protectedActions = TRUE;
-
-    /**
-     * variable que indica si por defecto se hace el chequeo de la autenticación
-     * ó si lo hace el usuario manualmente.
-     *
-     * @var boolean
-     **/
-    protected $_checkAuthByDefault = TRUE;
+    protected $_protectedActions = array();
 
     /**
      * @var Object Objeto encargado de hacer el auth
      */
     protected $_authACL = null;
+
+    /**
+     * Check if user have permission for the resource
+     */
+    protected $_checkPermission = true;
 
     /**
      * Función que hace las veces de contructor de la clase.
@@ -55,11 +51,8 @@ class AuthController extends \Controller
     protected function initialize()
     {
         $this->_authACL = AuthACL::getInstance();
-        if ( $this->_checkAuthByDefault ){
-            if ( $this->_protectedActions === TRUE    || ( is_array($this->_protectedActions) &&
-                 in_array($this->action_name , $this->_protectedActions) ) ){  
-                return $this->checkAuth();          
-            }
+        if (empty($this->_protectedActions) || in_array($this->action_name , $this->_protectedActions)){  
+            return $this->checkAuth();          
         }
     }
 
@@ -78,7 +71,7 @@ class AuthController extends \Controller
      */ 
     protected function checkAuth(){
         if ($this->_authACL->isLogin()) {
-            return $this->_isAllow();
+            return !$this->_checkPermission || $this->_isAllow();
         } elseif (\Input::hasPost('login') && \Input::hasPost('clave')) {
             $this->_valid();
             \Redirect::toAction(\Router::get('action'));
