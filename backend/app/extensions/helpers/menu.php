@@ -8,51 +8,23 @@
  */
 class Menu {
     /**
-     * Crea los menus para la app.
-     * 
-     * @param  int $id_user 
-     * @param  int $entorno 
+     * Crea los menus para la app. 
      * @return string          
      */
     public static function render() {
-        $registros = self::load();
-        $html = '';
-        if ($registros) {
-            foreach ($registros as $e) {
-                $html .= self::generarItems($e);
-            }
-        }
-        return $html;
+        $menus =  require APP_PATH . 'config/menu.php';
+        return self::generate($menus);
     }
 
     /**
-     * Genera los items del menu.
-     * 
-     * @param  Model $objeto_menu 
-     * @param  int $entorno     
-     * @return string              
+     * Generate a menu
+     * @param array $menus Array of menus
+     * @return string 
      */
-    protected static function generarItems($objeto_menu) {
-        $sub_menu = isset($objeto_menu->sub)?$objeto_menu->sub:null;
-        //$class = 'menu_' . str_replace('/', '_', $objeto_menu->name);
-        $class = h(isset($objeto_menu->clases)?$objeto_menu->clases:null);
-        if ($sub_menu) {
-            $html = '<li class="'. h($class) . ' dropdown">' .
-                    Html::link('#', h($objeto_menu->name) .
-                            ' <b class="caret"></b>',
-                            'class="dropdown-toggle" data-toggle="dropdown"');
-        } else {
-            $html = '<li class="' . h($class) . '">' .
-                    Html::link($objeto_menu->url, h($objeto_menu->name));
-        }
-        if ($sub_menu) {
-            $html .= '<ul class="dropdown-menu">';
-            foreach ($sub_menu as $e) {
-                $html .= self::generarItems($e);
-            }
-            $html .= '</ul>' . PHP_EOL;
-        }
-        return $html . "</li>" . PHP_EOL;
+    public static function generate($menus){
+        return Haanga::Load('_shared/menu.phtml', array(
+            'menu' => $menus
+        ), true);
     }
 
     /**
@@ -65,9 +37,4 @@ class Menu {
         $url_actual = substr(Router::get('route'), 1);
         return (strpos($url, $url_actual) !== false || strpos($url, "$url_actual/index") !== false);
     }
-    
-    protected static function load(){
-		return json_decode(file_get_contents(APP_PATH . 'config/menu.json'));
-	}
-
 }
