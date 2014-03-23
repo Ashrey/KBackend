@@ -43,8 +43,8 @@ class Template extends \KumbiaView {
     {
         /*Establece las configuraciones de haanga*/
         Haanga::configure(array(
-            'template_dir' => APP_PATH.'views',
-            'cache_dir' => APP_PATH.'temp/cache/haanga',
+            'template_dir' => KBACKEND_PATH.'/views',
+            'cache_dir' => KBACKEND_PATH.'/temp/cache/haanga',
             'compiler' => array( /* opts for the tpl compiler */
                 'strip_whitespace' => TRUE,
                 'allow_exec'  => TRUE
@@ -67,7 +67,11 @@ class Template extends \KumbiaView {
             // Carga el contenido del buffer de salida
             self::$_content = ob_get_clean();
             $file = static::getFile();
-            self::$_content = static::getTpl($file, $vars);
+            try{
+                self::$_content = static::getTpl($file, $vars);
+            }catch(\Exception $e){
+                parent::render($controller);
+            }
         } else {
             ob_clean();
         }
