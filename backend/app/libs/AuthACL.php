@@ -96,7 +96,7 @@ class AuthACL {
         $res = \KBackend\Model\Role::getResource($id);
         //establecemos los recursos permitidos para el rol
         $urls = array();
-        while (($e = $res->fetch())) {
+        foreach($res as $e) {
             $urls[] = $e->url;
         }
          //damos permiso al rol de acceder al arreglo de recursos
