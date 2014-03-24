@@ -41,16 +41,6 @@ class Template extends \KumbiaView {
      */
     public static function render($controller)
     {
-        /*Establece las configuraciones de haanga*/
-        Haanga::configure(array(
-            'template_dir' => KBACKEND_PATH.'/views',
-            'cache_dir' => KBACKEND_PATH.'/temp/cache/haanga',
-            'compiler' => array( /* opts for the tpl compiler */
-                'strip_whitespace' => TRUE,
-                'allow_exec'  => TRUE
-            ),
-        ));
-
 
         /*Si no hay nada termina el proceso y descarga el buffer*/
         if (!self::$_view && !self::$_template)
@@ -64,8 +54,6 @@ class Template extends \KumbiaView {
         
          // carga la vista si no esta en produccion o se usa scaffold o no hay contenido cargado
         if (!PRODUCTION || $scaffold || !self::$_content) {
-            // Carga el contenido del buffer de salida
-            self::$_content = ob_get_clean();
             $file = static::getFile();
             try{
                 self::$_content = static::getTpl($file, $vars);
@@ -93,6 +81,15 @@ class Template extends \KumbiaView {
     }
 
     public static function getTpl($file, $vars){
+         /*Establece las configuraciones de haanga*/
+        Haanga::configure(array(
+            'template_dir' => KBACKEND_PATH.'/views',
+            'cache_dir' => KBACKEND_PATH.'/temp/cache/haanga',
+            'compiler' => array( /* opts for the tpl compiler */
+                'strip_whitespace' => TRUE,
+                'allow_exec'  => TRUE
+            ),
+        ));
         return Haanga::Load($file, $vars, true);
     }
 
