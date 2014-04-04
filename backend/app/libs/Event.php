@@ -53,7 +53,6 @@ class Event implements \SplSubject {
     /**
      * Fired a event
      * @param string $name name of event
-     * @param Closure $cb Closure callback
      * @return bool 
      */
     public static function fired($name){
