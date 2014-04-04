@@ -16,6 +16,42 @@ class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess 
 
     protected $logger = true;
 
+    public function __construct(Array $data = array())
+    {
+        parent::__construct($data);
+        $validate =  function($e){
+            if(!$this->logger) return TRUE;
+            $rules = $this->_rules();
+            $val = new Validate($this, $rules);
+            if($val->exec()){
+                return TRUE;
+            }else{
+                $error = $val->getMessages();
+                foreach ($error as $value)
+                    \Flash::error($value);
+                return FALSE;
+            }
+        };
+        $validate->bindTo($this);
+        Event::bind('ORMUpdate', $validate);
+        Event::bind('ORMCreate', $validate);
+    }
+
+    public function create(Array $data = array()){
+        if(!Event::fired('ORMCreate')){
+            return FALSE;
+        }
+        parent::create($data);
+    }
+
+    public function update(Array $data = array()){
+        if(!Event::fired('ORMUpdate')){
+            return FALSE;
+        }
+        parent::update($data);
+    }
+
+
     /**
      * Obtiene nombre de tabla
      * 
@@ -28,18 +64,7 @@ class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess 
         return "_$name";
     }
 
-    protected function _beforeSave(){
-        $rules = $this->_rules();
-        $val = new Validate($this, $rules);
-        if($val->exec()){
-            return true;
-        }else{
-            $error = $val->getMessages();
-            foreach ($error as $value)
-                \Flash::error($value);
-            return false;
-        }
-    }
+
 
     public function unique($field){
         return static::count("$field = ?",$this->$field);
