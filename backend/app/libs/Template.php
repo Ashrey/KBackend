@@ -39,7 +39,7 @@ class Template extends \KumbiaView {
      * @todo add the cache
      * @param Controller $controller
      */
-    public static function render($controller)
+    public static function render(\Controller $controller)
     {
 
         /*Si no hay nada termina el proceso y descarga el buffer*/
