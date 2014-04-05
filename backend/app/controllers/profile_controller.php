@@ -17,6 +17,23 @@ class ProfileController extends  \KBackend\Libs\AuthController{
 
     }
 
+        
+    /**
+     * manda la nueva contraseña luego de validar el hash
+     */
+    public function change($id, $hash){
+        try{
+            if($id && $hash){
+                $user = new \KBackend\Model\User();
+                $user->newpass($id, $hash);
+                Flash::valid("La nueva contraseña ha sido enviados a su correo");
+                Redirect::to('profile');
+            }
+        }catch(Exception $e){
+            Flash::error($e->getMessage());
+        }
+    }
+
     public function logout() {
 		parent::logout();
     }  
