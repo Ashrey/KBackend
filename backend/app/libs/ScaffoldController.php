@@ -7,6 +7,7 @@ namespace KBackend\Libs;
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team   
  */
+use \Flash;
 abstract class ScaffoldController extends \KBackend\Libs\AuthController {
 
     /**
@@ -75,12 +76,8 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
     public function index() {
         try {
             $model = $this->_model;
-            $filter = FilterSQL::get();
-            $filter->per_page =  Config::get('backend.app.per_page');
-            $param = method_exists($this->_model, 'index') ? $model::index():array();
-            $paginator = new Paginator($this->_model, array_merge($param, $filter->getArray()));
-            /*llama a la funcion de resultados*/
-            $this->result = new \Grid($paginator);
+            $param = method_exists($model, 'index') ? $model::index():array();
+            $this->result = new \Grid(new Paginator($model, $param));
         } catch (\Exception $e) {
             \View::excepcion($e);
         }

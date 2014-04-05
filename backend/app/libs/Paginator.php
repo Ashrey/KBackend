@@ -3,6 +3,7 @@ namespace KBackend\Libs;
 use \Router;
 use \Haanga;
 use \ArrayIterator;
+use \Kumbia\ActiveRecord\QueryGenerator;
 /**
  * KumbiaPHP web & app Framework
  *
@@ -33,17 +34,18 @@ class Paginator extends \Kumbia\ActiveRecord\Paginator
      * Constructor
      * 
      * @param string $model nombre de clase de modelo
-     * @param string $sql consulta select sql
-     * @param int $page numero de pagina
-     * @param int $per_page cantidad de items por pagina
-     * @param array $values valores
+     * @param Array $param Param for query
+     * @param array $values values
      */
-    public function __construct($model, Array $param, Array $values = array())
+    public function __construct($model, Array $param = array(), Array $values = array())
     {
+        $filter = FilterSQL::get();
+        $filter->per_page =  Config::get('backend.app.per_page');
+        $param = array_merge($param, $filter->getArray());
         $page = $param['page'];
         $per_page = $param['per_page'];
         unset($param['limit'], $param['offset']);
-        $sql = \Kumbia\ActiveRecord\QueryGenerator::select($model::getSource(), $model::getDriver(), $param);
+        $sql = QueryGenerator::select($model::getSource(), $model::getDriver(), $param);
         parent::__construct($model, $sql, $page, $per_page, $values);   
 	}
 

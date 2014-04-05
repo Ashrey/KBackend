@@ -18,10 +18,7 @@ class AccessController extends  \KBackend\Libs\AuthController{
         try {
             $this->rol =  Role::get($rol);
             $_model = new \KBackend\Model\Resource();
-            /*captura los filtros*/
-            $filter = \KBackend\Libs\FilterSQL::get();
-            $filter->per_page =  Config::get('backend.app.per_page');
-            $this->result  = new \KBackend\Libs\Paginator($_model,  $filter->getArray());
+            $this->result  = new \KBackend\Libs\Paginator($_model);
             $this->url = "access/assign/$rol";
              /*llama a la funcion de resultados*/
             $this->privilegios = RoleResource::access($rol);
