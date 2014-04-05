@@ -54,20 +54,15 @@ class Email {
      * @param  String $hash
      * @return boolean        
      */
-    public function sendPass(User $u, $hash) {
+    public function forget(User $u, $hash) {
 		return $this->create('Pasos para recuperar tu contraseña', 
-			$u->email, $u->login, 'forget',  array('user' => $u, 'hash'=> $hash)) ;
-    }
-    
-     /**
-     * Envia un correo con una nueva contraseña
-     * @param  Usuarios $usuario 
-     * @param  String $hash
-     * @return boolean        
-     */
-    public function sendNewPass(User $u, $pass) {
-		return $this->create('Nueva contraseña contraseña', 
-			$u->email, $u->login, 'change',  array('user' => $u, 'pass'=> $pass)) ;
+			$u->email, $u->login, 'forget', 
+            array('user' => $u,
+                'hash'=> $hash,
+                'url'  => 'http://' .$_SERVER['SERVER_NAME'] . PUBLIC_PATH. "register/change/{$u->id}/{$hash}",
+                'name' => Config::get('backend.app.name'),
+            )
+        );
     }
    
     /**

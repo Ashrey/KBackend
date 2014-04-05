@@ -1,3 +1,4 @@
-<?php $url = 'http://' .$_SERVER['SERVER_NAME'] . PUBLIC_PATH. "register/change/{$user->id}/{$hash}";?>
-Este correo ha sido enviado por su requerimiento de recuperacion de contraseña  en <strong><?php echo Config::get('backend.app.name');?></strong>
-<p>Para generar una contraseña nueva visi te el siguiente link: <a href="<?php echo $url;?>"><?php echo $url;?></a></p>
+Este correo ha sido enviado por su requerimiento de recuperacion de contraseña  en
+<strong>{{name}}</strong>
+<p>Para generar una contraseña nueva visite el siguiente link:
+<a href="{{url}}">{{url}}</a></p>

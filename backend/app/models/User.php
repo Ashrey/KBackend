@@ -118,18 +118,20 @@ class User extends \KBackend\Libs\ARecord {
     /**
      * Envia un link de recuperación
      */
-    public function forget(){
-        $this->begin(); //iniciamos una transaccion
-        $this->created_at = date("Y-m-d G:i:s");
-        if ($this->save()) {
-            $hash = $this->hash();
-            $correo = new Email();
-            if ($correo->sendPass($this, $hash)) {
-                $this->commit();   
-            } else {
-                $this->rollback();
-                throw new \Exception($correo->getError());
-            }
+    public static function forget($by){
+        $user = self::first(
+                array('where' => 'email = :value OR login=:value'),
+                array(':value' => $by)
+            );
+        if(!$user)
+            throw new \Exception('Usuario o email no válido');
+        $user->begin(); //iniciamos una transaccion
+        $user->created_at = date("Y-m-d G:i:s");
+        if ($user->save()) {
+            $hash = $user->hash();
+            $email = new Email();
+            $email->forget($user, $hash);
+            $user->commit();   
         } else {
             $this->rollback();
             throw new \Exception('Existen datos que no son válidos');
@@ -140,29 +142,23 @@ class User extends \KBackend\Libs\ARecord {
      /**
      * Permite generar una contraseña nueva al usuario y enviarla a su correo 
      */
-    public function newpass($id, $hash){
-        if ($this->find_first((int) $id)) { //verificamos la existencia del user
-            if(!($this->hash() === $hash)){
-                throw new \Exception('Hash de validación no válido');
-            }
-            $this->begin(); //iniciamos una transaccion
-            $this->created_at = date("Y-m-d G:i:s");
-            $pass = substr( str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$@&'), 0, 8);
-            $this->password =  \KBackend\Libs\AuthACL::hash($pass);
-            if ($this->save()) {
-                $correo = new Email();
-                if ($correo->sendNewPass($this, $pass)) {
-                    $this->commit();   
-                } else {
-                    $this->rollback();
-                    throw new \Exception($correo->getError());
-                }
+    public function changePassword($hash){
+        $this->begin(); //iniciamos una transaccion
+        $this->created_at = date("Y-m-d G:i:s");
+        $pass = substr( str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$@&'), 0, 8);
+        $this->password =  \KBackend\Libs\AuthACL::hash($pass);
+        if ($this->save()) {
+            $correo = new Email();
+            if ($correo->sendNewPass($this, $pass)) {
+                $this->commit();   
             } else {
                 $this->rollback();
-                throw new \Exception('Existen datos que no son válidos');
+                throw new \Exception($correo->getError());
             }
+        } else {
+            $this->rollback();
+            throw new \Exception('Existen datos que no son válidos');
         }
-        return true;
     }
 
     /**

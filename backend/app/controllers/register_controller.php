@@ -52,16 +52,12 @@ class RegisterController extends AppController{
      * Hace una petición para cambiar la contraseña
      */
     public function forget(){
+    	$this->show = TRUE;
 		try{
-			if (Input::hasPost('forget')) {
-				$by = Input::post('forget');
-				$user = new \KBackend\Model\User();
-				$u = $user->find_first("email = '$by' OR login='$by'");
-				if(!$u)
-					throw new \Exception('Usuario o email no válido');
-				$u->forget();
+			if (($by = Input::post('forget'))) {
+				$user = User::forget($by);
 				Flash::valid("Los pasos para recuperar su contraseña han sido enviados a su correo");
-				$this->hidden = true;
+				$this->show = FALSE;
 			}
 		}catch(Exception $e){
 			Flash::error($e->getMessage());
@@ -71,16 +67,16 @@ class RegisterController extends AppController{
 	/**
 	 * manda la nueva contraseña luego de validar el hash
 	 */
-	public function change($id=null, $hash=null){
+	public function change($id, $hash){
 		try{
 			if($id && $hash){
 				$user = new \KBackend\Model\User();
 				$user->newpass($id, $hash);
 				Flash::valid("La nueva contraseña ha sido enviados a su correo");
+				Redirect::to('profile');
 			}
 		}catch(Exception $e){
 			Flash::error($e->getMessage());
 		}
-		if($id && $hash)Redirect::to('register/change');
 	}
 }
