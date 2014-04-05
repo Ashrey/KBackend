@@ -83,8 +83,9 @@ class Email {
         ob_start();
         $res = $this->_mail->Send();
         ob_clean();
-        $this->_error = $this->_mail->ErrorInfo;
-        return $res;
+        if(!$res)
+            throw new Exception($this->_mail->ErrorInfo);
+        return TRUE;
 	}
 	
     
