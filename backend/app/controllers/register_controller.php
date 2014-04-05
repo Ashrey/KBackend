@@ -55,7 +55,7 @@ class RegisterController extends AppController{
     	$this->show = TRUE;
 		try{
 			if (($by = Input::post('forget'))) {
-				$user = User::forget($by);
+				User::forget($by);
 				Flash::valid("Los pasos para recuperar su contraseña han sido enviados a su correo");
 				$this->show = FALSE;
 			}
