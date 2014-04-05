@@ -41,7 +41,7 @@ class User extends \KBackend\Libs\ARecord {
         return array('login', 'password', 'email', 'role_id', 'enable');
     }
 
-    protected function before_save() {
+    protected function _beforeSave() {
         if (\Input::hasPost('user')){
 			if(!isset($data['pasword']))return;
 			$data = \Input::post('user');
@@ -84,13 +84,8 @@ class User extends \KBackend\Libs\ARecord {
      * Realiza el proceso de registro de un usuario desde el frontend.
      * @return boolean true si la operación fué exitosa.
      */
-    public function register() {
+    public function register($data) {
 		$data = \Input::post('user');
-		if(!($data['captcha'] === \Session::get('captcha'))){
-			\Flash::info($data['captcha']);
-			var_dump(\Session::get('captcha'));
-			throw new \Exception('La letra introducida no es válida');
-		}
         $clave = $this->password;
         $this->begin(); //iniciamos una transaccion
         $this->enable = '0';//por defecto las cuentas están desactivadas
