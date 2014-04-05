@@ -55,7 +55,7 @@ class Event implements \SplSubject {
     /**
      * Fired a event
      * @param string $name name of event
-     * @param object|string hash
+     * @param mixed hash
      * @return bool 
      */
     public static function fired($name,  $scope = 'global'){
@@ -69,7 +69,7 @@ class Event implements \SplSubject {
     /**
      * Return if exist event
      * @param string $name
-     * @param object|string $scope
+     * @param mixed $scope
      * @return bool 
      */
     protected static function exist($name, $scope){
