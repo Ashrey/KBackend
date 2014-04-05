@@ -31,7 +31,7 @@ class Event implements \SplSubject {
     public function notify() {
         foreach ($this->_observers as $observer) {
              $return = $observer->update($this);
-             if(is_bool($return) && $return)
+             if(is_bool($return) && !$return)
                 return FALSE;
         }
         return TRUE;
