@@ -19,7 +19,7 @@ class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess 
     public function __construct(Array $data = array())
     {
         parent::__construct($data);
-        $validate =  function($e){
+        $validate =  function(){
             $rules = $this->_rules();
             $val = new Validate($this, $rules);
             if($val->exec()){
