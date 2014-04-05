@@ -24,12 +24,9 @@ class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess 
             $val = new Validate($this, $rules);
             if($val->exec()){
                 return TRUE;
-            }else{
-                $error = $val->getMessages();
-                foreach ($error as $value)
-                    \Flash::error($value);
-                return FALSE;
             }
+            $val->flash();
+            return FALSE;
         };
         $validate->bindTo($this);
         Event::bind('ORMUpdate', $validate, $this);
@@ -66,7 +63,7 @@ class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess 
 
 
     public function unique($field){
-        return static::count("$field = ?",$this->$field);
+        return static::count("$field = ?",$this->$field) == 0;
     }
     
 
