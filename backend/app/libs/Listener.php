@@ -30,6 +30,6 @@ class Listener implements SplObserver{
     */
     public function update(\SplSubject $subject) {
         $cb = $this->_callback;
-        $cb($subject);
+        return $cb($subject);
     }
 }
