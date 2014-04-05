@@ -90,15 +90,4 @@ class Template extends \KumbiaView {
 
         return Haanga::Load($file, $vars, true);
     }
-
-
-    public static function content()
-    {
-        if (isset($_SESSION['KUMBIA.CONTENT'])) {
-            $content = $_SESSION['KUMBIA.CONTENT'];
-            unset($_SESSION['KUMBIA.CONTENT']);
-            return $content;
-        }
-        return self::$_content;
-    }
 }
