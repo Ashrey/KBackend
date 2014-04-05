@@ -22,6 +22,7 @@
  * @license    http://wiki.kumbiaphp.com/Licencia     New BSD License
  */
 class Flash {
+    protected static $buffer = '';
 
     /**
      * Visualiza un mensaje flash
@@ -31,11 +32,26 @@ class Flash {
      */
     public static function show($name, $text) {
         if (isset($_SERVER['SERVER_SOFTWARE'])) {
-            echo '<div class="', $name, ' alert flash" data-alert="alert" data-dismiss1="alert">
-                <a class="close" data-dismiss="alert"  href="#">×</a>', $text, '</div>', PHP_EOL;
+            self::$buffer .= "<div class=\"$name alert flash\" data-alert=\"alert\" data-dismiss1=\"alert\">
+                <a class=\"close\" data-dismiss=\"alert\"  href=\"#\">×</a> $text </div>";
         } else {
-            echo $name, ': ', strip_tags($text), PHP_EOL;
+            self::$buffer .= "$name : ". strip_tags($text);
         }
+    }
+
+    /**
+     * Get content buffer
+     * @return string
+     */
+    public static function content(){
+        if (Session::has('KUMBIA.CONTENT', 'FlashBuffer')) {
+            $content = Session::get('KUMBIA.CONTENT', 'FlashBuffer');
+            Session::delete('KUMBIA.CONTENT', 'FlashBuffer');
+            return $content;
+        }
+        $buffer = self::$buffer;
+        self::$buffer = '';
+        return $buffer;
     }
 
     /**

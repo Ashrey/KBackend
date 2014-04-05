@@ -4,7 +4,7 @@
        <div class="col-4 offset-4">
             {% exec Form::open '', 'post', 'class="jumbotron"' %}
 			<h2 >Autenticación</h2>
-            {%exec View::content%}
+            {%exec Flash::content%}
 			<div class="form-group">
 				<label for="login"><i class="fa fa-group"></i></label>
                 {% exec Form::text 'login', 'placeholder="Usuario" class="control"' %}

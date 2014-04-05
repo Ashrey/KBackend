@@ -5,7 +5,7 @@
 	{% if show_bar %}
 		{% inline '_shared/scaffold_top.phtml'%}
 	{%endif%}
-	{%exec View::content %}
+	{%exec Flash::content %}
 	{% autoescape off %}
 		{%block result%}
 			{%exec result->useCRUD %}

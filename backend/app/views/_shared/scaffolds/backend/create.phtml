@@ -3,7 +3,7 @@
 {%block content%}
 <div class="row">
     <div class="col-5 offset-3">
-    	{%exec View::content%}
+    	{%exec Flash::content%}
         {% autoescape off %}
             {%block result%}
                 {%exec form.useDefaultBtn %}

@@ -2,7 +2,7 @@
 {%block title%}Configurando <em>{{config}}</em>{%endblock%}
 {%block content%}
     <div class="offset-3 col-6" >
-        {%exec View::content %}
+        {%exec Flash::content%}
         {%exec Form::open '', 'post', 'class="horizontal"'%}
         {%for key, val in values%}
             <fieldset>

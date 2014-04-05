@@ -1,7 +1,7 @@
 {% extends 'default.phtml'%}
 {%block title%}Privilegios para <em>{{rol.role}}</em>{%endblock%}
 {%block content%}
-    {%exec View::content %}
+    {%exec Flash::content%}
     {% if result %}
         {%exec Form::open url %}
         {%inline '_shared/submit.phtml' %}
