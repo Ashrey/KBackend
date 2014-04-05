@@ -9,6 +9,7 @@ namespace KBackend\Libs;
  */
 require_once CORE_PATH . 'kumbia/kumbia_view.php';
 use \Haanga;
+use \Flash;
 class Template extends \KumbiaView {
     /**
      * Muestra las excepciones generadas y crea un log de las mismas.
