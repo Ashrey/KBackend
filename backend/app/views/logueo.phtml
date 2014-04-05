@@ -3,7 +3,7 @@
 	<div class="container">               
        <div class="col-4 offset-4">
             {% exec Form::open '', 'post', 'class="jumbotron"' %}
-			<h2 >Autenticación</h2>
+			<h2>Autenticación</h2>
             {%exec Flash::content%}
 			<div class="form-group">
 				<label for="login"><i class="fa fa-group"></i></label>
@@ -16,12 +16,13 @@
              </div>
 
             <div class="btn-group">
-                <button class="btn-lg btn btn-primary" type="submit"><i class="icon-signin"></i> Ingresar</button>
-                {% buffer reg%}{%exec Config::get 'backend.app.registro'%}{% endbuffer %}
+                <button class="btn btn-primary" type="submit"><i class="fa fa-sign-in"></i> Ingresar</button>
+                {% buffer reg%}{%exec Config::get 'backend.app.register'%}{% endbuffer %}
                 {% if reg %}
-                    {%exec Html::link 'registro', 'Registro <i class=" icon-folder-open"></i>', 'class="btn btn-info"' %}
+                    {%exec Html::link 'registro', 'Registro <i class="fa fa-book"></i>', 'class="btn btn-info"' %}
                 {% endif %}
             </div>
+            {%exec Html::link 'register/forget', 'Olvidé mi contraseña' %}
             {% exec Form::close%}
         </div>
     </div>
