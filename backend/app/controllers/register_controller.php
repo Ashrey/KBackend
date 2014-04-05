@@ -6,7 +6,11 @@
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team
  */
-class RegisterController extends \AppController{
+use \KBackend\Libs\Config;
+use \KBackend\Libs\Captcha;
+use \KBackend\Libs\Template;
+use \KBackend\Model\User;
+class RegisterController extends AppController{
 	
 	public function before_filter(){
 		/*Inactive by config*/
@@ -19,40 +23,28 @@ class RegisterController extends \AppController{
 	 * Register new user
 	 */
 	public function index() {
-		
 		try{
-			$str = array('primera', 'segunda', 'tercera', 'cuarta', 'última');
-			$captcha = new  \KBackend\Libs\Captcha();
-			$this->captcha = $str[$captcha->getKey()];
-			$this->text = $captcha->getCaptcha();	
-			if (Input::hasPost('user')) {
-				$user = new \KBackend\Model\User(Input::post('user'));
+			if (Input::hasPost('user')){
+				$user = new User(\Input::post('user'));
+				Captcha::check();
 				$user->register();
 				Flash::valid("Usuario Registrado, revise su correo para continuar");
-				$this->hidden = true;
+				Template::select(null, 'success');
 			}
-			Session::set('captcha', $captcha->getAswer());
 		}catch(Exception $e){
-			/*On error erase value*/
-			unset($_POST['user']['captcha']);
-			unset($_POST['user']['clave']);
 			Flash::error($e->getMessage());
 		}
-		Session::set('captcha', $captcha->getAswer());
-
 	}
 
 	/**
 	 * Active user by email
 	 */
-    public function active($id=null, $hash=null) {
-		$usuario = new \KBackend\Model\User();
-		if(!is_null($id) ||  !is_null($hash)){
-			if ($usuario->active($id, $hash)) {
-				Redirect::toAction('active');
-			} else {
-				View::response('error');
-			}			
+    public function active($id, $hash) {
+		$user = User::get($id);
+		if ($user->active($id, $hash)) {
+			Redirect::toAction('profile');
+		} else {
+			View::response('error');			
 		}
     }
     

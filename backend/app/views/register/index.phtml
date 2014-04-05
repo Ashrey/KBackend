@@ -1,39 +1,34 @@
-<div class="page-header">
-    <h1>Crear una Cuenta</h1>
-</div>
-<?php View::content(); ?>
-<?php if(empty($hidden)):?>
-	<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+{% extends 'default.phtml'%}
+{%block title%}Crear una Cuenta{%endblock%}
+{%block content%}
+	<div class="col-8 offset-2">
+	{%exec Flash::content %}
+	{%exec Form::open '', 'post', 'class="horizontal"' %}
 	<div class="form-group">
-		<label for="user_login" class="col-sm-4 control-label">Nombre de Usuario</label>
-		<div class="col-sm-8">
-			<?php echo Form::text('user.login', 'class="form-control" required maxlength="20"' ) ?>
+		<label for="user_login" class="col-4 control">Nombre de Usuario</label>
+		<div class="col-8">
+			{%exec Form::text 'user.login', 'class="control" required maxlength="20"' %}
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="user_clave" class="col-sm-4 control-label">Contraseña</label>
-		<div class="col-sm-8">
-			<?php echo Form::pass('user.password', 'class="form-control" required') ?>
+		<label for="user_password" class="col-4 control">Contraseña</label>
+		<div class="col-8">
+			{% exec  Form::pass 'user.password', 'class="control" required'  %}
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="user_clave2" class="col-sm-4 control-label">Repita Contraseña</label>
-		<div class="col-sm-8">
-			<?php echo Form::pass('user.clave2', 'class="form-control" required') ?>
+		<label for="user_password2" class="col-4 control">Repita Contraseña</label>
+		<div class="col-8">
+			{% exec  Form::pass 'user.password2', 'class="control" required'  %}
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="user_email" class="col-sm-4 control-label">Correo Electrónico</label>
-		<div class="col-sm-8">
-			<?php echo Form::email('user.email', 'class="form-control" required') ?>
+		<label for="user_email" class="col-4 control">Correo Electrónico</label>
+		<div class="col-8">
+			{% exec  Form::email 'user.email', 'class="control" required'  %}
 		</div>
 	</div>
-	<div class="form-group">
-		<label for="user_email" class="col-sm-4 control-label">Escriba la <em><?php echo $captcha?></em> letra del siguiente texto: <em><?php echo $text?></em></label>
-		<div class="col-sm-8">
-			<?php echo Form::text('user.captcha', 'class="form-control" maxlength="1" pattern="[a-zA-Z]{1}" required') ?>
-		</div>
+	<input type="text" name="email" style="display:none"/>
+	{%inline '_shared/submit.phtml' %}
 	</div>
-	<?php View::partial('backend/submit') ?>
-	<?php echo Form::close() ?>
-<?php endif;?>
+{%endblock%}

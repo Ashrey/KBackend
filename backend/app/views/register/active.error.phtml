@@ -1,5 +1,7 @@
-<div class="page-header">
-    <h1>Activación de la Cuenta</h1>
+{% extends 'default.phtml'%}
+{%block title%}Activación de la Cuenta{%endblock%}
+{%block content%}
+<div class="alert alert-danger">
+Lo sentimos, tu cuenta no ha podido ser activada correctamente {%exec Flash::content %}
 </div>
-
-<div class="alert alert-danger">Lo sentimos, tu cuenta no ha podido ser activada correctamente <?php View::content(); ?></div>
+{%endblock%}

@@ -1,6 +1,7 @@
 <?php
 namespace KBackend\Model;
-
+use \KBackend\Libs\Config;
+use \KBackend\Libs\Template;
 /**
  * KBackend
  * PHP version 5
@@ -14,7 +15,7 @@ class Email {
     protected $_error = 'error';
 
     public function __construct() {
-        $this->_mail = new \KBackend\Libs\PHPMailer();
+        $this->_mail = new \PHPMailer();
         $this->_mail->IsSMTP();
         $this->_mail->SMTPAuth = TRUE;
         $this->_mail->SMTPSecure = Config::get('backend.email.security');
@@ -33,9 +34,18 @@ class Email {
      * @param  Usuarios $usuario 
      * @return boolean        
      */
-    public function enviarRegistro(User $u, $clave, $hash) {
-        return $this->create('Tu cuenta ha sido creada con exito', $u->email, $u->login,
-			'register', array('user' => $u, 'clave'=>$clave, 'hash'=> $hash));
+    public function register(User $u, $clave, $hash) {
+        return $this->create(
+            'Tu cuenta ha sido creada con exito',
+            $u->email,
+            $u->login,
+			'register',
+            array('user' => $u, 'password'=>$clave,
+                'hash'=> $hash,
+                'url' =>'http://' .$_SERVER['SERVER_NAME'] . PUBLIC_PATH. "register/active/{$u->id}/{$hash}",
+                'name' => Config::get('backend.app.name'),
+            )
+        );
     }
     
      /**
@@ -64,27 +74,24 @@ class Email {
 	 * Create a new mail
 	 */
 	protected function create($subject, $to, $toName, $tpl, $var){
-		ob_start();
-        \View::partial("email/$tpl", NULL, $var);
-        $msg =  ob_get_clean();
+        $msg =  Template::getTpl("email/$tpl.phtml",  $var);
         $this->_mail->Subject = "$subject - " . Config::get('backend.app.name');
         $this->_mail->AltBody = strip_tags($msg);
         $this->_mail->MsgHTML($msg);
         $this->_mail->IsHTML(TRUE);
         $this->_mail->AddAddress($to, $toName);
-        return $this->_enviar();
-	
+        return $this->send();
 	}
 
 	/**
 	 * Send mail
 	 */
-    protected function _enviar(){
+    protected function send(){
         ob_start();
         $res = $this->_mail->Send();
         ob_clean();
         if(!$res)
-            throw new Exception($this->_mail->ErrorInfo);
+            throw new \Exception($this->_mail->ErrorInfo);
         return TRUE;
 	}
 	

@@ -1,6 +1,8 @@
 <?php
 namespace KBackend\Model;
 use \KBackend\Libs\Paginator;
+use \Validate;
+use \Flash;
 /**
  * KBackend
  * PHP version 5
@@ -16,10 +18,12 @@ class User extends \KBackend\Libs\ARecord {
                 'required' => array('error' =>'Debe escribir un <strong>Login</strong>'),
                 'alphanum',
                 'length' =>  array('max' =>20, 'min' =>4),
+                '@unique'  => array('error' => 'usuario ya registrado')
             ),
             'email' => array(
                 'required',
                 'email',
+                '@unique' => array('error' => 'email ya registrado'),
             ),   
         );
     }
@@ -42,17 +46,14 @@ class User extends \KBackend\Libs\ARecord {
     }
 
     protected function _beforeSave() {
-        if (\Input::hasPost('user')){
-			if(!isset($data['pasword']))return;
-			$data = \Input::post('user');
-			if($data['password'] === $data['clave2']){
-				$this->password = \KBackend\Libs\AuthACL::hash($data['password']);
-			}else{
-				 \Flash::error('Las <strong>Claves</strong> no coinciden');
-				return 'cancel';
-			}
-        }
+        /*Not is a hash*/
+        if(isset($this->password) && $this->password[0] != '$')
+            $this->password = \KBackend\Libs\AuthACL::hash($this->password);
     }
+
+    protected function _beforeCreate(){
+        $this->created_at = date('Y-m-d H:i:s');
+    } 
 
     /**
      * Devuelve el SQL para paginación
@@ -84,26 +85,34 @@ class User extends \KBackend\Libs\ARecord {
      * Realiza el proceso de registro de un usuario desde el frontend.
      * @return boolean true si la operación fué exitosa.
      */
-    public function register($data) {
-		$data = \Input::post('user');
+    public function register() {
         $clave = $this->password;
         $this->begin(); //iniciamos una transaccion
-        $this->enable = '0';//por defecto las cuentas están desactivadas
-        $this->role_id = '3';//el minimo de permisos
-        if ($this->save()) {
-            $hash = $this->hash();
-            $correo = new Email();
-            if ($correo->enviarRegistro($this, $clave, $hash)) {
-                $this->commit();   
-            } else {
-				$this->rollback();
-				throw new \Exception($correo->getError());
-            }
-        } else {
+        $this->enable = 0;//por defecto las cuentas están desactivadas
+        $this->role_id = 0;//el minimo de permisos
+        $val = array(
+            'password' => array(
+                'required' => array('error' =>'Debe escribir un <strong>Login</strong>'),
+                'length' =>  array('min' =>4),
+            ),
+            'password2' => array(
+                'required',
+                'equal' => array(
+                    'to' => $this->password,
+                    'error' => 'Las contraseñas no coinciden'
+                 )
+            )  
+        );
+        $fail = Validate::fail($this, $val);
+        if ($fail || !$this->save()){
+            if($fail) Validate::errorToFlash($fail);
             $this->rollback();
             throw new \Exception('Existen datos que no son válidos');
         }
-        return true;
+        $hash = $this->hash();
+        $correo = new Email();
+        $correo->register($this, $clave, $hash);
+        $this->commit(); 
     }
     
     /**
@@ -118,41 +127,41 @@ class User extends \KBackend\Libs\ARecord {
             if ($correo->sendPass($this, $hash)) {
                 $this->commit();   
             } else {
-				$this->rollback();
-				throw new \Exception($correo->getError());
+                $this->rollback();
+                throw new \Exception($correo->getError());
             }
         } else {
             $this->rollback();
             throw new \Exception('Existen datos que no son válidos');
         }
         return true;
-	}
-	
-	 /**
+    }
+    
+     /**
      * Permite generar una contraseña nueva al usuario y enviarla a su correo 
      */
     public function newpass($id, $hash){
-		if ($this->find_first((int) $id)) { //verificamos la existencia del user
-			if(!($this->hash() === $hash)){
-				throw new \Exception('Hash de validación no válido');
-			}
-			$this->begin(); //iniciamos una transaccion
-			$this->created_at = date("Y-m-d G:i:s");
-			$pass = substr( str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$@&'), 0, 8);
-			$this->password =  \KBackend\Libs\AuthACL::hash($pass);
-			if ($this->save()) {
-				$correo = new Email();
-				if ($correo->sendNewPass($this, $pass)) {
-					$this->commit();   
-				} else {
-					$this->rollback();
-					throw new \Exception($correo->getError());
-				}
-			} else {
-				$this->rollback();
-				throw new \Exception('Existen datos que no son válidos');
-			}
-		}
+        if ($this->find_first((int) $id)) { //verificamos la existencia del user
+            if(!($this->hash() === $hash)){
+                throw new \Exception('Hash de validación no válido');
+            }
+            $this->begin(); //iniciamos una transaccion
+            $this->created_at = date("Y-m-d G:i:s");
+            $pass = substr( str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$@&'), 0, 8);
+            $this->password =  \KBackend\Libs\AuthACL::hash($pass);
+            if ($this->save()) {
+                $correo = new Email();
+                if ($correo->sendNewPass($this, $pass)) {
+                    $this->commit();   
+                } else {
+                    $this->rollback();
+                    throw new \Exception($correo->getError());
+                }
+            } else {
+                $this->rollback();
+                throw new \Exception('Existen datos que no son válidos');
+            }
+        }
         return true;
     }
 
@@ -163,11 +172,9 @@ class User extends \KBackend\Libs\ARecord {
      * @return boolean
      */
     public function active($id, $hash) {
-        if ($this->find_first((int) $id)) { //verificamos la existencia del user
-            if ($this->hash() === $hash && ($this->enable === '0' or  $this->enable === '1')) {
-                $this->enable = 1;
-                return $this->save();
-            }
+        if ($this->hash() === $hash && ($this->enable === '0')) {
+            $this->enable = 1;
+            return $this->save();
         }
         return FALSE;
     }

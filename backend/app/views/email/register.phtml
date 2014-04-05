@@ -1,8 +1,7 @@
-<?php $url = 'http://' .$_SERVER['SERVER_NAME'] . PUBLIC_PATH. "register/active/{$user->id}/{$hash}";?>
-Felicidades tu cuenta en <strong><?php echo Config::get('backend.app.name');?></strong> ha sido creada Exitosamente 
+Felicidades tu cuenta en <strong>{{name}}</strong> ha sido creada Exitosamente 
 <ul>
-    <li>Usuario:  <strong><?php echo $user->login?></strong></li>
-    <li>Contraseña: <strong><?php echo $clave?></strong></li>
+    <li>Usuario:  <strong>{{user.login}}</strong></li>
+    <li>Contraseña: <strong>{{password}}</strong></li>
 </ul>
 <p>Para activar tu cuenta visita el siguiente link:
-<a href="<?php echo $url;?>"><?php echo $url;?></a></p>
+<a href="{{url}}">{{url}}</a></p>

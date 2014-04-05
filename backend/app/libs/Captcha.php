@@ -68,4 +68,11 @@ class Captcha{
 	function __toString(){
 		return $this->captcha;
 	}
+
+	static function check(){
+		$captcha = \Input::post('email');
+		if(!isset($captcha) || !empty($captcha)){
+			throw new \Exception('¿Are you a bot?');
+		}
+	}
 }
