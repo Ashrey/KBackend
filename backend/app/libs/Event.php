@@ -41,11 +41,11 @@ class Event implements \SplSubject {
      * Bind a callback for a event
      * @param string $name name of event
      * @param Closure $cb Closure callback
-     * @param Object|String hash
+     * @param object|string hash
      */
     public static function bind($name, \Closure $cb, $scope = 'global'){
-        $hash = is_object($scope) ? spl_object_hash ($scope): $scope;
-        if(!isset(self::$_events[$hash][$name])){
+        $hash = self::hash($scope);
+        if(!self::exist($name, $scope)){
             self::$_events[$hash][$name] = new self();
         }
         $observer = new Listener($cb);
@@ -55,14 +55,34 @@ class Event implements \SplSubject {
     /**
      * Fired a event
      * @param string $name name of event
-     * @param Object|String hash
+     * @param object|string hash
      * @return bool 
      */
     public static function fired($name,  $scope = 'global'){
-        $hash = is_object($scope) ? spl_object_hash ($scope): $scope;
-        if(isset(self::$_events[$hash][$name])){
+        $hash = self::hash($scope);
+        if(self::exist($name, $scope)){
            return  self::$_events[$hash][$name]->notify();
         }
         return TRUE;   
+    }
+
+    /**
+     * Return if exist event
+     * @param string $name
+     * @param object|string $scope
+     * @return bool 
+     */
+    protected static function exist($name, $scope){
+        $hash = self::hash($scope);
+        return isset(self::$_events[$hash][$name]);
+    }
+
+    /**
+     * Return the hash of scope
+     * @param mixed $scope
+     * @return string
+     */
+    protected static function hash($scope){
+        return is_object($scope) ? spl_object_hash ($scope): (string)$scope;
     }
 }
