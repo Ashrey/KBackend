@@ -20,7 +20,6 @@ class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess 
     {
         parent::__construct($data);
         $validate =  function($e){
-            if(!$this->logger) return TRUE;
             $rules = $this->_rules();
             $val = new Validate($this, $rules);
             if($val->exec()){
@@ -41,14 +40,14 @@ class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess 
         if(!Event::fired('ORMCreate')){
             return FALSE;
         }
-        parent::create($data);
+        return parent::create($data);
     }
 
     public function update(Array $data = array()){
         if(!Event::fired('ORMUpdate')){
             return FALSE;
         }
-        parent::update($data);
+        return parent::update($data);
     }
 
 
@@ -93,4 +92,8 @@ class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess 
     public function get_alias($key=null){
         return ucfirst(str_replace('_', ' ',$key));
 	}
+
+    public static function _rules(){
+        return array();
+    }
 }
