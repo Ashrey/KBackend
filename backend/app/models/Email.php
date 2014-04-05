@@ -34,7 +34,7 @@ class Email {
      * @param  Usuarios $usuario 
      * @return boolean        
      */
-    public function register(User $u, $clave, $hash) {
+    public function register(User $u, $hash) {
         return $this->create(
             'Tu cuenta ha sido creada con exito',
             $u, 'register', 'register/active',  $hash);
