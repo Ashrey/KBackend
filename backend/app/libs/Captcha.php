@@ -22,9 +22,9 @@ class Captcha{
 	
 	/**
 	 * Character selected
-	 * @var  String
+	 * @var  int
 	 */
-	protected $aswer = '';
+	protected $key = -1;
 	
 	/**
 	 * Create new captcha
@@ -32,29 +32,40 @@ class Captcha{
 	 */
 	function __construct($max = 5){
 		$this->max = $max;
+		$this->generate();
 	}
 	
 	/**
-	 * Get key of string
+	 * Generate captcha
 	 */
-	function getKey(){
+	protected function generate(){
 		$this->captcha = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, $this->max);
-		$key = rand(0,$this->max - 1);
-		$this->aswer = $this->captcha[$key];
-		return $key;
+		$this->key = rand(0,$this->max - 1);
+		\Session::set('answer', $this->captcha[$this->key], 'Captcha');
 	}
 	
 	/**
 	 * Get Aswer of Captcha
+	 * @return string 
 	 */
 	function getAswer(){
-		return $this->aswer;
+		return \Session::get('answer', 'Captcha');
+	}
+
+	/**
+	 * Return position as string
+	 * @return string
+	 */
+	function getPos(){
+		$str = array('primera', 'segunda', 'tercera', 'cuarta', 'última');
+		return $str[$this->key];
 	}
 	
 	/**
-	 * Get generate string
+	 * To string magic method
+	 * @return string;
 	 */
-	function getCaptcha(){
+	function __toString(){
 		return $this->captcha;
 	}
 }
