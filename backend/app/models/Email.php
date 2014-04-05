@@ -37,15 +37,7 @@ class Email {
     public function register(User $u, $clave, $hash) {
         return $this->create(
             'Tu cuenta ha sido creada con exito',
-            $u->email,
-            $u->login,
-			'register',
-            array('user' => $u, 'password'=>$clave,
-                'hash'=> $hash,
-                'url' =>'http://' .$_SERVER['SERVER_NAME'] . PUBLIC_PATH. "register/active/{$u->id}/{$hash}",
-                'name' => Config::get('backend.app.name'),
-            )
-        );
+            $u, 'register', 'register/active',  $hash);
     }
     
      /**
@@ -56,25 +48,25 @@ class Email {
      */
     public function forget(User $u, $hash) {
 		return $this->create('Pasos para recuperar tu contraseña', 
-			$u->email, $u->login, 'forget', 
-            array('user' => $u,
-                'hash'=> $hash,
-                'url'  => 'http://' .$_SERVER['SERVER_NAME'] . PUBLIC_PATH. "register/change/{$u->id}/{$hash}",
-                'name' => Config::get('backend.app.name'),
-            )
-        );
+			$u, 'forget', 'profile/user', $hash);
     }
    
     /**
 	 * Create a new mail
 	 */
-	protected function create($subject, $to, $toName, $tpl, $var){
+	protected function create($subject, User $user, $tpl, $url, $hash){
+        $var = array(
+            'user' => $u,
+            'hash'=> $hash,
+            'url'  => 'http://' .$_SERVER['SERVER_NAME'] . PUBLIC_PATH. "{$url}/{$u->id}/{$hash}",
+            'name' => Config::get('backend.app.name'),
+        );
         $msg =  Template::getTpl("email/$tpl.phtml",  $var);
         $this->_mail->Subject = "$subject - " . Config::get('backend.app.name');
         $this->_mail->AltBody = strip_tags($msg);
         $this->_mail->MsgHTML($msg);
         $this->_mail->IsHTML(TRUE);
-        $this->_mail->AddAddress($to, $toName);
+        $this->_mail->AddAddress($user->email, $user->login);
         return $this->send();
 	}
 
@@ -90,7 +82,6 @@ class Email {
         return TRUE;
 	}
 	
-    
     /**
      *Retorna el ultimo error  
      */
