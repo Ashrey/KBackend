@@ -56,11 +56,7 @@ class Template extends \KumbiaView {
          // carga la vista si no esta en produccion o se usa scaffold o no hay contenido cargado
         if (!PRODUCTION || $scaffold || !self::$_content) {
             $file = static::getFile();
-            try{
-                self::$_content = static::getTpl($file, $vars);
-            }catch(\Exception $e){
-                parent::render($controller);
-            }
+            self::$_content = static::getTpl($file, $vars);
         } else {
             ob_clean();
         }
@@ -91,6 +87,7 @@ class Template extends \KumbiaView {
                 'allow_exec'  => TRUE
             ),
         ));
+
         return Haanga::Load($file, $vars, true);
     }
 
