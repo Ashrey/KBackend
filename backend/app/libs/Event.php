@@ -41,23 +41,27 @@ class Event implements \SplSubject {
      * Bind a callback for a event
      * @param string $name name of event
      * @param Closure $cb Closure callback
+     * @param Object|String hash
      */
-    public static function bind($name, \Closure $cb){
-        if(!isset(self::$_events[$name])){
-            self::$_events[$name] = new self();
+    public static function bind($name, \Closure $cb, $scope = 'global'){
+        $hash = is_object($scope) ? spl_object_hash ($scope): $scope;
+        if(!isset(self::$_events[$hash][$name])){
+            self::$_events[$hash][$name] = new self();
         }
         $observer = new Listener($cb);
-        self::$_events[$name]->attach($observer);
+        self::$_events[$hash][$name]->attach($observer);
     }
 
     /**
      * Fired a event
      * @param string $name name of event
+     * @param Object|String hash
      * @return bool 
      */
-    public static function fired($name){
-        if(isset(self::$_events[$name])){
-           return  self::$_events[$name]->notify();
+    public static function fired($name,  $scope = 'global'){
+        $hash = is_object($scope) ? spl_object_hash ($scope): $scope;
+        if(isset(self::$_events[$hash][$name])){
+           return  self::$_events[$hash][$name]->notify();
         }
         return TRUE;   
     }

@@ -32,19 +32,19 @@ class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess 
             }
         };
         $validate->bindTo($this);
-        Event::bind('ORMUpdate', $validate);
-        Event::bind('ORMCreate', $validate);
+        Event::bind('ORMUpdate', $validate, $this);
+        Event::bind('ORMCreate', $validate, $this);
     }
 
     public function create(Array $data = array()){
-        if(!Event::fired('ORMCreate')){
+        if(!Event::fired('ORMCreate', $this)){
             return FALSE;
         }
         return parent::create($data);
     }
 
     public function update(Array $data = array()){
-        if(!Event::fired('ORMUpdate')){
+        if(!Event::fired('ORMUpdate', $this)){
             return FALSE;
         }
         return parent::update($data);
