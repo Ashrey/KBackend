@@ -111,7 +111,7 @@ class User extends \KBackend\Libs\ARecord {
         }
         $hash = $this->hash();
         $correo = new Email();
-        $correo->register($this, $clave, $hash);
+        $correo->register($this, $hash);
         $this->commit(); 
     }
     
