@@ -1,9 +1,12 @@
-{% if pag.total != 1 %}
+{% if pag.totalPages != 1 %}
+{% set next = pag.nextPage %}
+{% set prev = pag.prevPage %}
+
 <div class="text-center">
 	<ul class="pagination">
-		{%if ! pag.prev | null%}
+		{%if ! pag.prevPage | null%}
 			{# previous page #}
-			{%buffer href%}{%exec str_replace '-_page_-', pag.prev, url%}{%endbuffer%}
+			{%buffer href%}{%exec str_replace '-_page_-', prev, url%}{%endbuffer%}
 			<li class="prev">{%exec Html::link href, 'Anterior', 'title="Ir a la pág. anterior"' %}</li>
 		{% else %}
 			<li class="prev  disabled"><a title="Ir a la pág. anterior" href="#">Anterior</a></li>
@@ -12,7 +15,7 @@
 		{#se coloca el link sin numero de pagina para la pagina 1#}
 		{%buffer href%}{%exec str_replace '-_page_-', 1, url%}{%endbuffer%}
 		
-		{%if pag.current == 1%}
+		{%if pag.page == 1%}
 			<li class="active"><a href="#">1</a><li>
 		{%else%}
 			<li>{%exec Html::link href, '1' %}</li>
@@ -23,21 +26,21 @@
 		{# each page link #}
 		{%for i in range %} 
 			{%buffer href%}{%exec str_replace '-_page_-', i, url%}{%endbuffer%}
-			{%if i == pag.current %}
+			{%if i == pag.page %}
 				<li class="active"><a href='#'>{{i}}</a><li>
 			{% else %}
 				<li>{%exec Html::link href, i %}</li>
 			{% endif %}
 		{% endfor %}
 		
-		{%if pag.total > i %}
+		{%if pag.totalPages > i %}
 			<li><a href="#">...</a></li>
-			{%buffer href%}{%exec str_replace '-_page_-', pag.next, pag.total%}{%endbuffer%}
-			<li>{%exec Html::link href, pag.total %}</li>
+			{%buffer href%}{%exec str_replace '-_page_-', next, pag.totalPage%}{%endbuffer%}
+			<li>{%exec Html::link href, pag.totalPage %}</li>
 		{% endif %}
 		
-		{% if ! pag.next | null %}
-			{%buffer href%}{%exec str_replace '-_page_-', pag.next, url%}{%endbuffer%}
+		{% if ! pag.nextPage | null %}
+			{%buffer href%}{%exec str_replace '-_page_-', next, url%}{%endbuffer%}
 			<li class="prev">{% exec Html::link href, 'Siguiente', 'title="Ir a la pág. siguiente" class="nextprev"' %}</li>
 		{% else %}
 			<li class="prev disabled"><a title="Ir a la pág. siguiente" href="#">Siguiente</a></li>
