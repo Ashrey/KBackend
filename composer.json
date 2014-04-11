@@ -1,0 +1,6 @@
+{
+    "require": {
+        "ashrey/php-gettext": "dev-master",
+        "phpmailer/phpmailer": "dev-master"
+    }
+}

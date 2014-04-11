@@ -22,5 +22,5 @@ spl_autoload_register('autoload_kbackend');
 $__dir = dirname(dirname(KBACKEND_PATH)).'/vendor';
 require $__dir .'/Haanga/lib/Haanga/Loader.php';
 require $__dir. '/ActiveRecord/lib/Kumbia/ActiveRecord/Autoloader.php';
-require $__dir. '/PHPMailer/PHPMailerAutoload.php';
+require $__dir. '/autoload.php';
 \Kumbia\ActiveRecord\Autoloader::register();
