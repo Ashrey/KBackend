@@ -56,7 +56,7 @@ class Email {
 	 */
 	protected function create($subject, User $user, $tpl, $url, $hash){
         $var = array(
-            'user' => $u,
+            'user' => $user,
             'hash'=> $hash,
             'url'  => 'http://' .$_SERVER['SERVER_NAME'] . PUBLIC_PATH. "{$url}/{$u->id}/{$hash}",
             'name' => Config::get('backend.app.name'),
