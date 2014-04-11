@@ -232,7 +232,7 @@ class Field
      * @param string|array $value Array para select multiple (opcional)
      * @return string
      */
-    public static function select($field, $attrs = NULL, $value = NULL, Traversable $data)
+    public static function select($field, $attrs = NULL, $value = NULL, $data)
     {
         if (is_array($attrs)) {
             $attrs = Tag::getAttrs($attrs);
