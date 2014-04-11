@@ -58,7 +58,7 @@ class Email {
         $var = array(
             'user' => $user,
             'hash'=> $hash,
-            'url'  => 'http://' .$_SERVER['SERVER_NAME'] . PUBLIC_PATH. "{$url}/{$u->id}/{$hash}",
+            'url'  => 'http://' .$_SERVER['SERVER_NAME'] . PUBLIC_PATH. "{$url}/{$user->id}/{$hash}",
             'name' => Config::get('backend.app.name'),
         );
         $msg =  Template::getTpl("email/$tpl.phtml",  $var);
