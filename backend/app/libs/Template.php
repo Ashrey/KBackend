@@ -44,7 +44,7 @@ class Template extends \KumbiaView {
      */
     public static function render(\Controller $controller)
     {
-        self::addPath(KBACKEND_PATH.'/views');
+        self::addPath(KBACKEND_PATH.'/views/');
         /*Si no hay nada termina el proceso y descarga el buffer*/
         if (!self::$_view && !self::$_template)
             return ob_end_flush();
@@ -72,7 +72,6 @@ class Template extends \KumbiaView {
         $file =  self::getPath();
         $view = self::$_view;
         foreach (self::$_dirs as  $value) {
-            
             if (is_file("$value{$file}")){   
                 return $file;
             }elseif($scaffold && $view && is_file("{$value}_shared/scaffolds/$scaffold/$view.phtml")){
@@ -93,7 +92,6 @@ class Template extends \KumbiaView {
                 'allow_exec'  => TRUE
             ),
         ));
-
         return Haanga::Load($file, $vars, true);
     }
 
