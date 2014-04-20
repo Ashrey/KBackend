@@ -105,7 +105,6 @@ class AuthACL {
      */
     public function check() {
         $id = \KumbiaAuth::get('id');
-        var_dump($id);
         $controller = \Router::get('controller');
         $action = \Router::get('action');
         $module = \Router::get('module') ? \Router::get('module') . '/': '';
