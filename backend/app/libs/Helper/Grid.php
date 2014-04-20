@@ -1,4 +1,5 @@
 <?php
+namespace KBackend\Libs\Helper;
 /**
  * KBackend
  * PHP version 5
@@ -94,9 +95,9 @@ class Grid {
     }
 
 	function render(){
-		$filter = KBackend\Libs\FilterSQL::get();
+		$filter = \KBackend\Libs\FilterSQL::get();
 		$header = empty($this->_header)?$this->pag->getHeader():$this->_header;
-		return Haanga::Load('_shared/grid.phtml', array(
+		return \Haanga::Load('_shared/grid.phtml', array(
 			'href' => \Router::get('action'). $filter->getURL(array('order' => '-_order_-')),
 			'grid' => $this,
 			'result' => $this->pag,
