@@ -86,7 +86,6 @@ class User extends \KBackend\Libs\ARecord {
      * @return boolean true si la operación fué exitosa.
      */
     public function register() {
-        $clave = $this->password;
         $this->begin(); //iniciamos una transaccion
         $this->enable = 0;//por defecto las cuentas están desactivadas
         $this->role_id = 0;//el minimo de permisos
