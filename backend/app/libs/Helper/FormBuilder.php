@@ -3,10 +3,11 @@ namespace KBackend\Libs\Helper;
 /**
  * KBackend
  * PHP version 5
- * @package Controller
+ * @package Helper
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team   
  */
+use \Router, \Form, \Haanga, \View;
 class FormBuilder{
 	/**
 	 * Acciones disponibles
@@ -68,7 +69,7 @@ class FormBuilder{
 	/**
 	 * Permite añadir una acción
 	 * @param string $action identificador de la accion
-	 * @param type $html HTML para la acción 
+	 * @param string $html HTML para la acción 
 	 */
 	public function action($action, $html) {
 		$this->_action[$action] = $html;
@@ -153,7 +154,7 @@ class FormBuilder{
 			$data = static::getData($field, $this->options);
 			/*HTML generator*/
 			$value = isset($this->model->$field)?$this->model->$field:null;
-			$add   = call_user_func_array(array('Field', $type), array($name, $attr, $value, $data));
+			$add   = call_user_func_array(array('KBackend\Libs\Helper\Field', $type), array($name, $attr, $value, $data));
 			$html .= Haanga::Safe_Load('_shared/field.phtml', array(
 					'label' => $this->getLabel($field),
 					'id'   => $id,
