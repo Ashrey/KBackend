@@ -1,4 +1,5 @@
-{% if pag.totalPages != 1 %}
+{% set total = pag.nextPage %}
+{% if total > 1 %}
 {% set next = pag.nextPage %}
 {% set prev = pag.prevPage %}
 
