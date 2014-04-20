@@ -53,17 +53,6 @@ class AuthACL {
         return self::$_obj;
     }
 
-    /**
-     * Realiza el proceso de autenticación de un usuario en el sistema.
-     * @param  string  $user      
-     * @param  string  $pass      
-     * @return boolean             
-     */
-    public function login($user, $pass) {
-        
-        $this->_assignAccess();  
-    }
-
 
     /**
      * Crea una encriptacion de la clave para el usuario.
@@ -76,8 +65,6 @@ class AuthACL {
     public static function hash($pass) {
         return crypt($pass, self::$_hash);
     }
-
-
 
     /**
      * Establece los recursos a los que un rol tiene acceso
