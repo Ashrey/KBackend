@@ -7,6 +7,7 @@ namespace KBackend\Libs;
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team
  */
+use \KumbiaAuth;
 class Logger {
     /**
      * Almacena un mensaje en el log
@@ -22,7 +23,7 @@ class Logger {
             return;
         try {
             $log = new \KBackend\Model\Action();
-            $log->user_id = AuthACL::isLogin() ? AuthACL::get('id') : NULL;
+            $log->user_id = KumbiaAuth::isLogin() ? KumbiaAuth::get('id') : NULL;
             $log->action = $action;
             $log->extra = $msg;
             $log->date_at = date('Y-m-d H:i:s');

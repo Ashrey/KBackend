@@ -8,13 +8,21 @@ namespace KBackend\Libs;
  * @author KumbiaPHP Development Team   
  */
 use \Flash;
+use \KBackend\Libs\Helper\Grid;
+use \KBackend\Libs\Helper\FormBuilder;
 abstract class ScaffoldController extends \KBackend\Libs\AuthController {
 
     /**
-     * Decide el scaffold a usar
+     * Name of scaffold
      * @var String 
      */
     public $scaffold = 'backend';
+
+    /**
+     * Base template for scaffold
+     * @var String
+     */
+    public $basetpl = 'default.phtml';
 
     /**
      * Nombre del _modelo a mostrar
@@ -77,7 +85,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
         try {
             $model = $this->_model;
             $param = method_exists($model, 'index') ? $model::index():array();
-            $this->result = new \Grid(new Paginator($model, $param));
+            $this->result = new Grid(new Paginator($model, $param));
         } catch (\Exception $e) {
             \View::excepcion($e);
         }
@@ -105,7 +113,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
                 }
             }
             // Solo es necesario para el autoForm
-            $this->form = new \FormBuilder(new $this->_model());
+            $this->form = new FormBuilder(new $this->_model());
         } catch (\Exception $e) {
             Flash::error($e);
         }
@@ -133,7 +141,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
                 \Flash::error('No existe este registro');
             }
         }
-        $this->form = new \FormBuilder($model::get((int) $id));
+        $this->form = new FormBuilder($model::get((int) $id));
     }
 
     /**

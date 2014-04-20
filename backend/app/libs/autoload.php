@@ -5,12 +5,14 @@ define('KBACKEND_PATH', dirname(dirname(__FILE__)));
 function autoload_kbackend($name) {
     if (strncmp($name, 'KBackend', 7) == 0 ) {
         $split = explode('\\', $name);
-        $class = $split[2];
-        if ($split[1] == 'Model') {
+        array_shift($split);
+        $type = array_shift($split);
+        $class = implode(DIRECTORY_SEPARATOR, $split);
+        if ($type == 'Model') {
             if (!include  KBACKEND_PATH."/models/$class.php") {
                 throw new KumbiaException("Clase $class no encontrada");
             }
-        } elseif ($split[1] == 'Libs') {
+        } elseif ($type == 'Libs') {
             if (!include KBACKEND_PATH."/libs/$class.php"){
                 throw new KumbiaException("Clase $class no encontrada");
             }

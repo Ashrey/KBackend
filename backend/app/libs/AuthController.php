@@ -1,5 +1,4 @@
 <?php
-
 namespace KBackend\Libs;
 /**
  * KBackend
@@ -8,6 +7,7 @@ namespace KBackend\Libs;
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team
  */
+use \KumbiaAuth;
 require_once CORE_PATH . 'kumbia/controller.php';
 /*carga las configuraciones del backend*/
 \KBackend\Libs\Config::read('backend');
@@ -50,6 +50,9 @@ class AuthController extends \Controller
      */ 
     protected function initialize()
     {
+        $class = Config::get('backend.security.auth');
+        $obj = new $class();
+        KumbiaAuth::inject(new Auth($obj));
         $this->_authACL = AuthACL::getInstance();
         if (empty($this->_protectedActions) || in_array($this->action_name , $this->_protectedActions)){  
             return $this->checkAuth();          
@@ -70,9 +73,9 @@ class AuthController extends \Controller
      * 
      */ 
     protected function checkAuth(){
-        if ($this->_authACL->isLogin()) {
+        if (KumbiaAuth::isLogin()) {
             return !$this->_checkPermission || $this->_isAllow();
-        } elseif (\Input::hasPost('login') && \Input::hasPost('clave')) {
+        } elseif (\Input::hasPost('login')) {
             $this->_valid();
             \Redirect::toAction(\Router::get('action'));
         } else {
@@ -109,8 +112,8 @@ class AuthController extends \Controller
      */ 
     protected function _valid()
     {
-        $this->_authACL->login(\Input::post('login'), \Input::post('clave'));
-        if ($this->_authACL->isLogin()) {
+        KumbiaAuth::login(\Input::post('login'));
+        if (KumbiaAuth::isLogin()) {
             Event::fired('LoginSuccess');
             return $this->_isAllow();
         } else {
@@ -130,7 +133,7 @@ class AuthController extends \Controller
      */ 
     public function logout()
     {
-        $this->_authACL->logout();
+        KumbiaAuth::logout();
         return \Redirect::to('/');
     }
 
@@ -139,7 +142,7 @@ class AuthController extends \Controller
      * del controlador.
      * 
      */ 
-    final protected function finalize()
+    protected function finalize()
     {
 
     }

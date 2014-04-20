@@ -8,7 +8,7 @@ use \Session;
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team
  */
-class Auth implements iAuth
+class Auth implements \KumbiaAuthInterface
 {
 	
 	/**
@@ -34,7 +34,7 @@ class Auth implements iAuth
     protected $_key = 'jt2D14KIdRs7LA==';
 
 	
-	protected function __construct($obj) {
+	function __construct($obj) {
 		if(!is_object($obj)){
 			throw new \Exception('Expecting an object. A '. gettype($obj). ' given');
 		}
@@ -44,20 +44,12 @@ class Auth implements iAuth
 		$this->_store = \Session::get('store', $this->_key);
     }
 
-    /**
-     * Singlenton
-     * @return Auth Retorna la instancia
-     */
-    static public function getInstance($o){
-        self::$_auth = self::$_auth ? self::$_auth:
-                new self($o);
-        return self::$_auth;
-    }
 	
 	public function login($arg = array()){
         if(empty($arg['user'])){
 			throw new KumbiaException('user not get');
 		}
+        $arg['password'] = AuthACL::hash($arg['password']);
 		/*instancia al objeto*/
 		$result =$this->obj->auth($arg);
         if ($result) {
@@ -71,16 +63,6 @@ class Auth implements iAuth
         Session::set('login', $is_login, $this->_key);
         return $is_login;
     }
-
-    public function isLogin(){
-    	return Session::get('login', $this->_key);
-    }
-
-    public function logout(){
-    	Session::set('login', FALSE, $this->_key);
-    	return true;
-    }
-
 
     /**
      * Obtiene un valor de la identidad actual

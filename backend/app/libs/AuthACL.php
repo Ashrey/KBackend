@@ -1,7 +1,5 @@
 <?php
-
 namespace KBackend\Libs;
-
 /**
  * KBackend
  * PHP version 5
@@ -37,12 +35,10 @@ class AuthACL {
     protected static $_obj = null; 
 
 
-    protected function __construct(iAuth $auth, $acl) {
-        $this->_auth = $auth;
+    protected function __construct($acl) {
         $this->_acl = \Acl2::factory($acl);
         $this->_assignAccess();
     }
-    
 
     /**
      * Devuelve un objeto de Autenticación y Permisos
@@ -50,13 +46,9 @@ class AuthACL {
     static public function getInstance() {
         $tmp = self::$_obj; /*da error si uso el self en el if*/
         if(!($tmp instanceof self)){
-            $class = Config::get('backend.security.auth');
+            
             $acl   = Config::get('backend.security.acl');
-            if(!class_exists($class)){
-                throw new \Exception("Class $class configured for Auth do not exists");   
-            }
-            $obj = new $class();
-            self::$_obj =  new self(Auth::getInstance($obj), $acl);
+            self::$_obj =  new self($acl);
         }
         return self::$_obj;
     }
@@ -68,8 +60,7 @@ class AuthACL {
      * @return boolean             
      */
     public function login($user, $pass) {
-        $pass = self::hash($pass);
-        $this->_auth->login(array('user'=>$user,'password' => $pass));
+        
         $this->_assignAccess();  
     }
 
@@ -92,7 +83,7 @@ class AuthACL {
      * Establece los recursos a los que un rol tiene acceso
      */
     protected function _assignAccess() {
-        $id = $this->_auth->get('role_id');
+        $id = \KumbiaAuth::get('role_id');
         $res = \KBackend\Model\Role::getResource($id);
         //establecemos los recursos permitidos para el rol
         $urls = array();
@@ -101,7 +92,7 @@ class AuthACL {
         }
          //damos permiso al rol de acceder al arreglo de recursos
         $this->_acl->allow($id, $urls);
-        $this->_acl->user($this->_auth->get('id'), array($id));
+        $this->_acl->user( \KumbiaAuth::get('id'), array($id));
     }
 
     /**
@@ -113,7 +104,8 @@ class AuthACL {
      * @return boolean resultado del chequeo
      */
     public function check() {
-        $id = $this->_auth->get('id');
+        $id = \KumbiaAuth::get('id');
+        var_dump($id);
         $controller = \Router::get('controller');
         $action = \Router::get('action');
         $module = \Router::get('module') ? \Router::get('module') . '/': '';
@@ -125,26 +117,5 @@ class AuthACL {
         return $this->_acl->check($direct, $id) ||
                 $this->_acl->check($control, $id) ||
                 $this->_acl->check($all, $id);
-    }
-
-    /**
-     * isLogin
-     */
-    public static function isLogin(){
-        $obj = self::getInstance();
-        return $obj->_auth->isLogin();
-    }
-
-    /**
-     * Logout
-     */
-    public function logout(){
-        $obj = self::getInstance();
-        return $obj->_auth->logout();
-    }
-
-    public static function get($var){
-        $obj = self::getInstance();
-        return $obj->_auth->get($var);
     }
 }
