@@ -64,13 +64,13 @@ class ConfigINI{
      * @return string 
      */
     protected function generate(){
-        $buffer = ''
+        $buffer = '';
          foreach ($this->_value as $key => $section) {
             $buffer .= "[$key]" . PHP_EOL;
             foreach ($section as $variable => $valor) {
                 $buffer .= (in_array($valor, array('On', 'Off')) || is_numeric($valor)) ?
                     "$variable = $valor" : "$variable = \"$valor\"";
-                $buffer .=  PHP_EOL
+                $buffer .=  PHP_EOL;
             }
         }
         return $buffer;
