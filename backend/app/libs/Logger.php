@@ -21,16 +21,12 @@ class Logger {
         /*No audito select, ni describe*/
         if (in_array($action, array('SELECT', 'DESCRIBE')) ||  Config::get('backend.app.logger') != true)
             return;
-        try {
-            $log = new \KBackend\Model\Action();
-            $log->user_id = KumbiaAuth::isLogin() ? KumbiaAuth::get('id') : NULL;
-            $log->action = $action;
-            $log->extra = $msg;
-            $log->date_at = date('Y-m-d H:i:s');
-            if(!$log->save()) throw new \Exception("Error Processing Request");
-        } catch (\Exception $e) {
-            \View::excepcion($e);
-        }
+        $log = new \KBackend\Model\Action();
+        $log->user_id = KumbiaAuth::isLogin() ? KumbiaAuth::get('id') : NULL;
+        $log->action = $action;
+        $log->extra = $msg;
+        $log->date_at = date('Y-m-d H:i:s');
+        if(!$log->save()) throw new \Exception("Error Processing Request");
     }
 
     /**
