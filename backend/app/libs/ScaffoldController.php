@@ -81,12 +81,14 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
         $this->title = empty($this->title) ? ucwords($this->model) : $this->title;
     }
     
-    public function index() {
+    public function index()
         try {
             $model = $this->_model;
             $param = method_exists($model, 'index') ? $model::index():array();
             $this->result = new Grid(new Paginator($model, $param));
-        } catch (\Exception $e) {
+        }catch(\RangeException $e){
+            /*nothing*/
+        }catch (\Exception $e) {
             \View::excepcion($e);
         }
     }
@@ -124,12 +126,12 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
      */
     public function edit($id) {
         $model = $this->_model;
+        $obj = $model::get($id);
         /**
          * Date set in request
          */
         if (\Input::hasPost($this->model)) {
             $data = \Input::post($this->model); 
-            $obj = $model::get($id);
             if (is_object($obj)) {
                 if (!$obj->save($data)) {
                     //se hacen persistente los datos en el formulario
@@ -142,6 +144,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
             }
         }
         $this->form = new FormBuilder($model::get((int) $id));
+        $this->{$this->model} = $obj;
     }
 
     /**
