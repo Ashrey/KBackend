@@ -16,6 +16,10 @@ class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess 
 
     protected $logger = true;
 
+    protected static $database = 'backend';
+
+
+
     public function __construct(Array $data = array())
     {
         parent::__construct($data);
