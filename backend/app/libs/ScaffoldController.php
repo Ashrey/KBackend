@@ -81,7 +81,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
         $this->title = empty($this->title) ? ucwords($this->model) : $this->title;
     }
     
-    public function index()
+    public function index(){
         try {
             $model = $this->_model;
             $param = method_exists($model, 'index') ? $model::index():array();
