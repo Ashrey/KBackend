@@ -1,6 +1,7 @@
 {
     "require": {
         "ashrey/php-gettext": "dev-master",
-        "phpmailer/phpmailer": "dev-master"
+        "phpmailer/phpmailer": "dev-master",
+        "raveren/kint": "0.9"
     }
 }
