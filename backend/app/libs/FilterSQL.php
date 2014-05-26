@@ -33,7 +33,7 @@ class FilterSQL {
 	private function __construct() {
         foreach($_GET as $key => $val){
 			if(in_array($key, $this->_valid)){
-				$this->_arg[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_STRING);
+				$this->_arg[$key] =  filter_input(INPUT_GET, $key, FILTER_SANITIZE_STRING);
 			}
 		}
 		if(!isset($this->_arg['page']))$this->_arg['page']=1;
@@ -44,6 +44,7 @@ class FilterSQL {
         return $this->_arg;
     }
 
+
     function getSQLParam(){
     	$param = $this->_arg;
     	unset($param['per_page']);
@@ -51,11 +52,20 @@ class FilterSQL {
     	return $param;
     }
     
+    /**
+     * Return URL for filter
+     * @param  Array $arg array of options
+     * @return String
+     */
     function getURL($arg){
+        if(isset($arg['order']) && isset($this->_arg['order'])
+            && $arg['order'] == $this->_arg['order']){
+            $arg['order'] .= ' desc';
+        }
 		$arg = array_merge($this->_arg, $arg);
 		asort($arg);
 		$action=implode('/', \Router::get('parameters'));
-		return "/$action?".http_build_query($arg);
+		return "$action?".http_build_query($arg);
 	}
 
     /**

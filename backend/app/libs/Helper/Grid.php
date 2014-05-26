@@ -98,10 +98,10 @@ class Grid {
 		$filter = \KBackend\Libs\FilterSQL::get();
 		$header = empty($this->_header)?$this->pag->getHeader():$this->_header;
 		return \Haanga::Load('_shared/grid.phtml', array(
-			'href' => \Router::get('action'). $filter->getURL(array('order' => '-_order_-')),
+			'href' => \Router::get('action'),
 			'grid' => $this,
 			'result' => $this->pag,
-			'filter'=>$filter,
+			'f'=>$filter,
 			'action'=>$this->_action,
 			'header'=>$header
 		), true);

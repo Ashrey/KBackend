@@ -1,8 +1,10 @@
+
 {% if result %}
 	<table class="t bordered condensed hover">
 		<thead>
 			{%for value in header %}
-				{%buffer url%}{%exec str_replace '-_order_-', value, href%}{%endbuffer%}
+				{%def t%}{'order': "{{value}}" }{%enddef%} 
+				{%buffer url%}{{href}}{%exec f.getURL t%}{%endbuffer%}
 				{%buffer label%}{{value}} <i class="fa fa-sort"></i>{%endbuffer%}
 				<th>{%exec Html::linkAction url, label %} </th>
 			{%endfor%}
@@ -11,7 +13,7 @@
 			{% endif %}
 		</thead>
 
-	{%for item in result%}
+	{%for item in result%}  
 		<tr>
 			{% for key, val in item %}
 				<td>{%exec grid.getCol key, val %}</td>
