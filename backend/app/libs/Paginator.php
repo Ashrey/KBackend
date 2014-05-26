@@ -33,7 +33,7 @@ class Paginator extends \Kumbia\ActiveRecord\Paginator
     /**
      * Constructor
      * 
-     * @param string $model nombre de clase de modelo
+     * @param mixed $model nombre de clase o modelo
      * @param Array $param Param for query
      * @param array $values values
      */
