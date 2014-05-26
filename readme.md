@@ -26,8 +26,11 @@ El backend es el módulo de administración y configuración de una aplicación,
 
    --public
 
-2. Incluir el archivo **backend/autoload.php** en el bootstarp de tu app
-3. Disfrutar
+2. Incluir el archivo **backend/app/libs/autoload.php** en el bootstarp de tu app
+3. Copiar el repositorio de Haanga en la carpeta vendor (https://github.com/Ashrey/Haanga) 
+4. Ejecutar composer 
+5. Copiar el SQL ubicado en **backend/app/config** a tu base de datos
+5. Disfrutar
 
 ##Para el login usar:
 **Usuario:** root
