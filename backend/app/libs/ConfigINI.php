@@ -68,12 +68,21 @@ class ConfigINI{
          foreach ($this->_value as $key => $section) {
             $buffer .= "[$key]" . PHP_EOL;
             foreach ($section as $variable => $valor) {
-                $buffer .= (in_array($valor, array('On', 'Off')) || is_numeric($valor)) ?
-                    "$variable = $valor" : "$variable = \"$valor\"";
+                $buffer .= "$variable = ". $this->getValue($valor);
                 $buffer .=  PHP_EOL;
             }
         }
         return $buffer;
+    }
+
+    /**
+     * Add quote if not if numeric o boolan
+     * @param  mixed $val value
+     * @return string
+     */
+    protected function getValue($val){
+        return (in_array($val, array('On', 'Off')) || is_numeric($valor)) ?
+                     $val: "\"$valor\"";
     }
 
     /**
