@@ -73,11 +73,11 @@ class AuthController extends \Controller
      * 
      */ 
     protected function checkAuth(){
+
         if (KumbiaAuth::isLogin()) {
             return !$this->_checkPermission || $this->_isAllow();
         } elseif (\Input::hasPost('login')) {
             $this->_valid();
-            \Redirect::toAction(\Router::get('action'));
         } else {
             \View::select(null, 'logueo');
             return FALSE;
