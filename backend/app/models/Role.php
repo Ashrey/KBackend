@@ -23,12 +23,12 @@ class Role extends \KBackend\Libs\ARecord {
      * @return Obejct
      */
     public static function  getResource($id){
-        $join = "INNER JOIN _role_resource as rr ON rr.role_id = _role.id ";
-        $join .= "INNER JOIN _resource as r ON rr.resource_id = r.id ";
+        $join = "INNER JOIN kb_role_resource as rr ON rr.role_id = kb_role.id ";
+        $join .= "INNER JOIN kb_resource as r ON rr.resource_id = r.id ";
         $param = array(
             'join'   => $join,
             'fields' => 'url',
-            'where'  => "_role.id = ? AND enable = 1"
+            'where'  => "kb_role.id = ? AND enable = 1"
         );
         return self::all($param, array($id));
     }

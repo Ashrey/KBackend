@@ -61,7 +61,7 @@ class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess 
     {
         $class = explode('\\', get_called_class());
         $name = strtolower(end($class));
-        return "_$name";
+        return "kb_$name";
     }
 
 
