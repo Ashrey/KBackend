@@ -12,6 +12,10 @@ use \Flash;
  */
 class User extends \KBackend\Libs\ARecord {
 
+    protected function init(){
+        $this->relation(self::ONE_TO_ONE, 'KBackend\Model\Role');
+    }
+
     public static function _rules() {
         return array(
             'login' => array(
@@ -61,8 +65,8 @@ class User extends \KBackend\Libs\ARecord {
      */
     public static function index() {
         return  array(
-            'fields' => '_user.id, _user.login, _user.email, r.role rol',
-            'join'   => 'JOIN _role r ON r.id = role_id',
+            'join'   => 'JOIN Role r ON r.id = role_id',
+            'fields' => 'User.id, User.login, User.email, r.role rol',
         );
     }
 

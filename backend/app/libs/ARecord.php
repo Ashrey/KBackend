@@ -13,10 +13,16 @@ namespace KBackend\Libs;
 use \Validate;
 class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess {
 
+    const _SELF_     = 0;
+    const ONE_TO_ONE = 1;
+
 
     protected $logger = true;
 
     protected static $database = 'backend';
+
+    protected static $relationship = array();
+
 
 
 
@@ -35,6 +41,31 @@ class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess 
         $validate->bindTo($this);
         Event::bind('ORMUpdate', $validate, $this);
         Event::bind('ORMCreate', $validate, $this);
+        $this->init();
+        $this->relation(self::_SELF_, get_called_class());
+    }
+
+
+    protected function init(){
+
+    }
+
+    public static function query($sql, $values = NULL){
+        $search  = array();
+        $replace = array();
+        foreach (static::$relationship as $type) {
+            foreach ($type as $table => $val) {
+                $var       = explode('\\', $table);
+                $search[]  = end($var);
+                $replace[] = $table::getTable();
+            }
+        }
+        $sql = str_replace($search, $replace, $sql);
+        return parent::query($sql, $values);
+    }
+
+    protected function relation($type, $table){
+        self::$relationship[$type][$table] = array();
     }
 
     public function create(Array $data = array()){
