@@ -1,4 +1,6 @@
 backend/app/temp/cache/haanga/*
+backend/app/temp/cache/*
+backend/composer.lock
 /backend.sublime-project
 /backend.sublime-workspace
 vendor/*
