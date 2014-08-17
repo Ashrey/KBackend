@@ -90,7 +90,7 @@ class RoleResource extends \KBackend\Libs\ARecord {
     }
 
     public static function getTable()  {
-        return '_role_resource';
+        return 'kb_role_resource';
     }
 
 }
