@@ -13,7 +13,8 @@ use \Flash;
 class User extends \KBackend\Libs\ARecord {
 
     protected function init(){
-        $this->relation(self::ONE_TO_ONE, 'KBackend\Model\Role');
+        $this->oneToOne('KBackend\Model\Role');
+        $this->oneToMany('KBackend\Model\Action');
     }
 
     public static function _rules() {
@@ -204,9 +205,9 @@ class User extends \KBackend\Libs\ARecord {
      */
     public static function actions($page = 1) {
         $arg = array(
-            'fields' =>  '_user.*,COUNT(_action.id) as total',
-            'join'   =>  'LEFT JOIN _action ON _user.id = _action.user_id',
-            'group'  => '_user.id'
+            'fields' =>  'User.*,COUNT(Action.id) as total',
+            'join'   =>  'LEFT JOIN Action ON User.id = Action.user_id',
+            'group'  => 'User.id'
         );
         return self::paginate($arg,  $page, \Config::get('backend.app.per_page'));
     }
