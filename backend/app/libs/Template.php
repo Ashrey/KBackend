@@ -56,7 +56,7 @@ class Template extends \KumbiaView {
         $vars = get_object_vars($controller);
         
          // carga la vista si no esta en produccion o se usa scaffold o no hay contenido cargado
-        if (!PRODUCTION || $scaffold || !self::$_content) {
+        if (!PRODUCTION || $controller->scaffold || !self::$_content) {
             $file = static::getFile();
             self::$_content = static::getTpl($file, $vars);
         } else {
