@@ -16,7 +16,7 @@ class Captcha{
 	
 	/**
 	 * Generated string
-	 * @var Integer
+	 * @var String
 	 */
 	protected $captcha = '';  
 	
