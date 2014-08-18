@@ -66,6 +66,10 @@ class Paginator extends \Kumbia\ActiveRecord\Paginator
     }
 
 
+    /**
+     * @param double $half
+     * @param integer $show
+     */
     function start($half, $show){
         if ($this->page <= $half) {
             $start = 1;

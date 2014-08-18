@@ -65,10 +65,16 @@ class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess 
         return parent::query($sql, $values);
     }
 
+    /**
+     * @param string $table
+     */
     protected function oneToOne($table){
         self::$relationship[self::ONE_TO_ONE][$table] = array();
     }
 
+    /**
+     * @param string $table
+     */
     protected function oneToMany($table){
         self::$relationship[self::ONE_TO_MANY][$table] = array();
     }

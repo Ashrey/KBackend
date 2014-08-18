@@ -12,7 +12,6 @@ class Logger {
     /**
      * Almacena un mensaje en el log
      *
-     * @param string $type
      * @param string $msg
      */
     public static function log($msg) {
@@ -31,7 +30,7 @@ class Logger {
 
     /**
      * Return Message String
-     * @param mixed $msg Message
+     * @param string $msg Message
      * @return string String messsage
      */
     protected static function getMessage($msg){

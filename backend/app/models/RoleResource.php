@@ -12,7 +12,6 @@ class RoleResource extends \KBackend\Libs\ARecord {
     /**
      * Add new access for a resource
      * @param  int $rol     id of role
-     * @param  int  $recurso id of resource
      * @return boolean         
      */
     public static function add($rol, $resource) {
@@ -29,7 +28,6 @@ class RoleResource extends \KBackend\Libs\ARecord {
      * Deny access for a resource
      * 
      * @param  int $rol     id del rol
-     * @param  int  $recurso id del recuro
      * @return boolean        
      */
     public static function  remove($rol, $resource) {
@@ -42,7 +40,7 @@ class RoleResource extends \KBackend\Libs\ARecord {
 
     /**
      * Edit access for user id
-     * @param int $role id 
+     * @param int $rol id 
      * @param  array $priv allows
      * @param  array $all all allow for page
      * @return boolean  
@@ -69,7 +67,6 @@ class RoleResource extends \KBackend\Libs\ARecord {
      * Verifica la existencia de un privilegio.
      * 
      * @param  int $rol     id del rol
-     * @param  int $recurso id del recurso
      * @return boolean
      */
     public static function isCreated($rol, $resource) {

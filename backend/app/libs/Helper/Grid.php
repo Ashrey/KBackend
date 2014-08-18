@@ -33,6 +33,9 @@ class Grid {
 	 */
 	protected $_header = array();
 
+	/**
+	 * @param \KBackend\Libs\Paginator $pag
+	 */
 	function __construct($pag=null){
 		if(!is_null($pag)){
 			$this->setPaginator($pag);

@@ -250,7 +250,6 @@ class Field
      * Crea un campo checkbox
      *
      * @param string $field Nombre de campo
-     * @param string $checkValue Valor en el checkbox
      * @param string|array $attrs Atributos de campo (opcional)
      * @param boolean $checked Indica si se marca el campo (opcional)
      * @return string

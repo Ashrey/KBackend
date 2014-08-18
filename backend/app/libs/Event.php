@@ -40,8 +40,8 @@ class Event implements \SplSubject {
     /**
      * Bind a callback for a event
      * @param string $name name of event
-     * @param Closure $cb Closure callback
-     * @param mixed $scope hash
+     * @param \Closure $cb Closure callback
+     * @param ARecord $scope hash
      */
     public static function bind($name, \Closure $cb, $scope = 'global'){
         $hash = self::hash($scope);
@@ -55,7 +55,7 @@ class Event implements \SplSubject {
     /**
      * Fired a event
      * @param string $name name of event
-     * @param mixed $h hash
+     * @param ARecord $h hash
      * @return bool 
      */
     public static function fired($name, $h = 'global'){

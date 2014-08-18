@@ -18,6 +18,9 @@ class ConfigINI{
      */
     protected $_value = array();
     
+    /**
+     * @param string $file
+     */
     public function __construct ($file) {
         $this->_file = APP_PATH . "config/{$file}.ini";
         $_conf = parse_ini_file($this->_file, true);
@@ -36,7 +39,7 @@ class ConfigINI{
     /**
      * Save the file
      * @param Array $config
-     * @return bool
+     * @return integer
      */
     public function save(Array $config) {
         $this->assign($config);

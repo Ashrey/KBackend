@@ -31,7 +31,7 @@ class Email {
     /**
      * Envia un correo de registro exitoso al usuario.
      * 
-     * @param  Usuarios $usuario 
+     * @param string $hash
      * @return boolean        
      */
     public function register(User $u, $hash) {
@@ -42,7 +42,6 @@ class Email {
     
      /**
      * Envia un correo para recuperar la contraseña
-     * @param  Usuarios $usuario 
      * @param  String $hash
      * @return boolean        
      */
@@ -53,6 +52,9 @@ class Email {
    
     /**
 	 * Create a new mail
+	 * @param string $subject
+	 * @param string $tpl
+	 * @param string $url
 	 */
 	protected function create($subject, User $user, $tpl, $url, $hash){
         $var = array(
