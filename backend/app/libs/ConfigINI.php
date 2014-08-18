@@ -84,8 +84,8 @@ class ConfigINI{
      * @return string
      */
     protected function getValue($val){
-        return (in_array($val, array('On', 'Off')) || is_numeric($valor)) ?
-                     $val: "\"$valor\"";
+        return (in_array($val, array('On', 'Off')) || is_numeric($val)) ?
+                     $val: "\"$val\"";
     }
 
     /**
