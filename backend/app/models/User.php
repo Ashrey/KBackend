@@ -153,7 +153,7 @@ class User extends \KBackend\Libs\ARecord {
         $this->password =  \KBackend\Libs\AuthACL::hash($pass);
         if ($this->save()) {
             $correo = new Email();
-            if ($correo->sendNewPass($this, $pass)) {
+            if ($correo->forget($this, $pass)) {
                 $this->commit();   
             } else {
                 $this->rollback();
