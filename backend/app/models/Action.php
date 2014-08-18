@@ -20,6 +20,7 @@ class Action extends \KBackend\Libs\ARecord {
 
 	/**
 	 * Return pagination action by user id
+	 * @param integer $id
 	 */
     public static function byUser($id) { 
         $filter = \KBackend\Libs\FilterSQL::get();

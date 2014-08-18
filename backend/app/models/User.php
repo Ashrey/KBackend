@@ -88,7 +88,7 @@ class User extends \KBackend\Libs\ARecord {
 
     /**
      * Realiza el proceso de registro de un usuario desde el frontend.
-     * @return boolean true si la operación fué exitosa.
+     * @return boolean|null true si la operación fué exitosa.
      */
     public function register() {
         $this->begin(); //iniciamos una transaccion
@@ -167,7 +167,7 @@ class User extends \KBackend\Libs\ARecord {
 
     /**
      * Activa un usaurio via correo
-     * @param int $id_
+     * @param int $id
      * @param string $hash
      * @return boolean
      */

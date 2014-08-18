@@ -15,7 +15,7 @@ class Template extends \KumbiaView {
 
     /**
      * Muestra las excepciones generadas y crea un log de las mismas.
-     * @param  Exception $e [description]
+     * @param  \Exception $e [description]
      */
     public static function excepcion(\Exception $e) {
         Flash::warning('Ha Ocurrido un error');
@@ -82,6 +82,9 @@ class Template extends \KumbiaView {
         return "$tpl.phtml";
     }
 
+    /**
+     * @return string
+     */
     public static function getTpl($file, $vars){
          /*Establece las configuraciones de haanga*/
         Haanga::configure(array(

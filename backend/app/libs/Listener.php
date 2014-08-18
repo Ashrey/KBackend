@@ -18,7 +18,7 @@ class Listener implements SplObserver{
     private $_callback;
     
     /**
-     * @param Closuer $cb Callback
+     * @param Closure $cb Callback
      */
     public function __construct(Closure $cb) {
         $this->_callback = $cb;

@@ -69,7 +69,7 @@ class AuthController extends \Controller
      * si está logueado verifica que tenga los permisos necesarios para acceder
      * a la acción correspondiente.
      * 
-     * @return boolean devuelve TRUE si tiene acceso a la acción.
+     * @return boolean|null devuelve TRUE si tiene acceso a la acción.
      * 
      */ 
     protected function checkAuth(){

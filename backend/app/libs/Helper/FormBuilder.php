@@ -199,7 +199,7 @@ class FormBuilder{
 	/**
 	 * Return if is required field
 	 * @param string $field name
-	 * @param array $options
+	 * @param array $option
 	 * @return bool
 	 */
 	protected static function isRequired($field, Array $option){
@@ -213,7 +213,7 @@ class FormBuilder{
 	/**
 	 * Return if is email field
 	 * @param string $field name
-	 * @param array $options
+	 * @param array $option
 	 * @return bool
 	 */
 	protected static function isEmail($field, Array $option){
@@ -227,7 +227,7 @@ class FormBuilder{
 	/**
 	 * Return if is email field
 	 * @param string $field name
-	 * @param array $options
+	 * @param array $option
 	 * @return array
 	 */
 	protected static function getData($field, Array $option){
@@ -248,7 +248,7 @@ class FormBuilder{
 	/**
 	 * Return if is have type field
 	 * @param string $field name
-	 * @param array $options
+	 * @param array $option
 	 * @return bool
 	 */
 	protected static function haveType($field, Array $option){
@@ -260,7 +260,8 @@ class FormBuilder{
 
 	/**
 	 * Use for default type
-	 * @param string @key 
+	 * @param string @key
+	 * @param string $key 
 	 * @return string
 	 */
 	protected static function defaultType($key){
