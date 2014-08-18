@@ -1,6 +1,8 @@
 <?php
 namespace KBackend\Model;
 use \Config;
+use KBackend\Libs\Paginator;
+use KBackend\Libs\Helper\Grid;
 /**
  * KBackend
  * PHP version 5
@@ -32,8 +34,8 @@ class Action extends \KBackend\Libs\ARecord {
                 'order' =>  'date_at DESC'
             ),
             $filter->getArray());
-        $paginator = new \KBackend\Libs\Paginator('\KBackend\Model\Action', $param , array(':id' => $id));
-        return  new \Grid($paginator);
+        $paginator = new Paginator('\KBackend\Model\Action', $param , array(':id' => $id));
+        return  new Grid($paginator);
     }
 }
 
