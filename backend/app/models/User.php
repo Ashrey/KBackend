@@ -137,7 +137,7 @@ class User extends \KBackend\Libs\ARecord {
             $email->forget($user, $hash);
             $user->commit();   
         } else {
-            $this->rollback();
+            static::rollback();
             throw new \Exception('Existen datos que no son válidos');
         }
         return true;
