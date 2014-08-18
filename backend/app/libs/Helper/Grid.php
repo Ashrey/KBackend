@@ -1,5 +1,7 @@
 <?php
 namespace KBackend\Libs\Helper;
+use KBackend\Libs\Paginator;
+
 /**
  * KBackend
  * PHP version 5
@@ -44,7 +46,7 @@ class Grid {
 	}
 	/**
 	 * Envia los datos del paginador
-	 * @param Obj $pag
+	 * @param Paginator $pag
 	 */
 	function setPaginator($pag){
 		$this->pag = $pag;
