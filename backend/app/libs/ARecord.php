@@ -66,13 +66,15 @@ class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess 
     }
 
     /**
-     * @param string $table
+     * Add new One to One relationship
+     * @param string $table name of the table
      */
     protected function oneToOne($table){
         self::$relationship[self::ONE_TO_ONE][$table] = array();
     }
 
     /**
+     * Add new One to Many relationship
      * @param string $table
      */
     protected function oneToMany($table){
