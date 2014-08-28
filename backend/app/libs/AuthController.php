@@ -7,7 +7,7 @@ namespace KBackend\Libs;
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team
  */
-use \KumbiaAuth;
+use \KumbiaAuth, \Redirect;
 require_once CORE_PATH . 'kumbia/controller.php';
 /*carga las configuraciones del backend*/
 \KBackend\Libs\Config::read('backend');
@@ -82,7 +82,6 @@ class AuthController extends \Controller
             \View::select(null, 'logueo');
             return FALSE;
         }
-
     }
 
     /**
@@ -107,7 +106,6 @@ class AuthController extends \Controller
      * Si se realiza el logueo correctamente, se verifica que tenga permisos
      * para entrar al recurso actual.
      * 
-     * @return boolean devuelve TRUE si se pudo loguear y tiene acceso a la acción.
      * 
      */ 
     protected function _valid()
@@ -115,12 +113,11 @@ class AuthController extends \Controller
         KumbiaAuth::login(\Input::post('login'));
         if (KumbiaAuth::isLogin()) {
             Event::fired('LoginSuccess');
-            return $this->_isAllow();
+            \Redirect::to('');
         } else {
             Event::fired('LoginFail');
             \Flash::warning('Datos de acceso  no válidos');
             \View::select(null,'logueo');
-            return FALSE;
         }
     }
 
