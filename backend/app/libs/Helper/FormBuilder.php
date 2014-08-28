@@ -53,35 +53,29 @@ class FormBuilder implements Iterator {
 	protected $has_error = array();
 
 	/**
-	 * Position of field for iterator
-	 * @var integer
-	 */
-	protected $pos = 0;
-
-	/**
 	 * CSS class for each field
 	 * @var string
 	 */
 	protected $fieldClass = 'control';
 
 	function rewind() {
-        $this->pos = 0;
+        reset($this->fields);
     }
 
     function current() {
-        return $this->field($this->fields[$this->pos]);
+        return $this->field(current($this->fields));
     }
 
     function key() {
-        return $this->fields[$this->pos];
+        return current($this->fields);
     }
 
     function next() {
-        ++$this->pos;
+        next($this->fields);
     }
 
     function valid() {
-        return isset($this->fields[$this->pos]);
+        return current($this->fields);
     }
 
 
@@ -228,7 +222,7 @@ class FormBuilder implements Iterator {
 		/*HTML generator*/
 		$value = isset($this->model->$field)?$this->model->$field:null;
 		$add   = call_user_func_array(array('KBackend\Libs\Helper\Field', $type), array($name, $attr, $value, $data));
-		return  Haanga::Safe_Load('_shared/field.phtml', array(
+		return  Haanga::Load('_shared/field.phtml', array(
 				'label' => $this->getLabel($field),
 				'id'   => $id,
 				'input' => $add,
