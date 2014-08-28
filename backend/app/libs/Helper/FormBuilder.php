@@ -7,7 +7,7 @@ namespace KBackend\Libs\Helper;
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team   
  */
-use \Router, \Form, \Haanga, \View;
+use \Router, \Form, \Haanga, \View, \Validate, \Input;
 class FormBuilder{
 	/**
 	 * Acciones disponibles
@@ -34,11 +34,29 @@ class FormBuilder{
 	 */
 	protected $model = null;
 
+	/**
+	 * Lista de validacioens
+	 * @var array
+	 */
+	protected $rules = array();
 
-	function __construct($model){
-		$this->model  = $model;
-		$this->fields = static::allFields($model);
-		$this->options = static::getOption($model);
+	/**
+	 * Flag is form was validate
+	 * @var boolean
+	 */
+	protected $validated = false;
+
+	/**
+	 * Field with error
+	 * @var array
+	 */
+	protected $has_error = array();
+
+	function __construct($model, Array $rules = array()){
+		$this->model    = $model;
+		$this->fields   = static::allFields($model);
+		$this->options  = $this->getOption($model);
+		$this->rules   +=  $rules;
 	}
 
 	/**
@@ -61,9 +79,9 @@ class FormBuilder{
 	protected function getOption($model){
 		$option = method_exists($model, '_formOption')? $model::_formOption():
 			array();
-		$rules = method_exists($model, '_rules')? $model::_rules():
+		$this->rules = method_exists($model, '_rules')? $model::_rules():
 			array();
-		return array_merge_recursive($option, $rules);
+		return array_merge_recursive($option, $this->rules);
 	}
 
 	/**
@@ -98,10 +116,15 @@ class FormBuilder{
 	 * Genera los posibles atributos
 	 */
 	function getAttrs($field){
+		$error = $this->hasError($field)? ' error': '';
 		return array(
 			'required' => $this->isRequired($field, $this->options),
-			'class' => 'control'
+			'class' => "control$error",
 		);
+	}
+
+	function hasError($field){
+		return empty($this->has_error[$field])? NULL: $this->has_error[$field];
 	}
 
 
@@ -142,28 +165,51 @@ class FormBuilder{
 	 */
 	function __toString(){
 		$html = '';
-		$model_name = $this->getNameForm();
 		//form init
 		$action = ltrim(Router::get('route'), '/');
-        $html .= Form::open($action, 'post', 'class="horizontal"');
+        $html .= Form::open($action, 'post', 'class="horizontal" novalidate');
 		foreach($this->fields as $field){
-			$attr = $this->attrStr($this->getAttrs($field));
-			$type = $this->getType($field);
-			$id   = "{$model_name}_{$field}";//HTML for atributte
-			$name = "$model_name.$field"; //HTML name atributte
-			$data = static::getData($field, $this->options);
-			/*HTML generator*/
-			$value = isset($this->model->$field)?$this->model->$field:null;
-			$add   = call_user_func_array(array('KBackend\Libs\Helper\Field', $type), array($name, $attr, $value, $data));
-			$html .= Haanga::Safe_Load('_shared/field.phtml', array(
-					'label' => $this->getLabel($field),
-					'id'   => $id,
-					'input' => $add
-				), true);
+			$html .= $this->field($field);
 		}
 		//add button
 		$html .=  Haanga::Safe_Load('_shared/submit.phtml',array(), true);
 		return "$html</form>";
+	}
+
+	function field($field){
+		$model_name = $this->getNameForm();
+		$attr = $this->attrStr($this->getAttrs($field));
+		$type = $this->getType($field);
+		$id   = "{$model_name}_{$field}";//HTML for atributte
+		$name = "$model_name.$field"; //HTML name atributte
+		$data = static::getData($field, $this->options);
+		/*HTML generator*/
+		$value = isset($this->model->$field)?$this->model->$field:null;
+		$add   = call_user_func_array(array('KBackend\Libs\Helper\Field', $type), array($name, $attr, $value, $data));
+		return  Haanga::Safe_Load('_shared/field.phtml', array(
+				'label' => $this->getLabel($field),
+				'id'   => $id,
+				'input' => $add,
+				'error' => $this->hasError($field),
+			), true);
+
+	}
+
+	function isValid(){
+		$name = $this->getNameForm();
+		if(!Input::hasPost($name)){
+			return FALSE;
+		}
+		$this->validated = true;
+		$error = Validate::fail($this->model, $this->rules);
+		$this->has_error =  $error === FALSE ? array():$error;
+		return empty($this->has_error);
+	}
+
+	function handle(){
+		$name = $this->getNameForm();
+		if(Input::hasPost($name))
+			$this->model->dump(Input::post($name));
 	}
 
 	public static function fieldValue($field, $result) {
@@ -282,4 +328,6 @@ class FormBuilder{
 		}
 		return 'text';
 	}
+
+
 }
