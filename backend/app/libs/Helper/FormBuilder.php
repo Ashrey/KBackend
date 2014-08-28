@@ -58,13 +58,17 @@ class FormBuilder implements Iterator {
 	 */
 	protected $pos = 0;
 
+	/**
+	 * CSS class for each field
+	 * @var string
+	 */
+	protected $fieldClass = 'control';
 
 	function rewind() {
         $this->pos = 0;
     }
 
     function current() {
-    	var_dump($this->fields[$this->pos]);
         return $this->field($this->fields[$this->pos]);
     }
 
@@ -121,6 +125,16 @@ class FormBuilder implements Iterator {
 	public function action($action, $html) {
 		$this->_action[$action] = $html;
 	}
+
+	/**
+	 * set the CSS class for field
+	 * @param string $fieldClass CSS class
+	 */
+	public function setClass($fieldClass){
+		$this->fieldClass = $fieldClass;
+
+
+	}
 	
 	static function getMeta($key){
 		return trim(preg_replace('/(\(.*\))/', '', $key));	
@@ -145,10 +159,9 @@ class FormBuilder implements Iterator {
 	 * Genera los posibles atributos
 	 */
 	function getAttrs($field){
-		$error = $this->hasError($field)? ' error': '';
 		return array(
 			'required' => $this->isRequired($field, $this->options),
-			'class' => "control$error",
+			'class' => $this->fieldClass,
 		);
 	}
 
@@ -224,13 +237,13 @@ class FormBuilder implements Iterator {
 
 	}
 
-	function isValid(){
+	function isValid($rules=array()){
 		$name = $this->getNameForm();
 		if(!Input::hasPost($name)){
 			return FALSE;
 		}
 		$this->validated = true;
-		$error = Validate::fail($this->model, $this->rules);
+		$error = Validate::fail($this->model, array_merge($this->rules, $rules));
 		$this->has_error =  $error === FALSE ? array():$error;
 		return empty($this->has_error);
 	}
