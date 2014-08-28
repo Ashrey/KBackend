@@ -7,8 +7,8 @@ namespace KBackend\Libs\Helper;
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team   
  */
-use \Router, \Form, \Haanga, \View, \Validate, \Input;
-class FormBuilder{
+use \Router, \Form, \Haanga, \View, \Validate, \Input, \Iterator;
+class FormBuilder implements Iterator {
 	/**
 	 * Acciones disponibles
 	 * @var Array 
@@ -51,6 +51,35 @@ class FormBuilder{
 	 * @var array
 	 */
 	protected $has_error = array();
+
+	/**
+	 * Position of field for iterator
+	 * @var integer
+	 */
+	protected $pos = 0;
+
+
+	function rewind() {
+        $this->pos = 0;
+    }
+
+    function current() {
+    	var_dump($this->fields[$this->pos]);
+        return $this->field($this->fields[$this->pos]);
+    }
+
+    function key() {
+        return $this->fields[$this->pos];
+    }
+
+    function next() {
+        ++$this->pos;
+    }
+
+    function valid() {
+        return isset($this->fields[$this->pos]);
+    }
+
 
 	function __construct($model, Array $rules = array()){
 		$this->model    = $model;
