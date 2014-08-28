@@ -19,7 +19,7 @@
                 <button class="btn btn-primary" type="submit"><i class="fa fa-sign-in"></i> Ingresar</button>
                 {% buffer reg%}{%exec Config::get 'backend.app.register'%}{% endbuffer %}
                 {% if reg %}
-                    {%exec Html::link 'registro', 'Registro <i class="fa fa-book"></i>', 'class="btn btn-info"' %}
+                    {%exec Html::link 'register', 'Registro <i class="fa fa-book"></i>', 'class="btn btn-info"' %}
                 {% endif %}
             </div>
             {%exec Html::link 'register/forget', 'Olvidé mi contraseña' %}
