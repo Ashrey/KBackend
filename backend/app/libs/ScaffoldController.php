@@ -98,24 +98,23 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
      */
     public function create() {
         try {
-            /**
-             * Date set in request
-             */
-            if (\Input::hasPost($this->model)) {
-                $obj = new $this->_model();
-                if (!$obj->save(\Input::post($this->model))) {
-                    \Flash::error('Falló Operación');
-                    //se hacen persistente los datos en el formulario
-                    $this->{$this->model} = $obj;
-                } else {
+            $obj = new $this->_model();
+            $this->form = new FormBuilder($obj);
+            $this->form->handle();
+            if(\Input::hasPost($this->model)){
+                if ($this->form->isValid() && $obj->save()) {
                     \Flash::valid('Agregegado correctamente');
                     if (!\Input::isAjax()) {
                         \Redirect::toAction('');
-                    }
+                    }    
+                } else {
+                   \Flash::error('Falló Operación');
+                    //se hacen persistente los datos en el formulario
+                    $this->{$this->model} = $obj; 
                 }
             }
-            // Solo es necesario para el autoForm
-            $this->form = new FormBuilder(new $this->_model());
+            
+            
         } catch (\Exception $e) {
             Flash::error($e);
         }

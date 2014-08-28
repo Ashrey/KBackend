@@ -1,5 +1,12 @@
 <div class="form-group">
 	<label for="{{id}}" class="col-6 control">{{label}}</label>
 	<div class="col-6">{%autoescape off%}{{input}}{%endautoescape%}</div>
+    {% if error %}
+        <ul>
+            {% for i in error %}
+                <li>{%autoescape off%}{{i}}{%endautoescape%}</li>
+            {% endfor  %}
+        </ul>
+    {% endif %}
 </div>
 	
