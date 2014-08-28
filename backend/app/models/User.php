@@ -96,16 +96,19 @@ class User extends \KBackend\Libs\ARecord {
         $this->role_id = 0;//el minimo de permisos
         $val = array(
             'password' => array(
-                'required' => array('error' =>'Debe escribir un <strong>Login</strong>'),
+                'required' => array('error' =>'Debe escribir una contraseña'),
                 'length' =>  array('min' =>4),
             ),
             'password2' => array(
-                'required',
+                'required' => array('error' =>'Debe confirmar la contraseña'),
                 'equal' => array(
                     'to' => $this->password,
                     'error' => 'Las contraseñas no coinciden'
                  )
-            )  
+            ),
+            'email' => array(
+                'email'
+            )
         );
         $fail = Validate::fail($this, $val);
         if ($fail || !$this->save()){
