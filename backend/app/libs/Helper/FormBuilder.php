@@ -79,11 +79,11 @@ class FormBuilder implements Iterator {
     }
 
 
-	function __construct($model, Array $rules = array()){
+	function __construct($model, $rules=array()){
+		$rules = static::load($rules);
 		$this->model    = $model;
-		$this->fields   = static::allFields($model);
+		$this->fields   = static::getFields($model, $rules);
 		$this->options  = $this->getOption($model);
-		$this->rules   +=  $rules;
 	}
 
 	/**
@@ -91,11 +91,16 @@ class FormBuilder implements Iterator {
 	 * @param string name of model
 	 * @return array
 	 */
-	protected static function allFields($model){
+	protected static function getFields($model, array &$rules){
 		$md = $model::metadata();
-		$metadata = method_exists($model, '_formFields') ? $model::_formFields():
-			array_diff($md->getFieldsList(), array($md->getPK()));
-		return $metadata;
+		if(isset($rules['_fields'])){
+			$fields = $rules['_fields'];
+			unset($rules['_fields']);
+		}else{
+			$fields = method_exists($model, '_formFields') ? $model::_formFields():
+				array_diff($md->getFieldsList(), array($md->getPK()));
+		}
+		return $fields;
 	}
 
 	/**
@@ -104,9 +109,9 @@ class FormBuilder implements Iterator {
 	 * @return array
 	 */
 	protected function getOption($model){
-		$option = method_exists($model, '_formOption')? $model::_formOption():
+		$option = method_exists($model, '_formOption') ? $model::_formOption():
 			array();
-		$this->rules = method_exists($model, '_rules')? $model::_rules():
+		$this->rules = method_exists($model, '_rules') ? $model::_rules():
 			array();
 		return array_merge_recursive($option, $this->rules);
 	}
@@ -233,19 +238,12 @@ class FormBuilder implements Iterator {
 
 	function isValid($rules=array()){
 		$name = $this->getNameForm();
-		if(!Input::hasPost($name)){
-			return FALSE;
-		}
+		if(Input::hasPost($name))
+			$this->model->dump(Input::post($name));
 		$this->validated = true;
 		$error = Validate::fail($this->model, array_merge($this->rules, $rules));
 		$this->has_error =  $error === FALSE ? array():$error;
 		return empty($this->has_error);
-	}
-
-	function handle(){
-		$name = $this->getNameForm();
-		if(Input::hasPost($name))
-			$this->model->dump(Input::post($name));
 	}
 
 	public static function fieldValue($field, $result) {
@@ -365,5 +363,21 @@ class FormBuilder implements Iterator {
 		return 'text';
 	}
 
+	/**
+	 * Load a array of a file
+	 * @param  string|array $rules filename or array of rules
+	 * @param  array  $merge other rules
+	 * @return array        final array
+	 */
+	function load($rules, Array $merge = array()){
+        if(is_string($rules)){
+            $rules = include APP_PATH . "/extensions/form/$rules.php";
+        }
+        if(!is_array($rules)){
+            \RuntimeException('Se esperaba un array');
+        }
+        $rules += $merge;
+        return $rules;
+    }
 
 }
