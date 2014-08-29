@@ -100,7 +100,6 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
         try {
             $obj = new $this->_model();
             $this->form = new FormBuilder($obj);
-            $this->form->handle();
             if(\Input::hasPost($this->model)){
                 if ($this->form->isValid() && $obj->save()) {
                     \Flash::valid('Agregegado correctamente');
