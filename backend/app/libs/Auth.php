@@ -47,7 +47,7 @@ class Auth implements \KumbiaAuthInterface
 	
 	public function login($arg = array()){
         if(empty($arg['user'])){
-			throw new KumbiaException('user not get');
+			throw new \KumbiaException('user not get');
 		}
         $arg['password'] = AuthACL::hash($arg['password']);
 		/*instancia al objeto*/
