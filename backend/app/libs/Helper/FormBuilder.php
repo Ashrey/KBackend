@@ -119,7 +119,7 @@ class FormBuilder implements Iterator {
 		$rules = method_exists($model, '_rules') ?
 			$model::_rules():
 			array();
-		$arr = array('type', 'label');
+		$arr = array('type', 'label', 'list');
 		foreach ($option as $key => $value) {
 			foreach ($arr as $val) {
 				if(isset($option[$key][$val]))
@@ -253,7 +253,6 @@ class FormBuilder implements Iterator {
 				'input' => $add,
 				'error' => $this->hasError($field),
 			), true);
-
 	}
 
 	function isValid($rules=array()){
@@ -333,13 +332,12 @@ class FormBuilder implements Iterator {
 	protected static function getData($field, Array $option){
 		return isset($option[$field]) 
 			&& (
-				in_array('data', $option[$field]) ||
-				 array_key_exists('data', $option[$field]
+				 array_key_exists('list', $option[$field]
 			)) ?
 				call_user_func_array(
-					$option[$field]['data'],
-					isset($option[$field]['dataparam']) ?
-						$option[$field]['dataparam']:
+					$option[$field]['list'],
+					isset($option[$field]['listparam']) ?
+						$option[$field]['listparam']:
 						array()
 				):
 				array();
