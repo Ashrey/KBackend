@@ -119,7 +119,15 @@ class FormBuilder implements Iterator {
 		$rules = method_exists($model, '_rules') ?
 			$model::_rules():
 			array();
+		$arr = array('type', 'label');
+		foreach ($option as $key => $value) {
+			foreach ($arr as $val) {
+				if(isset($option[$key][$val]))
+					unset($option[$key][$val]);
+			}
+		}
 		$this->rules = array_merge_recursive($rules, $option);
+		
 	}
 
 	/**
