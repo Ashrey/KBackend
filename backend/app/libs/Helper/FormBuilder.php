@@ -252,6 +252,7 @@ class FormBuilder implements Iterator {
 				'id'   => $id,
 				'input' => $add,
 				'error' => $this->hasError($field),
+				'required' => $this->isRequired($field, $this->options),
 			), true);
 	}
 
