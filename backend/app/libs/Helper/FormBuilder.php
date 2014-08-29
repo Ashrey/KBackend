@@ -161,7 +161,8 @@ class FormBuilder implements Iterator {
 		}
 		$model = $this->model;
 		$md = $model::metadata()->getFields();
-		$key = static::cleanType($md[$field]['Type']);
+		$type = empty($md[$field]['Type']) ? '' : $md[$field]['Type'];
+		$key = static::cleanType($type);
 		return static::isEmail($field, $this->options) ? 'email': static::defaultType($key);
 	}
 	
