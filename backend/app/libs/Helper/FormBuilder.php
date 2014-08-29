@@ -83,7 +83,7 @@ class FormBuilder implements Iterator {
 		$rules = static::load($rules);
 		$this->model    = $model;
 		$this->fields   = static::getFields($model, $rules);
-		$this->options  = $this->getOption($rules);
+		$this->getOption($rules);
 	}
 
 	/**
@@ -111,11 +111,15 @@ class FormBuilder implements Iterator {
 	 */
 	protected function getOption(Array $option){
 		$model = $this->model;
-		$option = method_exists($model, '_formOption') ? $model::_formOption():
+		$op = method_exists($model, '_formOption') ?
+			$model::_formOption():
 			array();
-		$this->rules = method_exists($model, '_rules') ? $model::_rules():
+		$this->options  = array_merge_recursive($op, $option);
+
+		$rules = method_exists($model, '_rules') ?
+			$model::_rules():
 			array();
-		return array_merge_recursive($option, $this->rules);
+		$this->rules = array_merge_recursive($rules, $option);
 	}
 
 	/**
@@ -152,7 +156,7 @@ class FormBuilder implements Iterator {
 	 * @return string
 	 */
 	protected function getType($field){
-		if(static::haveType( $field, $this->options)){
+		if(static::haveType($field, $this->options)){
 			return $this->options[$field]['type'];
 		}
 		$model = $this->model;
@@ -183,9 +187,9 @@ class FormBuilder implements Iterator {
 	 * @return string
 	 */
 	function getLabel($field){
-		return isset($this->options[$field]['alias']) ?
-		 $this->options[$field]['alias'] :
-		  ucwords(str_replace(array('_id', '_', ), ' ', $field));
+		return isset($this->options[$field]['label']) ?
+			$this->options[$field]['label'] :
+		  	ucwords(str_replace(array('_id', '_', ), ' ', $field));
 	}
 
 	/**
