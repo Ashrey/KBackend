@@ -137,7 +137,12 @@ class FormBuilder implements Iterator {
 
 	}
 	
-	static function getMeta($key){
+	/**
+	 * return a 'clean' type of database
+	 * @param string $key 
+	 * @return string
+	 */
+	static function cleanType($key){
 		return trim(preg_replace('/(\(.*\))/', '', $key));	
 	}
 
@@ -152,7 +157,7 @@ class FormBuilder implements Iterator {
 		}
 		$model = $this->model;
 		$md = $model::metadata()->getFields();
-		$key = $this->getMeta($md[$field]['Type']);
+		$key = static::cleanType($md[$field]['Type']);
 		return static::isEmail($field, $this->options) ? 'email': static::defaultType($key);
 	}
 	
