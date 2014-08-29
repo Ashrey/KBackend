@@ -324,23 +324,23 @@ class FormBuilder implements Iterator {
 	}
 
 	/**
-	 * Return if is email field
+	 * Return  data for select
 	 * @param string $field name
 	 * @param array $option
 	 * @return array
 	 */
 	protected static function getData($field, Array $option){
-		return isset($option[$field]) 
-			&& (
-				 array_key_exists('list', $option[$field]
-			)) ?
-				call_user_func_array(
-					$option[$field]['list'],
-					isset($option[$field]['listparam']) ?
-						$option[$field]['listparam']:
-						array()
-				):
-				array();
+		if(isset($option[$field]['select']['list'])){
+			$select = $option[$field]['select'];
+			if(is_callable($select['list'])){
+				$param = isset($select['params']) ? $select['params']: array();
+				return call_user_func_array($select['list'], $param);
+			}else{
+				return $select['list'];
+			}
+		}else{
+			return array();
+		}
 	}
 
 	/**

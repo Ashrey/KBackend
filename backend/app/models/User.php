@@ -41,7 +41,9 @@ class User extends \KBackend\Libs\ARecord {
             ),
             'role_id' => array(
                 'type' => 'select',
-                'list' => array('\KBackend\Model\Role', 'all')
+                'select' => array(
+                    'list' => array('\KBackend\Model\Role', 'all')
+                )
             )
         );
     }
