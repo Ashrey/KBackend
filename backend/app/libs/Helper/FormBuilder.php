@@ -83,12 +83,13 @@ class FormBuilder implements Iterator {
 		$rules = static::load($rules);
 		$this->model    = $model;
 		$this->fields   = static::getFields($model, $rules);
-		$this->options  = $this->getOption($model);
+		$this->options  = $this->getOption($rules);
 	}
 
 	/**
-	 * Get the list of field based on metadata. Remove PK
-	 * @param string name of model
+	 * Get the list of field based on metadata or option
+	 * @param object $model l
+	 * @param array $rules options
 	 * @return array
 	 */
 	protected static function getFields($model, array &$rules){
@@ -105,10 +106,11 @@ class FormBuilder implements Iterator {
 
 	/**
 	 * Get option of form
-	 * @param string name of model
+	 * @param array $option options
 	 * @return array
 	 */
-	protected function getOption($model){
+	protected function getOption(Array $option){
+		$model = $this->model;
 		$option = method_exists($model, '_formOption') ? $model::_formOption():
 			array();
 		$this->rules = method_exists($model, '_rules') ? $model::_rules():
