@@ -293,29 +293,27 @@ class FormBuilder implements Iterator {
 	/**
 	 * Return if is required field
 	 * @param string $field name
-	 * @param array $option
 	 * @return bool
 	 */
-	protected static function isRequired($field, Array $option){
-		return isset($option[$field]) 
+	protected function isRequired($field){
+		return $this->has($field, 'required');
+	}
+
+	public function has($field, $key){
+		return isset($this->option[$field]) 
 			&& (
-				in_array('required', $option[$field]) ||
-				 array_key_exists('required', $option[$field]
+				in_array($key, $this->option[$field]) ||
+				 array_key_exists($key, $this->option[$field]
 			));
 	}
 
 	/**
 	 * Return if is email field
 	 * @param string $field name
-	 * @param array $option
 	 * @return bool
 	 */
-	protected static function isEmail($field, Array $option){
-		return isset($option[$field]) 
-			&& (
-				in_array('email', $option[$field]) ||
-				 array_key_exists('email', $option[$field]
-			));
+	public function isEmail($field){
+		return $this->has($field, 'email');
 	}
 
 	/**
