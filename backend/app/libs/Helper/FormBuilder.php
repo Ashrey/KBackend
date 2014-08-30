@@ -244,24 +244,23 @@ class FormBuilder implements Iterator {
 
 	function field($field){
 		$model_name = $this->getNameForm();
-		$name = "$model_name.$field"; //HTML name atributte
-		$id   = "{$model_name}_{$field}";//HTML for atributte
+		$value = isset($this->model->$field) ? $this->model->$field: NULL;
+		list($id, $name, $value) = Form::getFieldData("$model_name.$field", $value);
 		return  Haanga::Load('_shared/form/field.phtml', array(
 				'label'    => $this->getLabel($field),
 				'id'       => $id,
-				'input'    => $this->input($field, $id, $name),
+				'input'    => $this->input($field, $id, $name, $value),
 				'error'    => $this->hasError($field),
 				'required' => $this->isRequired($field, $this->options),
 		), true);
 	}
 
-	function input($field, $id, $name){
-		$model_name = $this->getNameForm();
-		$value = isset($this->model->$field)?$this->model->$field:null;
+	function input($field, $id, $name, $value){
 		$type = $this->getType($field);
 		return  Haanga::Load("_shared/form/$type.phtml", array(
 				'id'       => $id,
 				'name'     => $name,
+				'value'    => $value,
 				'data'     => static::getData($field, $this->options),
 				'error'    => $this->hasError($field),
 				'required' => $this->isRequired($field, $this->options),
@@ -325,7 +324,7 @@ class FormBuilder implements Iterator {
 	 * @param array $option
 	 * @return array
 	 */
-	protected static function getData($field, Array $option){
+	protected static function getData($field, Array $option, $value=NULL){
 		$list = array();
 		if(isset($option[$field]['select']['list'])){
 			$select = $option[$field]['select'];
@@ -335,17 +334,22 @@ class FormBuilder implements Iterator {
 				$list = call_user_func_array($select['list'], $param);
 			}
 		}
-		return static::preProccessData($list);
+		return static::preProcessData($list, $value);
 	}
 
 	/**
 	 * Preproccess a data for render
 	 */
-	protected static preProcessData(Array $list){
+	protected static function preProcessData(Array $list, $value){
 		$result = array();
-		foreach ($list as $key => $value) {
-			
+		foreach ($list as $key => $v) {
+			$obj = new \StdClass();
+			$obj->value    = Form::selectValue($v, $key, 'id');
+            $obj->text     = Form::selectShow($v, NULL);
+            $obj->selected = Form::selectedValue($value, $obj->value);
+            $result[] = $obj;
 		}
+		return $result;
 	}
 
 	/**
