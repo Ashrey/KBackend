@@ -106,8 +106,7 @@ class FormBuilder implements Iterator {
 			$fields = $rules['_fields'];
 			unset($rules['_fields']);
 		}else{
-			$fields = method_exists($model, '_formFields') ? $model::_formFields():
-				array_diff($md->getFieldsList(), array($md->getPK()));
+			$fields = array_diff($md->getFieldsList(), array($md->getPK()));
 		}
 		return $fields;
 	}
@@ -299,6 +298,12 @@ class FormBuilder implements Iterator {
 		return $this->has($field, 'required');
 	}
 
+	/**
+	 * Return true if $field has propiety $key
+	 * @param string $field 
+	 * @param string $key 
+	 * @return bool
+	 */
 	public function has($field, $key){
 		return isset($this->options[$field]) 
 			&& (
@@ -379,7 +384,7 @@ class FormBuilder implements Iterator {
 		    ),
 		   'date'     => array('date'),
 		   'time'     => array('time'),
-		   'datatime' => array('datetime',  'timestamp'),
+		   'datetime' => array('datetime',  'timestamp'),
 		   'select'   => array('enum',  'set'),
 		   'textarea' => array(
 		        'tinytext', 'text',  'mediumtext',  'longtext',
