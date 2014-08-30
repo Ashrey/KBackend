@@ -131,6 +131,7 @@ class FormBuilder implements Iterator {
 	 * @param  Array  $option optio
 	 */
 	protected function getRules(Array $option){
+		$model = $this->model;
 		$rules = method_exists($model, '_rules') ?
 			$model::_rules():
 			array();
