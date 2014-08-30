@@ -334,18 +334,28 @@ class FormBuilder implements Iterator {
 			$tmp = explode('\',\'', substr($type, 6, -2));
 			$list = array_combine($tmp, $tmp);
 		}
-		return static::preProcessData($list, $value);
+		return $this->preProcessData($list, $field, $value);
 	}
 
 	/**
 	 * Preproccess a data for render
 	 */
-	protected static function preProcessData(Array $list, $value){
+	public function preProcessData(Array $list,$field, $value){
+		$option = isset($this->options[$field]['select']) ? $this->options[$field]['select']:array();
 		$result = array();
+		/*Implement empty value*/
+		if(!empty($option['empty'])){
+			$result[] = (object) array(
+			    'value'    => '',
+            	'text'     => $option['empty'],
+            	'selected' => ''
+            );
+		}
+		$text =  empty($option['show']) ? NULL: $option['show'];
 		foreach ($list as $key => $v) {
 			$obj = new \StdClass();
 			$obj->value    = Form::selectValue($v, $key, 'id');
-            $obj->text     = Form::selectShow($v, NULL);
+            $obj->text     = Form::selectShow($v, $text);
             $obj->selected = Form::selectedValue($value, $obj->value);
             $result[] = $obj;
 		}
