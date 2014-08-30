@@ -164,11 +164,20 @@ class FormBuilder implements Iterator {
 		if($this->haveType($field)){
 			return $this->options[$field]['type'];
 		}
+		$type = $this->type($field);
+		$key  = static::cleanType($type);
+		return $this->isEmail($field) ? 'email': static::defaultType($key);
+	}
+
+	/**
+	 * Return type like database set
+	 * @param  string $field 
+	 * @return string
+	 */
+	public function type($field){
 		$model = $this->model;
 		$md = $model::metadata()->getFields();
-		$type = empty($md[$field]['Type']) ? '' : $md[$field]['Type'];
-		$key = static::cleanType($type);
-		return $this->isEmail($field) ? 'email': static::defaultType($key);
+		return empty($md[$field]['Type']) ? '' : $md[$field]['Type'];
 	}
 	
 
