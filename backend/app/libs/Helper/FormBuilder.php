@@ -186,7 +186,7 @@ class FormBuilder implements Iterator {
 		$md = $model::metadata()->getFields();
 		$type = empty($md[$field]['Type']) ? '' : $md[$field]['Type'];
 		$key = static::cleanType($type);
-		return static::isEmail($field, $this->options) ? 'email': static::defaultType($key);
+		return $this->isEmail($field) ? 'email': static::defaultType($key);
 	}
 	
 
@@ -251,7 +251,7 @@ class FormBuilder implements Iterator {
 				'id'       => $id,
 				'input'    => $this->input($field, $id, $name, $value),
 				'error'    => $this->hasError($field),
-				'required' => $this->isRequired($field, $this->options),
+				'required' => $this->isRequired($field),
 		), true);
 	}
 
@@ -261,7 +261,7 @@ class FormBuilder implements Iterator {
 				'id'       => $id,
 				'name'     => $name,
 				'value'    => $value,
-				'data'     => static::getData($field, $this->options),
+				'data'     => $this->getData($field),
 				'error'    => $this->hasError($field),
 				'required' => $this->isRequired($field, $this->options),
 		), true);
@@ -300,10 +300,10 @@ class FormBuilder implements Iterator {
 	}
 
 	public function has($field, $key){
-		return isset($this->option[$field]) 
+		return isset($this->options[$field]) 
 			&& (
-				in_array($key, $this->option[$field]) ||
-				 array_key_exists($key, $this->option[$field]
+				in_array($key, $this->options[$field]) ||
+				 array_key_exists($key, $this->options[$field]
 			));
 	}
 
@@ -322,8 +322,9 @@ class FormBuilder implements Iterator {
 	 * @param array $option
 	 * @return array
 	 */
-	protected static function getData($field, Array $option, $value=NULL){
+	public function getData($field, $value=NULL){
 		$list = array();
+		$option = $this->options;
 		if(isset($option[$field]['select']['list'])){
 			$select = $option[$field]['select'];
 			$list = $select['list'];
