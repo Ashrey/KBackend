@@ -112,7 +112,7 @@ class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess 
 
     public function unique($field){
         $sm = self::saveMethod();
-        return ($sm === 'update') || static::count("$field = ?",$this->$field) == 0;
+        return ($sm === 'update') || empty($this->$field) || static::count("$field = ?",$this->$field) == 0;
     }
     
 
