@@ -1,12 +1,11 @@
 {% extends basetpl %}
-{%block title%}Create User{%endblock%}
+{%block title%}Create {{title}}{%endblock%}
 {%block content%}
 <div class="row">
     <div class="col-5 offset-3">
     	{%exec Flash::content%}
         {% autoescape off %}
             {%block result%}
-                {%exec form.useDefaultBtn %}
                 {{form}}
             {%endblock%}
         {% endautoescape %} 
