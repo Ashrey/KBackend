@@ -322,6 +322,7 @@ class FormBuilder implements Iterator {
 	public function getData($field, $value=NULL){
 		$list = array();
 		$option = $this->options;
+		$type = $this->type($field);
 		if(isset($option[$field]['select']['list'])){
 			$select = $option[$field]['select'];
 			$list = $select['list'];
@@ -329,8 +330,9 @@ class FormBuilder implements Iterator {
 				$param = isset($select['params']) ? $select['params']: array();
 				$list = call_user_func_array($select['list'], $param);
 			}
-		}else{
-
+		}elseif(strncmp('enum', $type, 4) == 0){
+			$tmp = explode('\',\'', substr($type, 6, -2));
+			$list = array_combine($tmp, $tmp);
 		}
 		return static::preProcessData($list, $value);
 	}
