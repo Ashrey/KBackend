@@ -115,7 +115,6 @@ class FormBuilder implements Iterator {
 	/**
 	 * Get option of form
 	 * @param array $option options
-	 * @return array
 	 */
 	protected function getOption(Array $option){
 		$model = $this->model;
@@ -123,7 +122,15 @@ class FormBuilder implements Iterator {
 			$model::_formOption():
 			array();
 		$this->options  = array_merge_recursive($op, $option);
+		$this->getRules($option);
+	}
 
+	/**
+	 * Set a rules validation
+	 * @todo optimize
+	 * @param  Array  $option optio
+	 */
+	protected function getRules(Array $option){
 		$rules = method_exists($model, '_rules') ?
 			$model::_rules():
 			array();
@@ -135,7 +142,6 @@ class FormBuilder implements Iterator {
 			}
 		}
 		$this->rules = array_merge_recursive($rules, $option);
-		
 	}
 
 	/**
