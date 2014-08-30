@@ -87,6 +87,14 @@ class FormBuilder implements Iterator {
 	}
 
 	/**
+	 * Get this model
+	 * @return object model
+	 */
+	function getModel(){
+		return $this->model;
+	}
+
+	/**
 	 * Get the list of field based on metadata or option
 	 * @param object $model l
 	 * @param array $rules options
