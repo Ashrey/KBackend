@@ -240,16 +240,10 @@ class FormBuilder implements Iterator {
 	 * @return String  HTML del formulario
 	 */
 	function __toString(){
-		$html = '';
-		//form init
-		$action = ltrim(Router::get('route'), '/');
-        $html .= Form::open($action, 'post', 'class="horizontal" novalidate');
-		foreach($this->fields as $field){
-			$html .= $this->field($field);
-		}
-		//add button
-		$html .=  Haanga::Safe_Load('_shared/submit.phtml',array(), true);
-		return "$html</form>";
+		return  Haanga::Load('_shared/form.phtml', array(
+		        'action' => ltrim(Router::get('route'), '/'),
+		        'fields' => $this
+		    ), true);
 	}
 
 	function field($field){

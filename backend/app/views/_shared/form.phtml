@@ -1,0 +1,6 @@
+<form method="post" action="{{action}}" class="horizontal" novalidate>
+{% for i in fields %}
+    {%autoescape off%}{{i}}{%endautoescape%}
+{% endfor %}
+{% inline '_shared/submit.phtml' %}
+</form>
