@@ -1,0 +1,7 @@
+{% extends '_shared/form/basic.phtml' %}
+{%block tag%}input{%endblock%}
+
+{%block attr%}
+{{block.super}}
+type="{%block type%}{% endblock %}"
+{%endblock%}

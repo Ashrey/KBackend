@@ -189,15 +189,6 @@ class FormBuilder implements Iterator {
 		return static::isEmail($field, $this->options) ? 'email': static::defaultType($key);
 	}
 	
-	/**
-	 * Genera los posibles atributos
-	 */
-	function getAttrs($field){
-		return array(
-			'required' => $this->isRequired($field, $this->options),
-			'class' => $this->fieldClass,
-		);
-	}
 
 	function hasError($field){
 		return empty($this->has_error[$field])? NULL: $this->has_error[$field];
@@ -240,29 +231,41 @@ class FormBuilder implements Iterator {
 	 * @return String  HTML del formulario
 	 */
 	function __toString(){
-		return  Haanga::Load('_shared/form.phtml', array(
+		try {
+			return  Haanga::Load('_shared/form/form.phtml', array(
 		        'action' => PUBLIC_PATH . ltrim(Router::get('route'), '/'),
 		        'fields' => $this
 		    ), true);
+		} catch (\Exception $e) {
+			return $e->getmessage();
+		}
+		
 	}
 
 	function field($field){
 		$model_name = $this->getNameForm();
-		$attr = $this->attrStr($this->getAttrs($field));
-		$type = $this->getType($field);
-		$id   = "{$model_name}_{$field}";//HTML for atributte
 		$name = "$model_name.$field"; //HTML name atributte
-		$data = static::getData($field, $this->options);
-		/*HTML generator*/
-		$value = isset($this->model->$field)?$this->model->$field:null;
-		$add   = call_user_func_array(array('KBackend\Libs\Helper\Field', $type), array($name, $attr, $value, $data));
-		return  Haanga::Load('_shared/field.phtml', array(
-				'label' => $this->getLabel($field),
-				'id'   => $id,
-				'input' => $add,
-				'error' => $this->hasError($field),
+		$id   = "{$model_name}_{$field}";//HTML for atributte
+		return  Haanga::Load('_shared/form/field.phtml', array(
+				'label'    => $this->getLabel($field),
+				'id'       => $id,
+				'input'    => $this->input($field, $id, $name),
+				'error'    => $this->hasError($field),
 				'required' => $this->isRequired($field, $this->options),
-			), true);
+		), true);
+	}
+
+	function input($field, $id, $name){
+		$model_name = $this->getNameForm();
+		$value = isset($this->model->$field)?$this->model->$field:null;
+		$type = $this->getType($field);
+		return  Haanga::Load("_shared/form/$type.phtml", array(
+				'id'       => $id,
+				'name'     => $name,
+				'data'     => static::getData($field, $this->options),
+				'error'    => $this->hasError($field),
+				'required' => $this->isRequired($field, $this->options),
+		), true);
 	}
 
 	function isValid($rules=array()){
@@ -287,23 +290,6 @@ class FormBuilder implements Iterator {
         }
         return $value;
     }
-
-    /**
-     * Return string if HTML attr
-     * @param array $attributes
-     * @return string
-     */
-    protected static function attrStr(Array $attributes){
-    	$output = '';
-   		foreach ($attributes as $name => $value) {
-    		if (is_bool($value)) {
-       		 	if ($value) $output .= $name . ' ';
-		    } else {
-		        $output .= sprintf('%s="%s"', $name, $value);
-		    }
-		}
-		return $output;
-	}
 
 	/**
 	 * Return if is required field
@@ -340,16 +326,25 @@ class FormBuilder implements Iterator {
 	 * @return array
 	 */
 	protected static function getData($field, Array $option){
+		$list = array();
 		if(isset($option[$field]['select']['list'])){
 			$select = $option[$field]['select'];
+			$list = $select['list'];
 			if(is_callable($select['list'])){
 				$param = isset($select['params']) ? $select['params']: array();
-				return call_user_func_array($select['list'], $param);
-			}else{
-				return $select['list'];
+				$list = call_user_func_array($select['list'], $param);
 			}
-		}else{
-			return array();
+		}
+		return static::preProccessData($list);
+	}
+
+	/**
+	 * Preproccess a data for render
+	 */
+	protected static preProcessData(Array $list){
+		$result = array();
+		foreach ($list as $key => $value) {
+			
 		}
 	}
 

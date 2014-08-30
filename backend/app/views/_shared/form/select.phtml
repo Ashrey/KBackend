@@ -1,0 +1,9 @@
+{% extends '_shared/form/basic.phtml' %}
+{%block tag%}select{%endblock%}
+
+{%block end%}>
+    {%for i, j in data%}
+    <option value="{{i}}">{{j}}</option>
+    {% endfor %}
+</select>
+{% endblock %}
