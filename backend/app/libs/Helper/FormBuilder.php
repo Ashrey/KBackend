@@ -15,7 +15,6 @@ class FormBuilder implements Iterator {
 	 */
 	protected $_action = array();
 
-
 	/**
 	 * Almacena todo los campos
 	 * @var Array
@@ -51,12 +50,6 @@ class FormBuilder implements Iterator {
 	 * @var array
 	 */
 	protected $has_error = array();
-
-	/**
-	 * CSS class for each field
-	 * @var string
-	 */
-	protected $fieldClass = 'control';
 
 	function rewind() {
         reset($this->fields);
@@ -152,16 +145,6 @@ class FormBuilder implements Iterator {
 	public function action($action, $html) {
 		$this->_action[$action] = $html;
 	}
-
-	/**
-	 * set the CSS class for field
-	 * @param string $fieldClass CSS class
-	 */
-	public function setClass($fieldClass){
-		$this->fieldClass = $fieldClass;
-
-
-	}
 	
 	/**
 	 * return a 'clean' type of database
@@ -178,7 +161,7 @@ class FormBuilder implements Iterator {
 	 * @return string
 	 */
 	protected function getType($field){
-		if(static::haveType($field, $this->options)){
+		if($this->haveType($field)){
 			return $this->options[$field]['type'];
 		}
 		$model = $this->model;
@@ -337,6 +320,8 @@ class FormBuilder implements Iterator {
 				$param = isset($select['params']) ? $select['params']: array();
 				$list = call_user_func_array($select['list'], $param);
 			}
+		}else{
+
 		}
 		return static::preProcessData($list, $value);
 	}
@@ -362,12 +347,9 @@ class FormBuilder implements Iterator {
 	 * @param array $option
 	 * @return bool
 	 */
-	protected static function haveType($field, Array $option){
-		return isset($option[$field]) 
-			&& array_key_exists('type', $option[$field]);
+	protected function haveType($field){
+		return $this->has($field, 'type');
 	}
-
-
 
 	/**
 	 * Use for default type
@@ -411,7 +393,7 @@ class FormBuilder implements Iterator {
             $rules = include APP_PATH . "/extensions/form/$rules.php";
         }
         if(!is_array($rules)){
-            \RuntimeException('Se esperaba un array');
+            throw new \RuntimeException('Se esperaba un array');
         }
         $rules += $merge;
         return $rules;
