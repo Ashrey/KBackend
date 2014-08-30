@@ -386,10 +386,10 @@ class FormBuilder implements Iterator {
 		        'tinytext', 'text',  'mediumtext',  'longtext',
 		        'blob',  'mediumblob',  'longblob'
 		   	)
-		)
+		);
 		foreach ($types as $type => $value) {
 		 	if(in_array($key, $value)){
-		 		$ret = $key;
+		 		$ret = $type;
 		 		break;
 		 	}
 		}
