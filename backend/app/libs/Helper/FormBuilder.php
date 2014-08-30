@@ -241,7 +241,7 @@ class FormBuilder implements Iterator {
 	 */
 	function __toString(){
 		return  Haanga::Load('_shared/form.phtml', array(
-		        'action' => ltrim(Router::get('route'), '/'),
+		        'action' => PUBLIC_PATH . ltrim(Router::get('route'), '/'),
 		        'fields' => $this
 		    ), true);
 	}
