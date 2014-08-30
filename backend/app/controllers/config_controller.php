@@ -22,7 +22,7 @@ class ConfigController extends \KBackend\Libs\AuthController {
                 }
            }
            
-        } catch (\KumbiaException $e) {
+        } catch (\Exception $e) {
             View::excepcion($e);
         }
     }

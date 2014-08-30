@@ -15,7 +15,7 @@ class ActionController extends  \KBackend\Libs\AuthController{
     public function index($pag= 1) {
         try {
             $this->user = User::actions($pag);
-        } catch (\KumbiaException $e) {
+        } catch (Exception $e) {
             View::excepcion($e);
         }
     }
@@ -30,7 +30,7 @@ class ActionController extends  \KBackend\Libs\AuthController{
                 \Flash::info('Este usuario no ha realizado ninguna acción en el sistema');
                 return Redirect::to();
             }
-        } catch (\KumbiaException $e) {
+        } catch (Exception $e) {
             View::excepcion($e);
         }
     }
