@@ -7,7 +7,7 @@ namespace KBackend\Libs;
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team   
  */
-use \Flash;
+use \Flash, \Input;
 use \KBackend\Libs\Helper\Grid;
 use \KBackend\Libs\Helper\FormBuilder;
 abstract class ScaffoldController extends \KBackend\Libs\AuthController {
@@ -97,25 +97,9 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
      * Crea un Registro
      */
     public function create() {
-        try {
-            $obj = new $this->_model();
-            $this->form = new FormBuilder($obj);
-            if(\Input::hasPost($this->model)){
-                if ($this->form->isValid() && $obj->save()) {
-                    \Flash::valid('Agregegado correctamente');
-                    if (!\Input::isAjax()) {
-                        \Redirect::toAction('');
-                    }    
-                } else {
-                   \Flash::error('Falló Operación');
-                    //se hacen persistente los datos en el formulario
-                    $this->{$this->model} = $obj; 
-                }
-            }
-            
-            
-        } catch (\Exception $e) {
-            Flash::error($e);
+        $obj = new $this->_model();
+        if ($this->handleForm($obj) && !Input::isAjax()) {
+            \Redirect::toAction('');
         }
     }
 
@@ -125,24 +109,10 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
     public function edit($id) {
         $model = $this->_model;
         $obj = $model::get($id);
-        /**
-         * Date set in request
-         */
-        if (\Input::hasPost($this->model)) {
-            $data = \Input::post($this->model); 
-            if (is_object($obj)) {
-                if (!$obj->save($data)) {
-                    //se hacen persistente los datos en el formulario
-                    $this->{$this->_model} = $data;
-                } else {
-                    \Flash::valid('Edición hecha');
-                }
-            } else {
-                \Flash::error('No existe este registro');
-            }
+        if (!is_object($obj)) {
+            throw new \Exception('Objecto dont exist', 1);
         }
-        $this->form = new FormBuilder($model::get((int) $id));
-        $this->{$this->model} = $obj;
+        $this->handleForm($obj);
     }
 
     /**
@@ -173,5 +143,33 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
         $this->result = method_exists($_model, 'view') ?
                 call_user_func_array(array($_model, 'view'), array((int)$id)) :
                 $_model::get((int) $id);
+    }
+
+    /**
+     * Return a form for model
+     * @param  object $obj model
+     * @return FormBuilder  form
+     */
+    protected function getForm($obj){
+        return new FormBuilder($obj);
+    }
+
+    /**
+     * Handle post request
+     * @param object $obj 
+     * @return bool
+     */
+    protected function handleForm($obj){
+        $this->form = $this->getForm($obj);
+        $this->{$this->model} = $obj; 
+        if(Input::is('POST') && $this->form->isValid()){
+            if($obj->save()) {
+                Flash::valid('Operación exitosa');
+                return TRUE; 
+            } else {
+               \Flash::error('Falló la operación');
+            }
+        }
+        return FALSE;
     }
 }
