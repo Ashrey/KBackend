@@ -367,27 +367,33 @@ class FormBuilder implements Iterator {
 
 	/**
 	 * Use for default type
-	 * @param string @key
 	 * @param string $key 
 	 * @return string
 	 */
 	protected static function defaultType($key){
-		if(in_array($key, array('tinyint',  'smallint',  'mediumint', 'integer',  'int', 
-			'bigint',  'float',  'double',  'precision',  'real', 'decimal',  'numeric',  'year',  'day',  'int unsigned'))){
-			return 'number';
-		}elseif($key == 'date'){
-            return 'date';
-        }elseif($key ==	'time'){
-			return 'time';
-        }elseif(in_array($key, array('datetime',  'timestamp'))){
-            return 'datetime';
-        }elseif(in_array($key, array('enum',  'set'))){ 
-            return 'select';
-        }elseif(in_array($key, array('tinytext', 'text',  'mediumtext',  'longtext', 
-            'blob',  'mediumblob',  'longblob'))){
-            return 'textarea';
+		$ret = 'text';
+		$types = array(
+		   'number' => array(
+		        'tinyint',  'smallint',  'mediumint', 'integer',  'int',
+		        'bigint',  'float',  'double',  'precision',  'real',
+		        'decimal',  'numeric',  'year',  'day',  'int unsigned'
+		    ),
+		   'date'     => array('date'),
+		   'time'     => array('time'),
+		   'datatime' => array('datetime',  'timestamp'),
+		   'select'   => array('enum',  'set'),
+		   'textarea' => array(
+		        'tinytext', 'text',  'mediumtext',  'longtext',
+		        'blob',  'mediumblob',  'longblob'
+		   	)
+		)
+		foreach ($types as $type => $value) {
+		 	if(in_array($key, $value)){
+		 		$ret = $key;
+		 		break;
+		 	}
 		}
-		return 'text';
+		return $ret; 
 	}
 
 	/**
