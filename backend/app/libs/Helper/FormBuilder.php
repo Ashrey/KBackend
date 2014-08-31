@@ -34,12 +34,6 @@ class FormBuilder implements Iterator {
 	protected $model = null;
 
 	/**
-	 * Lista de validacioens
-	 * @var array
-	 */
-	protected $rules = array();
-
-	/**
 	 * Flag is form was validate
 	 * @var boolean
 	 */
@@ -79,6 +73,7 @@ class FormBuilder implements Iterator {
 		foreach ($fields as $name) {
 			$options = isset($this->options[$name]) ? $this->options[$name]:array();
 			$this->fields[$name] = new Field($model, $this, $name, $options);
+			$this->options[$name] = $this->fields[$name]->getOptions();
 		}
 	}
 
@@ -116,42 +111,17 @@ class FormBuilder implements Iterator {
 		$op = method_exists($model, '_formOption') ?
 			$model::_formOption():
 			array();
-		$this->options  = array_merge_recursive($op, $option);
-		$this->getRules($option);
-	}
-
-	/**
-	 * Set a rules validation
-	 * @todo optimize
-	 * @param  Array  $option optio
-	 */
-	protected function getRules(Array $option){
-		$model = $this->model;
 		$rules = method_exists($model, '_rules') ?
 			$model::_rules():
 			array();
-		$arr = array('type', 'label', 'list');
-		foreach ($option as $key => $value) {
-			foreach ($arr as $val) {
-				if(isset($option[$key][$val]))
-					unset($option[$key][$val]);
-			}
-		}
-		$this->rules = array_merge_recursive($rules, $option);
+		$this->options  = array_merge_recursive($op,$rules, $option);
 	}
 
 	/**
-	 * Permite añadir una acción
-	 * @param string $action identificador de la accion
-	 * @param string $html HTML para la acción 
+	 * Return array of error
+	 * @param  string  $field ]
+	 * @return array
 	 */
-	public function action($action, $html) {
-		$this->_action[$action] = $html;
-	}
-	
-
-
-
 	function hasError($field){
 		return empty($this->has_error[$field])? NULL: $this->has_error[$field];
 	}
@@ -167,15 +137,6 @@ class FormBuilder implements Iterator {
 		$ex = explode('\\', $name);
 		return end($ex);
 	}
-
-	
-	/**
-     * Permite usar los botones predeterminados
-    */
-    public function useDefaultBtn() {
-        $this->action('submit', '<button type="submit" class="btn btn-primary"><i class=" fa fa-check"></i> Ok</button> ');
-        $this->action('calcel', \Html::linkAction('', '<i class="fa fa-times"></i> Cancelar', 'class="btn btn-danger js-confirm" data-msg="¿Está seguro?"'));
-    }
 
 	/**
 	 * Genera el formulario
@@ -193,13 +154,17 @@ class FormBuilder implements Iterator {
 		
 	}
 
-
+	/**
+	 * Return true if has valid data
+	 * @param  array   $rules optional more $rules
+	 * @return boolean
+	 */
 	function isValid($rules=array()){
 		$name = $this->getNameForm();
 		if(Input::hasPost($name))
 			$this->model->dump(Input::post($name));
 		$this->validated = true;
-		$error = Validate::fail($this->model, array_merge($this->rules, $rules));
+		$error = Validate::fail($this->model, array_merge($this->options, $rules));
 		$this->has_error =  $error === FALSE ? array():$error;
 		return empty($this->has_error);
 	}
@@ -222,5 +187,4 @@ class FormBuilder implements Iterator {
         $rules += $merge;
         return $rules;
     }
-
 }
