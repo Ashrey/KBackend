@@ -149,8 +149,9 @@ class FormBuilder implements Iterator {
 	 */
 	function isValid($rules=array()){
 		$name = $this->getNameForm();
-		if(Input::hasPost($name))
+		if(Input::hasPost($name) && method_exists($this->model, 'dump')){
 			$this->model->dump(Input::post($name));
+		}
 		$error = Validate::fail($this->model, array_merge($this->options, $rules));
 		$this->has_error =  $error === FALSE ? array():$error;
 		return empty($this->has_error);
