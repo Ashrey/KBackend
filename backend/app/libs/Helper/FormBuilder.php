@@ -10,12 +10,6 @@ namespace KBackend\Libs\Helper;
 use \Router, \Form, \Haanga, \View, \Validate, \Input, \Iterator;
 class FormBuilder implements Iterator {
 	/**
-	 * Acciones disponibles
-	 * @var Array 
-	 */
-	protected $_action = array();
-
-	/**
 	 * Almacena todo los campos
 	 * @var Array
 	 */
@@ -32,12 +26,6 @@ class FormBuilder implements Iterator {
 	 * @var Object
 	 */
 	protected $model = null;
-
-	/**
-	 * Flag is form was validate
-	 * @var boolean
-	 */
-	protected $validated = false;
 
 	/**
 	 * Field with error
@@ -163,7 +151,6 @@ class FormBuilder implements Iterator {
 		$name = $this->getNameForm();
 		if(Input::hasPost($name))
 			$this->model->dump(Input::post($name));
-		$this->validated = true;
 		$error = Validate::fail($this->model, array_merge($this->options, $rules));
 		$this->has_error =  $error === FALSE ? array():$error;
 		return empty($this->has_error);
