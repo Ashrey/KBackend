@@ -2,8 +2,8 @@
 {%block tag%}select{%endblock%}
 
 {%block end%}>
-    {%for i in data%}
-    <option value="{{i.value}}">{{i.text}}</option>
+    {%for j,i in data%}
+    <option value="{{j}}" {{i.selected}}>{{i.text}}</option>
     {% endfor %}
 </select>
 {% endblock %}
