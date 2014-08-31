@@ -56,7 +56,7 @@ class FormBuilder implements Iterator {
     }
 
     function current() {
-        return $this->field(current($this->fields));
+        return current($this->fields);
     }
 
     function key() {
@@ -71,12 +71,15 @@ class FormBuilder implements Iterator {
         return current($this->fields);
     }
 
-
 	function __construct($model, $rules=array()){
 		$rules = static::load($rules);
 		$this->model    = $model;
-		$this->fields   = static::getFields($model, $rules);
+		$fields  = static::getFields($model, $rules);
 		$this->getOption($rules);
+		foreach ($fields as $name) {
+			$options = isset($this->options[$name]) ? $this->options[$name]:array();
+			$this->fields[$name] = new Field($model, $this, $name, $options);
+		}
 	}
 
 	/**
@@ -146,57 +149,14 @@ class FormBuilder implements Iterator {
 		$this->_action[$action] = $html;
 	}
 	
-	/**
-	 * return a 'clean' type of database
-	 * @param string $key 
-	 * @return string
-	 */
-	static function cleanType($key){
-		return trim(preg_replace('/(\(.*\))/', '', $key));	
-	}
 
-	/**
-	 * Return type of field
-	 * @param $key type of col
-	 * @return string
-	 */
-	protected function getType($field){
-		if($this->haveType($field)){
-			return $this->options[$field]['type'];
-		}
-		$type = $this->type($field);
-		$key  = static::cleanType($type);
-		return $this->isEmail($field) ? 'email': static::defaultType($key);
-	}
 
-	/**
-	 * Return type like database set
-	 * @param  string $field 
-	 * @return string
-	 */
-	public function type($field){
-		$model = $this->model;
-		$md = $model::metadata()->getFields();
-		return empty($md[$field]['Type']) ? '' : $md[$field]['Type'];
-	}
-	
 
 	function hasError($field){
 		return empty($this->has_error[$field])? NULL: $this->has_error[$field];
 	}
 
 
-
-	/**
-	 * Return label value
-	 * @param string $field field name
-	 * @return string
-	 */
-	function getLabel($field){
-		return isset($this->options[$field]['label']) ?
-			$this->options[$field]['label'] :
-		  	ucwords(str_replace(array('_id', '_', ), ' ', $field));
-	}
 
 	/**
 	 * Return name of the form
@@ -233,30 +193,6 @@ class FormBuilder implements Iterator {
 		
 	}
 
-	function field($field){
-		$model_name = $this->getNameForm();
-		$value = isset($this->model->$field) ? $this->model->$field: NULL;
-		list($id, $name, $value) = Form::getFieldData("$model_name.$field", $value);
-		return  Haanga::Load('_shared/form/field.phtml', array(
-				'label'    => $this->getLabel($field),
-				'id'       => $id,
-				'input'    => $this->input($field, $id, $name, $value),
-				'error'    => $this->hasError($field),
-				'required' => $this->isRequired($field),
-		), true);
-	}
-
-	function input($field, $id, $name, $value){
-		$type = $this->getType($field);
-		return  Haanga::Load("_shared/form/$type.phtml", array(
-				'id'       => $id,
-				'name'     => $name,
-				'value'    => $value,
-				'data'     => $this->getData($field),
-				'error'    => $this->hasError($field),
-				'required' => $this->isRequired($field),
-		), true);
-	}
 
 	function isValid($rules=array()){
 		$name = $this->getNameForm();
@@ -268,141 +204,8 @@ class FormBuilder implements Iterator {
 		return empty($this->has_error);
 	}
 
-	public static function fieldValue($field, $result) {
-        /* permite llamar a las claves foraneas */
-        if (isset($field[3]) && strripos($field, '_id', -3)) {
-            $method = substr($field, 0, -3);
-            $t = $result->$method; 
-            $c = is_object($t) ? $t->non_primary[0]:null;
-            $value = is_null($c)? '' :h($t->$c);
-        } else {
-            $value = $result->$field;
-        }
-        return $value;
-    }
 
-	/**
-	 * Return if is required field
-	 * @param string $field name
-	 * @return bool
-	 */
-	protected function isRequired($field){
-		return $this->has($field, 'required');
-	}
-
-	/**
-	 * Return true if $field has propiety $key
-	 * @param string $field 
-	 * @param string $key 
-	 * @return bool
-	 */
-	public function has($field, $key){
-		return isset($this->options[$field]) 
-			&& (
-				in_array($key, $this->options[$field]) ||
-				 array_key_exists($key, $this->options[$field]
-			));
-	}
-
-	/**
-	 * Return if is email field
-	 * @param string $field name
-	 * @return bool
-	 */
-	public function isEmail($field){
-		return $this->has($field, 'email');
-	}
-
-	/**
-	 * Return  data for select
-	 * @param string $field name
-	 * @param array $option
-	 * @return array
-	 */
-	public function getData($field, $value=NULL){
-		$list = array();
-		$option = $this->options;
-		$type = $this->type($field);
-		if(isset($option[$field]['select']['list'])){
-			$select = $option[$field]['select'];
-			$list = $select['list'];
-			if(is_callable($select['list'])){
-				$param = isset($select['params']) ? $select['params']: array();
-				$list = call_user_func_array($select['list'], $param);
-			}
-		}elseif(strncmp('enum', $type, 4) == 0){
-			$tmp = explode('\',\'', substr($type, 6, -2));
-			$list = array_combine($tmp, $tmp);
-		}
-		return $this->preProcessData($list, $field, $value);
-	}
-
-	/**
-	 * Preproccess a data for render
-	 */
-	public function preProcessData(Array $list,$field, $value){
-		$option = isset($this->options[$field]['select']) ? $this->options[$field]['select']:array();
-		$result = array();
-		/*Implement empty value*/
-		if(!empty($option['empty'])){
-			$result[] = (object) array(
-			    'value'    => '',
-            	'text'     => $option['empty'],
-            	'selected' => ''
-            );
-		}
-		$text =  empty($option['show']) ? NULL: $option['show'];
-		foreach ($list as $key => $v) {
-			$obj = new \StdClass();
-			$obj->value    = Form::selectValue($v, $key, 'id');
-            $obj->text     = Form::selectShow($v, $text);
-            $obj->selected = Form::selectedValue($value, $obj->value);
-            $result[] = $obj;
-		}
-		return $result;
-	}
-
-	/**
-	 * Return if is have type field
-	 * @param string $field name
-	 * @param array $option
-	 * @return bool
-	 */
-	protected function haveType($field){
-		return $this->has($field, 'type');
-	}
-
-	/**
-	 * Use for default type
-	 * @param string $key 
-	 * @return string
-	 */
-	protected static function defaultType($key){
-		$ret = 'text';
-		$types = array(
-		   'number' => array(
-		        'tinyint',  'smallint',  'mediumint', 'integer',  'int',
-		        'bigint',  'float',  'double',  'precision',  'real',
-		        'decimal',  'numeric',  'year',  'day',  'int unsigned'
-		    ),
-		   'date'     => array('date'),
-		   'time'     => array('time'),
-		   'datetime' => array('datetime',  'timestamp'),
-		   'select'   => array('enum',  'set'),
-		   'textarea' => array(
-		        'tinytext', 'text',  'mediumtext',  'longtext',
-		        'blob',  'mediumblob',  'longblob'
-		   	)
-		);
-		foreach ($types as $type => $value) {
-		 	if(in_array($key, $value)){
-		 		$ret = $type;
-		 		break;
-		 	}
-		}
-		return $ret; 
-	}
-
+	
 	/**
 	 * Load a array of a file
 	 * @param  string|array $rules filename or array of rules
