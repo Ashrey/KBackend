@@ -16,9 +16,14 @@ class Field{
      */
     protected $model = null;
 
+    /**
+     * Options for field
+     */
     protected $options = array();
 
     protected $name;
+
+    protected $form;
 
     function __construct($model, $form, $name, Array $options){
         $this->form    = $form;
@@ -27,28 +32,18 @@ class Field{
         $this->name    = $name;
     }
 
-     /**
-     * Return name of the form
-     * @return string name of the form
-     */
-    function getNameForm(){
-        $name = strtolower(get_class($this->model));
-        $ex = explode('\\', $name);
-        return end($ex);
-    }
-
 
     function __toString(){
-        $model_name = $this->getNameForm();
+        $model_name = $this->form->getNameForm();
         $field = $this->name;
         $value = isset($this->model->$field) ? $this->model->$field: NULL;
         list($id, $name, $value) = Form::getFieldData("$model_name.$field", $value);
         return  Haanga::Load('_shared/form/field.phtml', array(
-                'label'    => $this->getLabel($field),
+                'label'    => $this->getLabel(),
                 'id'       => $id,
                 'input'    => $this->input($field, $id, $name, $value),
                 'error'    => $this->form->hasError($field),
-                'required' => $this->isRequired($field),
+                'required' => $this->isRequired(),
         ), true);
     }
 
@@ -62,15 +57,15 @@ class Field{
             ucwords(str_replace(array('_id', '_', ), ' ', $this->name));
     }
 
-    function input($field, $id, $name, $value){
-        $type = $this->getType($field);
+    function input($id, $name, $value){
+        $type = $this->getType();
         return  Haanga::Load("_shared/form/$type.phtml", array(
                 'id'       => $id,
                 'name'     => $name,
                 'value'    => $value,
-                'data'     => $this->getData($field),
-                'error'    => $this->form->hasError($field),
-                'required' => $this->isRequired($field),
+                'data'     => $this->getData(),
+                'error'    => $this->form->hasError($this->name),
+                'required' => $this->isRequired(),
         ), true);
     }
 
@@ -129,16 +124,15 @@ class Field{
 
     /**
      * Return  data for select
-     * @param string $field name
      * @param array $option
      * @return array
      */
-    public function getData($field, $value=NULL){
+    public function getData($value=NULL){
         $list = array();
         $option = $this->options;
-        $type = $this->type($field);
-        if(isset($option[$field]['select']['list'])){
-            $select = $option[$field]['select'];
+        $type = $this->type();
+        if(isset($option['select']['list'])){
+            $select = $option['select'];
             $list = $select['list'];
             if(is_callable($select['list'])){
                 $param = isset($select['params']) ? $select['params']: array();
@@ -148,14 +142,14 @@ class Field{
             $tmp = explode('\',\'', substr($type, 6, -2));
             $list = array_combine($tmp, $tmp);
         }
-        return $this->preProcessData($list, $field, $value);
+        return $this->preProcessData($list, $value);
     }
 
     /**
      * Preproccess a data for render
      */
-    public function preProcessData(Array $list,$field, $value){
-        $option = isset($this->options[$field]['select']) ? $this->options[$field]['select']:array();
+    public function preProcessData(Array $list, $value){
+        $option = isset($this->options['select']) ? $this->options['select']:array();
         $result = array();
         /*Implement empty value*/
         if(!empty($option['empty'])){
@@ -184,9 +178,8 @@ class Field{
         return $this->has('type');
     }
 
-        /**
+    /**
      * Return type like database set
-     * @param  string $field 
      * @return string
      */
     public function type(){
