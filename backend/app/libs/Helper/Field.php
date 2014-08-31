@@ -80,7 +80,7 @@ class Field{
         $field = $this->col;
         $value = isset($this->model->$field) ? $this->model->$field: NULL;
         list($this->id, $this->name, $this->value) = Form::getFieldData("$model_name.$field", $value);
-        $this->data($this->value);
+        $this->data();
     }
 
     /**
@@ -177,10 +177,9 @@ class Field{
 
     /**
      * Return  data for select
-     * @param mixed $value
      * @return array
      */
-    public function data($value){
+    public function data(){
         if($this->type != 'select')return array();
         $list = array();
         $option = $this->options;
@@ -196,13 +195,13 @@ class Field{
             $tmp = explode('\',\'', substr($type, 6, -2));
             $list = array_combine($tmp, $tmp);
         }
-        return $this->preProcessData($list, $value);
+        return $this->preProcessData($list);
     }
 
     /**
      * Preproccess a data for render
      */
-    public function preProcessData(Array $list, $value){
+    public function preProcessData(Array $list){
         $result = array();
         /*Implement empty value*/
         if(!empty($this->options['select']['empty'])){
@@ -215,10 +214,10 @@ class Field{
         $text =  empty($this->options['select']['show']) ? NULL: $this->options['select']['show'];
         foreach ($list as $key => $v) {
             $obj = new \StdClass();
-            $value         = Form::selectValue($v, $key, 'id');
+            $val         = Form::selectValue($v, $key, 'id');
             $obj->text     = Form::selectShow($v, $text);
-            $obj->selected = Form::selectedValue($value, $value);
-            $result[$value] = $obj;
+            $obj->selected = Form::selectedValue($value, $this->value);
+            $result[$val] = $obj;
         }
         $this->options['select']['list'] = $result;
         $this->data = $result;
