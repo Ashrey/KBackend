@@ -80,11 +80,11 @@ class FormBuilder implements Iterator {
 	 * @return array
 	 */
 	protected static function getFields($model, array &$rules){
-		$md = $model::metadata();
 		if(isset($rules['_fields'])){
 			$fields = $rules['_fields'];
 			unset($rules['_fields']);
 		}else{
+			$md = $model::metadata();
 			$fields = array_diff($md->getFieldsList(), array($md->getPK()));
 		}
 		return $fields;
