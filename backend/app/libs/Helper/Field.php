@@ -21,20 +21,52 @@ class Field{
      */
     protected $options = array();
 
+    /**
+     * Name of col on the model
+     * @var string
+     */
     protected $col;
 
+    /**
+     * Form object
+     * @var FormBuilder
+     */
     protected $form;
 
+    /**
+     * label of widget
+     * @var string
+     */
     protected $label;
 
+    /**
+     * type of widget
+     * @var string
+     */
     protected $type;
 
+    /**
+     * Data for select type
+     * @var array
+     */
     protected $data;
 
+    /**
+     * Id of widget
+     * @var string
+     */
     protected $id;
 
+    /**
+     * Name of widget
+     * @var string
+     */
     protected $name;
 
+    /**
+     * Value of widget
+     * @var string
+     */
     protected $value;
 
     function __construct($model, FormBuilder $form, $col, Array $options){
