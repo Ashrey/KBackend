@@ -85,7 +85,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
         try {
             $model = $this->_model;
             $param = method_exists($model, 'index') ? $model::index():array();
-            $this->result = new Grid(new Paginator($model, $param));
+            $this->result = $this->createGrid($model, $param);
         }catch(\RangeException $e){
             /*nothing*/
         }catch (\Exception $e) {
@@ -153,6 +153,11 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
     protected function getForm($obj){
         return new FormBuilder($obj);
     }
+
+    protected function createGrid($model, Array $param=array(), Array  $values=array()){
+        return new Grid(new Paginator($model, $param, $values));
+    }
+    
 
     /**
      * Handle post request
