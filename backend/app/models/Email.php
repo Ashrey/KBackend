@@ -55,6 +55,7 @@ class Email {
 	 * @param string $subject
 	 * @param string $tpl
 	 * @param string $url
+     * @param string $hash
 	 */
 	protected function create($subject, User $user, $tpl, $url, $hash){
         $var = array(
