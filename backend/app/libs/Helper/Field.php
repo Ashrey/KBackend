@@ -21,68 +21,102 @@ class Field{
      */
     protected $options = array();
 
-    protected $name;
+    protected $col;
 
     protected $form;
 
-    function __construct($model, $form, $name, Array $options){
+    protected $label;
+
+    protected $type;
+
+    protected $data;
+
+    protected $id;
+
+    protected $name;
+
+    protected $value;
+
+    function __construct($model FormBuilder $form, $col, Array $options){
         $this->form    = $form;
         $this->model   = $model;
+        $this->col    = $col;
         $this->options = $options; 
-        $this->name    = $name;
+        $this->label();
+        $this->type();
+        $model_name = $this->form->getNameForm();
+        $field = $this->col;
+        $value = isset($this->model->$field) ? $this->model->$field: NULL;
+        list($this->id, $this->name, $this->value) = Form::getFieldData("$model_name.$field", $value);
+        $this->data($this->value);
     }
 
-
-    function __toString(){
-        $model_name = $this->form->getNameForm();
-        $field = $this->name;
-        $value = isset($this->model->$field) ? $this->model->$field: NULL;
-        list($id, $name, $value) = Form::getFieldData("$model_name.$field", $value);
-        return  Haanga::Load('_shared/form/field.phtml', array(
-                'label'    => $this->getLabel(),
-                'id'       => $id,
-                'input'    => $this->input($field, $id, $name, $value),
-                'error'    => $this->form->hasError($field),
-                'required' => $this->isRequired(),
-        ), true);
+    /**
+     * Return all options
+     * @return array
+     */
+    function getOptions(){
+        return $this->options;
     }
 
     /**
      * Return label value
      * @return string
      */
-    function getLabel(){
-        return isset($this->options['label']) ?
-            $this->options['label'] :
-            ucwords(str_replace(array('_id', '_', ), ' ', $this->name));
+    function label(){
+        if(isset($this->options['label'])){
+            $this->label = $this->options['label'];
+            unset($this->options['label']);
+        }else{
+            $this->label = ucwords(str_replace(array('_id', '_', ), ' ', $this->col));
+        }
     }
 
-    function input($id, $name, $value){
-        $type = $this->getType();
-        return  Haanga::Load("_shared/form/$type.phtml", array(
-                'id'       => $id,
-                'name'     => $name,
-                'value'    => $value,
-                'data'     => $this->getData(),
-                'error'    => $this->form->hasError($this->name),
+
+    /**
+     * Return type of field
+     * @return null
+     */
+    protected function type(){
+        if($this->haveType()){
+            $this->type = $this->options['type'];
+            unset($this->options['type']);
+            return ;
+        }
+        $type = $this->modelType();
+        $key  = static::cleanType($type);
+        $this->type = $this->isEmail() ? 'email': static::defaultType($key);
+    }
+
+
+
+    function __toString(){
+        return  Haanga::Load('_shared/form/field.phtml', array(
+                'label'    => $this->label,
+                'id'       => $this->id,
+                'input'    => $this->input(),
+                'error'    => $this->form->hasError($this->col),
+                'required' => $this->isRequired(),
+        ), true);
+    }
+
+
+    /**
+     * render widget
+     * @return string
+     */
+    function input(){
+        return  Haanga::Load("_shared/form/{$this->type}.phtml", array(
+                'id'       => $this->id,
+                'name'     => $this->name,
+                'value'    => $this->value,
+                'data'     => $this->data,
+                'error'    => $this->form->hasError($this->col),
                 'required' => $this->isRequired(),
         ), true);
     }
 
     /**
-     * Return type of field
-     * @return string
-     */
-    protected function getType(){
-        if($this->haveType()){
-            return $this->options['type'];
-        }
-        $type = $this->type();
-        $key  = static::cleanType($type);
-        return $this->isEmail() ? 'email': static::defaultType($key);
-    }
-
-        /**
      * Return if is required field
      * @return bool
      */
@@ -101,19 +135,6 @@ class Field{
                  array_key_exists($key, $this->options  ));
     }
 
-        public static function fieldValue($field, $result) {
-        /* permite llamar a las claves foraneas */
-        if (isset($field[3]) && strripos($field, '_id', -3)) {
-            $method = substr($field, 0, -3);
-            $t = $result->$method; 
-            $c = is_object($t) ? $t->non_primary[0]:null;
-            $value = is_null($c)? '' :h($t->$c);
-        } else {
-            $value = $result->$field;
-        }
-        return $value;
-    }
-
     /**
      * Return if is email field
      * @return bool
@@ -124,13 +145,14 @@ class Field{
 
     /**
      * Return  data for select
-     * @param array $option
+     * @param mixed $value
      * @return array
      */
-    public function getData($value=NULL){
+    public function data($value){
+        if($this->type != 'select')return array();
         $list = array();
         $option = $this->options;
-        $type = $this->type();
+        $type = $this->modelType();
         if(isset($option['select']['list'])){
             $select = $option['select'];
             $list = $select['list'];
@@ -149,25 +171,25 @@ class Field{
      * Preproccess a data for render
      */
     public function preProcessData(Array $list, $value){
-        $option = isset($this->options['select']) ? $this->options['select']:array();
         $result = array();
         /*Implement empty value*/
-        if(!empty($option['empty'])){
+        if(!empty($this->options['select']['empty'])){
             $result[] = (object) array(
                 'value'    => '',
-                'text'     => $option['empty'],
+                'text'     => $this->options['select']['empty'],
                 'selected' => ''
             );
         }
-        $text =  empty($option['show']) ? NULL: $option['show'];
+        $text =  empty($this->options['select']['show']) ? NULL: $this->options['select']['show'];
         foreach ($list as $key => $v) {
             $obj = new \StdClass();
-            $obj->value    = Form::selectValue($v, $key, 'id');
+            $value         = Form::selectValue($v, $key, 'id');
             $obj->text     = Form::selectShow($v, $text);
-            $obj->selected = Form::selectedValue($value, $obj->value);
-            $result[] = $obj;
+            $obj->selected = Form::selectedValue($value, $value);
+            $result[$value] = $obj;
         }
-        return $result;
+        $this->options['select']['list'] = $result;
+        $this->data = $result;
     }
 
     /**
@@ -182,10 +204,10 @@ class Field{
      * Return type like database set
      * @return string
      */
-    public function type(){
+    public function modelType(){
         $model = $this->model;
         $md = $model::metadata()->getFields();
-        return empty($md[$this->name]['Type']) ? '' : $md[$this->name]['Type'];
+        return empty($md[$this->col]['Type']) ? '' : $md[$this->col]['Type'];
     }
 
     /**
@@ -227,6 +249,4 @@ class Field{
         }
         return $ret; 
     }
-
-   
 }
