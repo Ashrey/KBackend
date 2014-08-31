@@ -37,7 +37,7 @@ class Field{
 
     protected $value;
 
-    function __construct($model FormBuilder $form, $col, Array $options){
+    function __construct($model, FormBuilder $form, $col, Array $options){
         $this->form    = $form;
         $this->model   = $model;
         $this->col    = $col;
