@@ -2,7 +2,7 @@
 {%exec Html::linkAction view, 'Ver',  'class="btn btn-info"' %}
 
 {%buffer  view%}edit/{{item.id}}{%endbuffer%}
-{%exec Html::linkAction view, 'Edit',  'class="btn btn-warning"' %}
+{%exec Html::linkAction view, 'Editar',  'class="btn btn-warning"' %}
 
 {%buffer  view%}delete/{{item.id}}{%endbuffer%}
 {%exec Html::linkAction view, 'Borrar',  'class="btn btn-danger" data-msg="¿Desea Eliminar?"' %}
