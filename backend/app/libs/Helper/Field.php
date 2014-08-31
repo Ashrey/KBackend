@@ -214,10 +214,10 @@ class Field{
         $text =  empty($this->options['select']['show']) ? NULL: $this->options['select']['show'];
         foreach ($list as $key => $v) {
             $obj = new \StdClass();
-            $val         = Form::selectValue($v, $key, 'id');
+            $value         = Form::selectValue($v, $key, 'id');
             $obj->text     = Form::selectShow($v, $text);
             $obj->selected = Form::selectedValue($value, $this->value);
-            $result[$val] = $obj;
+            $result[$value] = $obj;
         }
         $this->options['select']['list'] = $result;
         $this->data = $result;
