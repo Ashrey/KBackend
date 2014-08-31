@@ -205,8 +205,7 @@ class Field{
         $result = array();
         /*Implement empty value*/
         if(!empty($this->options['select']['empty'])){
-            $result[] = (object) array(
-                'value'    => '',
+            $result[''] = (object) array(
                 'text'     => $this->options['select']['empty'],
                 'selected' => ''
             );
