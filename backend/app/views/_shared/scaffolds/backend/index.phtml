@@ -9,7 +9,6 @@
 	{% autoescape off %}
 		{%block result%}
 			{%if result%}
-				{%exec result->useCRUD %}
 				{{result}}
 			{%else%}
 				<div class="alert alert-info">No hay resultados que mostrar</div>

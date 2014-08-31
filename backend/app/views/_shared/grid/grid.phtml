@@ -21,9 +21,7 @@
 
 			{% if action %}
 				<td>
-				{%for val in action %}
-					{%exec str_replace '%id%', item.id, val%}
-				{%endfor%}
+				{% partial action item  %}
 				</td>
 			{% endif %}
 		</tr>

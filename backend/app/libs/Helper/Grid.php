@@ -23,12 +23,6 @@ class Grid {
 	 */
 	 protected $_cb = array();
 
-	 /**
-	 * Acciones disponibles
-	 * @var Array 
-	 */
-	protected $_action = array();
-
 	/**
 	 * Cabecera
 	 *  @var array
@@ -52,14 +46,6 @@ class Grid {
 		$this->pag = $pag;
 	}
 	
-	/**
-	 * Permite añadir una acción
-	 * @param string $action identificador de la accion
-	 * @param type $html HTML para la acción 
-	 */
-	public function action($action, $html) {
-		$this->_action[$action] = $html;
-	}
 	
 	/**
 	 * Permite añadir un callback
@@ -90,24 +76,15 @@ class Grid {
 		$this->_header = $arg;
 	}
 
-	/**
-     * Asigna acciones básicas para el CRUD 
-    */
-    public function useCRUD() {
-        $this->action('ver', \Html::linkAction('view/%id%', '<i class="fa fa-eye"></i>',  'class="btn btn-info"'));
-        $this->action('editar', \Html::linkAction('edit/%id%', '<i class="fa fa-edit"></i>', 'class="btn btn-warning"'));
-        $this->action('borrar', \Html::linkAction('delete/%id%', '<i class="fa fa-trash-o"></i>', 'class="btn btn-danger" data-msg="¿Desea Eliminar?"'));
-    }
-
 	function render(){
 		$filter = \KBackend\Libs\FilterSQL::get();
 		$header = empty($this->_header)?$this->pag->getHeader():$this->_header;
-		return \Haanga::Load('_shared/grid.phtml', array(
+		return \Haanga::Load('_shared/grid/grid.phtml', array(
 			'href' => \Router::get('action'),
 			'grid' => $this,
 			'result' => $this->pag,
 			'f'=>$filter,
-			'action'=>$this->_action,
+			'action'=>'_shared/grid/default.phtml',//;$this->_action,
 			'header'=>$header
 		), true);
 	}
