@@ -18,6 +18,12 @@ class Grid {
 	protected $pag = null;
 
 	/**
+	 * buttons view
+	 * @var string
+	 */
+	protected $action = 'default';
+
+	/**
 	 * Callback para las columnas
 	 * @var Array
 	 */
@@ -76,20 +82,25 @@ class Grid {
 		$this->_header = $arg;
 	}
 
-	function render(){
-		$filter = \KBackend\Libs\FilterSQL::get();
-		$header = empty($this->_header)?$this->pag->getHeader():$this->_header;
-		return \Haanga::Load('_shared/grid/grid.phtml', array(
-			'href' => \Router::get('action'),
-			'grid' => $this,
-			'result' => $this->pag,
-			'f'=>$filter,
-			'action'=>'_shared/grid/default.phtml',//;$this->_action,
-			'header'=>$header
-		), true);
+	/**
+	 * set the action value
+	 * @param string $name 
+	 */
+	function setAction($name){
+		$this->action = $name;
 	}
 
 	function __toString(){
+		$filter = \KBackend\Libs\FilterSQL::get();
+		$header = empty($this->_header)?$this->pag->getHeader():$this->_header;
+		return \Haanga::Load('_shared/grid/grid.phtml', array(
+			'href'   => \Router::get('action'),
+			'grid'   => $this,
+			'result' => $this->pag,
+			'f'      => $filter,
+			'action' => "_shared/grid/{$this->action}.phtml",
+			'header' => $header
+		), true);
 		return $this->render();
 	}
 }
