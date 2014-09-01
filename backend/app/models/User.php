@@ -80,9 +80,9 @@ class User extends \KBackend\Libs\ARecord {
      */
     static function view($id) {
         $param = array(
-          'fields' => '_user.id, login, email, role',
-          'join' =>  'JOIN _role ON _role.id = role_id',
-          'where' => '_user.id = ? '
+          'fields' => 'User.id, login, email, role',
+          'join' =>  'JOIN Role r ON r.id = role_id',
+          'where' => 'User.id = ? '
         );
         return self::first($param, array($id));
     }
