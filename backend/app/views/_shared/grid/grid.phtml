@@ -1,5 +1,4 @@
-
-{% if result %}
+{% if result.count %}
 	<table class="t bordered condensed hover">
 		<thead>
 			{%for value in header %}
@@ -29,5 +28,5 @@
 	</table>
 	{%autoescape off%}{{result}}{%endautoescape%}
 {%else%}
-	No hay datos para mostrar
+	<div class="alert alert-info">No hay datos para mostrar</div>
 {%endif%}

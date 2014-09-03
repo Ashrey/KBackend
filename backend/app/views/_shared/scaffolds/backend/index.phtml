@@ -8,11 +8,7 @@
 	{%exec Flash::content %}
 	{% autoescape off %}
 		{%block result%}
-			{%if result%}
-				{{result}}
-			{%else%}
-				<div class="alert alert-info">No hay resultados que mostrar</div>
-			{%endif%}
+			{{result}}
 		{%endblock%}
 	{% endautoescape %}
 {%endblock%}

@@ -50,6 +50,7 @@ class Paginator extends \Kumbia\ActiveRecord\Paginator
 	}
 
     function getHeader(){
+        if(!$this->count()) return array();
         $model = $this->_model;
         $values = $this->_values;
         $head = $model::query($this->_sql, $values)->fetch(\PDO::FETCH_ORI_FIRST);
