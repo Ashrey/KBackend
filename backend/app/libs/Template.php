@@ -10,6 +10,7 @@ namespace KBackend\Libs;
 require_once CORE_PATH . 'kumbia/kumbia_view.php';
 use \Haanga;
 use \Flash;
+
 class Template extends \KumbiaView {
     protected static $_dirs = array();
 
@@ -44,7 +45,7 @@ class Template extends \KumbiaView {
      */
     public static function render(\Controller $controller)
     {
-        self::addPath(KBACKEND_PATH.'/views/');
+        
         /*Si no hay nada termina el proceso y descarga el buffer*/
         if (!self::$_view && !self::$_template)
             return ob_end_flush();
@@ -103,6 +104,7 @@ class Template extends \KumbiaView {
      * @param string $dir
      */ 
     public static function addPath($dir){
-        self::$_dirs[] = $dir;
+       array_unshift(self::$_dirs, $dir);
     }
 }
+Template::addPath(KBACKEND_PATH.'/views/');
