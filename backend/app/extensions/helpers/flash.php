@@ -22,7 +22,22 @@
  * @license    http://wiki.kumbiaphp.com/Licencia     New BSD License
  */
 class Flash {
-    protected static $buffer = array();
+
+    /**
+     * get the array buffer
+     * @return array
+     */
+    public static function getBuffer(){
+        return Session::has('content', 'Flash') ?
+            Session::get('content', 'Flash'): array();
+    }
+
+    /**
+     * Delete a buffer
+     */
+    public static function cleanBuffer(){
+        Session::delete('content', 'Flash');
+    }
 
     /**
      * Visualiza un mensaje flash
@@ -31,25 +46,25 @@ class Flash {
      * @param string $text 	Mensaje a mostrar
      */
     public static function show($name, $text) {
-        if(!isset(self::$buffer[$name])) {
-            self::$buffer[$name] = array($text);
+        $temp = static::getBuffer();
+        if(!isset($temp[$name])) {
+            $temp[$name] = array($text);
         }else{
-            self::$buffer[$name][] = $text;
+            $temp[$name][] = $text;
         }
+        Session::set('content',$temp, 'Flash');
     }
+
+
 
     /**
      * Get content buffer
      * @return string
      */
     public static function content(){
-        if (Session::has('KUMBIA.CONTENT', 'FlashBuffer')) {
-            $content = Session::get('KUMBIA.CONTENT', 'FlashBuffer');
-            Session::delete('KUMBIA.CONTENT', 'FlashBuffer');
-            return $content;
-        }
+        $b = static::getBuffer();
         $buffer = '';
-        foreach(self::$buffer as $name => $value){
+        foreach($b as $name => $value){
             $buffer .= "<div class=\"$name alert flash\" data-alert=\"alert\" data-dismiss1=\"alert\">
                 <a class=\"close\" data-dismiss=\"alert\"  href=\"#\">×</a><ul>";
             foreach($value as $text){
@@ -57,7 +72,7 @@ class Flash {
             }
             $buffer.='</ul></div>';
         }
-        self::$buffer = array();
+        static::cleanBuffer();
         return $buffer;
     }
 
