@@ -1,6 +1,0 @@
-{% extends 'default.phtml'%}
-{%block title%}Acciones realizadas por <em>{{usuario.login}}</em>{%endblock%}
-{%block content%}
-	{%exec Flash::content%}
-	{%autoescape off%}{{result}}{%endautoescape%}
-{%endblock%}

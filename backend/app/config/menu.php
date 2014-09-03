@@ -18,10 +18,6 @@ $menu = array(
 				"url" => "role"
 			),
 			(object)array(
-				"name" => "Accesos",
-				"url" => "access"
-			),
-			(object)array(
 				"name" => "Acciones",
 				"url" => "action"
 			),
