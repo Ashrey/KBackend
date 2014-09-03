@@ -2,9 +2,10 @@
 {%block title%}{{title}}{%endblock%}
 
 {%block content%}
-	{% if show_bar %}
+	{% block top %}
 		{% inline '_shared/scaffold_top.phtml'%}
-	{%endif%}
+	{% endblock %}
+
 	{%exec Flash::content %}
 	{% autoescape off %}
 		{%block result%}
