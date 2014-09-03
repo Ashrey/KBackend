@@ -21,7 +21,7 @@ class Grid {
 	 * buttons view
 	 * @var string
 	 */
-	protected $action = 'default';
+	protected $action = '_shared/grid/default';
 
 	/**
 	 * Callback para las columnas
@@ -98,9 +98,8 @@ class Grid {
 			'grid'   => $this,
 			'result' => $this->pag,
 			'f'      => $filter,
-			'action' => "_shared/grid/{$this->action}.phtml",
+			'action' => "{$this->action}.phtml",
 			'header' => $header
 		), true);
-		return $this->render();
 	}
 }
