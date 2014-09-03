@@ -31,12 +31,6 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
     protected $_model;
 
     /**
-     * Establece si se usan o no filtros
-     * @var boolean 
-     */
-    public $use_filter = false;
-
-    /**
      * Establece el titulo
      * @var String
      */
@@ -47,12 +41,6 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
      * @var String 
      */
     protected $_view = 'view';
-
-    /**
-     * Mostrar la barra de acciones
-     * @var boolean 
-     */
-    public $show_bar = true;
 
     /**
      * Añade la funcionalidad de iniciación
@@ -86,8 +74,6 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
             $model = $this->_model;
             $param = method_exists($model, 'index') ? $model::index():array();
             $this->result = $this->createGrid($model, $param);
-        }catch(\RangeException $e){
-            /*nothing*/
         }catch (\Exception $e) {
             \View::excepcion($e);
         }
@@ -136,12 +122,12 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
     }
 
     /**
-     * Ver un Registro
+     * show a record
      */
     public function view($id) {
         $_model = $this->_model;
-        $this->result = method_exists($_model, 'view') ?
-                call_user_func_array(array($_model, 'view'), array((int)$id)) :
+        $this->result = method_exists($_model, $this->_view) ?
+                call_user_func_array(array($_model, $this->_view), array((int)$id)) :
                 $_model::get((int) $id);
     }
 
