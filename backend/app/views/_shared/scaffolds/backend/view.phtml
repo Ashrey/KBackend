@@ -3,6 +3,7 @@
 {%block title%}User Details{%endblock%}
 {%block content%}
 <div class="row">
+    {%exec Flash::content %}
     {%if result %}
     <div class="col-5 offset-3">
         {%block msg%}{%endblock%}
