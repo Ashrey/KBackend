@@ -80,9 +80,9 @@ class RoleResource extends \KBackend\Libs\ARecord {
      */
     public static function access($id){
         $c = array();
-        $a = static::allBy('role_id', $id);
+        $a = static::allBy('resource_id', $id);
         foreach($a as $b)
-            $c[] = $b->resource_id;
+            $c[] = $b->role_id;
         return $c;
     }
 
