@@ -52,7 +52,7 @@ class Email {
 
     /**
      * Send email with the new password
-     * @param  String $hash
+     * @param string $password
      * @return boolean        
      */
     public function change(User $u, $password) {

@@ -40,7 +40,6 @@ class RoleResource extends \KBackend\Libs\ARecord {
 
     /**
      * Edit access for roles
-     * @param  int $rol id 
      * @param  array $access allows
      * @return boolean  
      */
