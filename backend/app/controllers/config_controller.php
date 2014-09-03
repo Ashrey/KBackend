@@ -14,14 +14,10 @@ class ConfigController extends \KBackend\Libs\AuthController {
             $ini = new \KBackend\Libs\ConfigINI($file);
             $this->values = $ini->getAll();
             if (Input::hasPost('config')) {
-                if ($ini->save(Input::post('config'))) {
-                    Flash::valid('Configuración fue Actualizada ');
-                    
-                } else {
-                    Flash::warning('No se pudo guardar');
-                }
-           }
-           
+                $this->flash($ini->save(Input::post('config')),
+                    'Configuración fue Actualizada', 
+                    'No se pudo guardar');
+           }  
         } catch (\Exception $e) {
             View::excepcion($e);
         }

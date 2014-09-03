@@ -154,6 +154,13 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
         return new FormBuilder($obj);
     }
 
+    /**
+     * Create a grid
+     * @param object $model 
+     * @param mixed Array $param 
+     * @param mixed Array  $values 
+     * @return Grid
+     */
     protected function createGrid($model, Array $param=array(), Array  $values=array()){
         return new Grid(new Paginator($model, $param, $values));
     }
@@ -176,5 +183,19 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
             }
         }
         return FALSE;
+    }
+
+    /**
+     * Set a flash message
+     * @param  bool $cond     evaluted condition
+     * @param  string $success sucess message
+     * @param  string $fail    error message
+     */
+    protected function flash($cond, $success, $fail){
+        if ($cond) {
+            Flash::valid($success);
+        } else {
+            Flash::warning($fail);
+        }
     }
 }

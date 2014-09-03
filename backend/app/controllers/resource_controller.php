@@ -23,11 +23,9 @@ class ResourceController extends \KBackend\Libs\ScaffoldController{
         try {
             if (Input::hasPost('access')) {
                 $access = Input::post('access');
-                if (RoleResource::edit($id, $access)) {
-                    Flash::valid('Los privilegios fueron editados');
-                } else {
-                    Flash::warning('No se pudo editar los privilegios');
-                }
+                $this->flash(RoleResource::edit($id, $access),
+                    'Los privilegios fueron editados',
+                    'No se pudo editar los privilegios');
             }
         } catch (\Exception $e) {
             View::excepcion($e);
