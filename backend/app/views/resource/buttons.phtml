@@ -1,0 +1,5 @@
+{% extends '_shared/grid/default.phtml'%}
+{% block prebuttons%}
+    {%buffer  view%}access/{{item.id}}{%endbuffer%}
+    {%exec Html::linkAction view, 'Access',  'class="btn btn-success"' %}
+{% endblock %}

@@ -15,7 +15,7 @@ class RoleResource extends \KBackend\Libs\ARecord {
      * @return boolean         
      */
     public static function add($rol, $resource) {
-        if (static::isCreated($rol,$resource))
+        if (static::isCreated($rol, $resource))
             return TRUE;
         $new = new self();
         return $new->create(array(
@@ -39,25 +39,26 @@ class RoleResource extends \KBackend\Libs\ARecord {
     }
 
     /**
-     * Edit access for user id
-     * @param int $rol id 
-     * @param  array $priv allows
-     * @param  array $all all allow for page
+     * Edit access for roles
+     * @param  int $rol id 
+     * @param  array $access allows
      * @return boolean  
      */
-    public static function edit($rol, $priv, $all) {
+    public static function edit($res, $access) {
+        $all = Role::all();
         static::begin();
-        foreach ($all as $e) {
-            /*El privilegio ha sido asignado*/
-            if (in_array($e, $priv)){
-                if(!static::add($rol, $e)){
-                    static::rollback();
-                    return false;
+        try{
+            foreach ($all as $rol) {
+                /*El privilegio ha sido asignado*/
+                if (in_array($rol->id, $access)){
+                    static::add($rol->id, $res);
+                }else{
+                    static::remove($rol->id, $res);
                 }
-            }elseif(!static::remove($rol, $e)){
-                static::rollback();
-                return false;
             }
+        }catch(\Exception $e){
+            static::rollback();
+            return false;
         }
         static::commit();
         return TRUE;
@@ -75,14 +76,15 @@ class RoleResource extends \KBackend\Libs\ARecord {
     }
     
     /**
-     * Return allow access for role $id
-     * @param int $id id of  rol
+     * Return allow access for resource $id
+     * @param int $id id of resource
+     * @return array
      */
     public static function access($id){
         $c = array();
-        $a = static::allBy('role_id', $id);
+        $a = static::allBy('resource_id', $id);
         foreach($a as $b)
-            $c[] = $b->resource_id;
+            $c[] = $b->role_id;
         return $c;
     }
 

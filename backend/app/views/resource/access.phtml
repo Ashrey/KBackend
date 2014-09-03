@@ -1,0 +1,20 @@
+{% extends 'default.phtml'%}
+{%block title%}Access allower for <em>{{resource.name}}</em>, match with: <strong>{{resource.url}}</strong>{%endblock%}
+{%block content%}
+    {%exec Flash::content%}
+    {% if result %}
+        {%exec Form::open '' %}
+        {%inline '_shared/form/submit.phtml' %}
+        {%for item in result%}
+        <div class="col-3">
+        {% set i = item.id|InArray:privilegios %}
+            <label>{{item.role}}
+            {%exec Form::check "access.", item.id, FALSE, i %}
+            </label>
+        </div>
+        {%endfor%}
+        </form>
+    {%else%}
+        <h2>No hay ningún registro</h2>
+    {%endif%}
+{%endblock%}

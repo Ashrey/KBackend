@@ -27,21 +27,6 @@ class AccessController extends  \KBackend\Libs\AuthController{
         }
     }
 
-    public function assign($rol) {
-        try {
-            if (Input::hasPost('todo')) {
-                $priv = Input::post('priv');
-                $todo  = Input::post('todo');
-                if (RoleResource::edit($rol, (array)$priv , $todo)) {
-                    Flash::valid('Los privilegios fueron editados');
-                } else {
-                    Flash::warning('No se pudo editar los privilegios');
-                }
-            }
-        } catch (\Exception $e) {
-            View::excepcion($e);
-        }
-        return Redirect::toAction("allow/$rol");
-    }
+
 }
 
