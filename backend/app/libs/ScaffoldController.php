@@ -156,7 +156,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
 
     /**
      * Create a grid
-     * @param object $model 
+     * @param string $model 
      * @param mixed Array $param 
      * @param mixed Array  $values 
      * @return Grid
