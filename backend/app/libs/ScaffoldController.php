@@ -71,9 +71,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
     
     public function index(){
         try {
-            $model = $this->_model;
-            $param = method_exists($model, 'index') ? $model::index():array();
-            $this->result = $this->createGrid($model, $param);
+            $this->result = $this->createGrid();
         }catch (\Exception $e) {
             \View::excepcion($e);
         }
@@ -117,7 +115,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
     			}
             }
 		} catch (\Exception $e) {
-            Flash::error($e);
+            Flash::error($e->getMessage());
         }
     }
 
@@ -141,14 +139,19 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
     }
 
     /**
-     * Create a grid
-     * @param string $model 
-     * @param mixed Array $param 
-     * @param mixed Array  $values 
+     * Create a Grid
      * @return Grid
      */
-    protected function createGrid($model, Array $param=array(), Array  $values=array()){
-        return new Grid(new Paginator($model, $param, $values));
+    protected function createGrid(){
+        return new Grid($this->createPaginator());
+    }
+
+    /**
+     * Create a Paginator
+     * @return Paginator
+     */
+    protected function createPaginator(){
+        return new Paginator($this->_model);
     }
     
 
