@@ -56,11 +56,30 @@ class RegisterController extends AppController{
 		try{
 			if (($by = Input::post('forget'))) {
 				User::forget($by);
-				Flash::valid("Los pasos para recuperar su contraseña han sido enviados a su correo");
-				$this->show = FALSE;
+				Redirect::to('register/success?message=Los pasos para recuperar su contraseña han sido enviados a su correo');
 			}
 		}catch(Exception $e){
 			Flash::error($e->getMessage());
 		}
 	}
+
+	/**
+     * manda la nueva contraseña luego de validar el hash
+     */
+    public function change($id, $hash){
+        try{
+            if($id && $hash){
+                $user = User::get($id);
+                $user->newPassword($hash);
+                Flash::valid("La nueva contraseña ha sido enviada a su correo");
+            }
+        }catch(Exception $e){
+            Flash::error($e->getMessage());
+        }
+    }
+
+    public function success(){
+    	$this->title   = Input::get('title');
+    	$this->message = Input::get('message');
+    }
 }

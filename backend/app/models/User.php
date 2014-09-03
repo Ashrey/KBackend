@@ -151,14 +151,17 @@ class User extends \KBackend\Libs\ARecord {
      /**
      * Permite generar una contraseña nueva al usuario y enviarla a su correo 
      */
-    public function changePassword($hash){
+    public function newPassword($hash){
+        if($hash != $this->hash()){
+            throw new \Exception("Invalid Hash");
+        }
         $this->begin(); //iniciamos una transaccion
         $this->created_at = date("Y-m-d G:i:s");
-        $pass = substr( str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$@&'), 0, 8);
+        $pass = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$@&'), 0, 8);
         $this->password =  \KBackend\Libs\AuthACL::hash($pass);
         if ($this->save()) {
             $correo = new Email();
-            if ($correo->forget($this, $pass)) {
+            if ($correo->change($this, $pass)) {
                 $this->commit();   
             } else {
                 $this->rollback();

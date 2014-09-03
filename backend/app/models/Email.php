@@ -47,7 +47,17 @@ class Email {
      */
     public function forget(User $u, $hash) {
 		return $this->create('Pasos para recuperar tu contraseña', 
-			$u, 'forget', 'profile/user', $hash);
+			$u, 'forget', 'register/change', $hash);
+    }
+
+    /**
+     * Send email with the new password
+     * @param  String $hash
+     * @return boolean        
+     */
+    public function change(User $u, $password) {
+        return $this->create('Nueva contraseña', 
+            $u, 'change',  NULL, $password);
     }
    
     /**
