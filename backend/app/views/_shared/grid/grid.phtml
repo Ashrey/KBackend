@@ -1,5 +1,5 @@
 {% if result.count %}
-	<table class="t bordered condensed hover">
+	<table class="{%block cssclass%}t bordered condensed hover{% endblock %}">
 		<thead>
 			{%for value in header %}
 				{%def t%}{'order': "{{value}}" }{%enddef%} 

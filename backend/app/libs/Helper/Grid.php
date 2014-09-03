@@ -21,7 +21,13 @@ class Grid {
 	 * buttons view
 	 * @var string
 	 */
-	protected $action = '_shared/grid/default';
+	protected $action  = '_shared/grid/default';
+
+	/**
+	 * Grid view
+	 * @var string
+	 */
+	protected $basetpl = '_shared/grid/grid';
 
 	/**
 	 * Callback para las columnas
@@ -44,8 +50,9 @@ class Grid {
 		}
 
 	}
+
 	/**
-	 * Envia los datos del paginador
+	 * Set paginator
 	 * @param Paginator $pag
 	 */
 	function setPaginator($pag){
@@ -83,17 +90,27 @@ class Grid {
 	}
 
 	/**
-	 * set the action value
+	 * set the action view
 	 * @param string $name 
 	 */
 	function setAction($name){
 		$this->action = $name;
 	}
 
+	/**
+	 * Set Base Template
+	 * @param string $tpl 
+	 */
+	function setBaseTpl($tpl){
+		$this->basetpl = $tpl;
+	}
+
+
+
 	function __toString(){
 		$filter = \KBackend\Libs\FilterSQL::get();
 		$header = empty($this->_header)?$this->pag->getHeader():$this->_header;
-		return \Haanga::Load('_shared/grid/grid.phtml', array(
+		return \Haanga::Load("{$this->basetpl}.phtml", array(
 			'href'   => \Router::get('action'),
 			'grid'   => $this,
 			'result' => $this->pag,
