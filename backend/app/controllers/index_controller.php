@@ -12,11 +12,4 @@ class IndexController extends AppController {
     public function index() {
 
     }
-    
-    public function logout() {
-		\KBackend\Libs\AuthACL::logout();
-		return Redirect::to();
-    }
-    
-    
 }
