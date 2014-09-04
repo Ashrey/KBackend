@@ -63,17 +63,6 @@ class User extends \KBackend\Libs\ARecord {
     } 
 
     /**
-     * Devuelve el SQL para paginación
-     * @return string sql
-     */
-    public static function index() {
-        return  array(
-            'join'   => 'JOIN Role r ON r.id = role_id',
-            'fields' => 'User.id, User.login, User.email, r.role rol',
-        );
-    }
-
-    /**
      * Get the row for user with id = $id
      * @param int $id id of user
      * @return Object
