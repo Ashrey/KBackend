@@ -123,10 +123,17 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
      * show a record
      */
     public function view($id) {
+        $this->result = $this->getRecord($id);
+    }
+
+    /**
+     * Get a object for view
+     * @param  int $id primary key
+     * @return object
+     */
+    protected function getRecord($id){
         $_model = $this->_model;
-        $this->result = method_exists($_model, $this->_view) ?
-                call_user_func_array(array($_model, $this->_view), array((int)$id)) :
-                $_model::get((int) $id);
+        return  $_model::get((int) $id);
     }
 
     /**
