@@ -18,7 +18,9 @@ class Email {
         $this->_mail = new \PHPMailer();
         $this->_mail->IsSMTP();
         $this->_mail->SMTPAuth = TRUE;
-        $this->_mail->SMTPSecure = Config::get('backend.email.security');
+        $this->_mail->SMTPDebug = 2;
+        if(Config::get('backend.email.security'))
+            $this->_mail->SMTPSecure = Config::get('backend.email.security');
         $this->_mail->Host =   Config::get('backend.email.server');
         $this->_mail->Port = Config::get('backend.email.port');
         $this->_mail->Username = Config::get('backend.email.user');//escribir el correo
