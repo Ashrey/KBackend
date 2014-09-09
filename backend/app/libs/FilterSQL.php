@@ -57,7 +57,7 @@ class FilterSQL {
      * @param  Array $arg array of options
      * @return String
      */
-    function getURL($arg){
+    function getURL(Array $arg){
         if(isset($arg['order']) && isset($this->_arg['order'])
             && $arg['order'] == $this->_arg['order']){
             $arg['order'] .= ' desc';

@@ -2,7 +2,7 @@
 	<table class="{%block cssclass%}t bordered condensed hover{% endblock %}">
 		<thead>
 			{%for value in header %}
-				{%def t%}{'order': "{{value}}" }{%enddef%} 
+				{%def t%}{"order": "{{value}}" }{%enddef%} 
 				{%buffer url%}{{href}}{%exec f.getURL t%}{%endbuffer%}
 				{%buffer label%}{{value | capfirst}} <i class="fa fa-sort"></i>{%endbuffer%}
 				<th>{%exec Html::linkAction url, label %} </th>
