@@ -57,9 +57,9 @@ class FormBuilder implements Iterator {
 		$rules = static::load($rules);
 		$this->model    = $model;
 		$fields  = static::getFields($model, $rules);
-		$this->getOption($rules);
+		$rules   = $this->getOption($rules);
 		foreach ($fields as $name) {
-			$options = isset($this->options[$name]) ? $this->options[$name]:array();
+			$options = isset($rules[$name]) ? $rules[$name]:array();
 			$this->fields[$name] = new Field($model, $this, $name, $options);
 			$this->options[$name] = $this->fields[$name]->getOptions();
 		}
@@ -93,6 +93,7 @@ class FormBuilder implements Iterator {
 	/**
 	 * Get option of form
 	 * @param array $option options
+	 * @return array
 	 */
 	protected function getOption(Array $option){
 		$model = $this->model;
@@ -102,7 +103,7 @@ class FormBuilder implements Iterator {
 		$rules = method_exists($model, '_rules') ?
 			$model::_rules():
 			array();
-		$this->options  = array_merge_recursive($op,$rules, $option);
+		return array_merge_recursive($op,$rules, $option);
 	}
 
 	/**
