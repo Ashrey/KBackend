@@ -145,7 +145,31 @@ class Field{
                 'data'     => $this->data,
                 'error'    => $this->form->hasError($this->col),
                 'required' => $this->isRequired(),
+                'pattern'  => $this->pattern(),
+                'title'    => $this->title(),
         ), true);
+    }
+
+    /**
+     * Return pattern 
+     * @return mixed Pattern or false
+     */
+    function pattern(){
+        if(isset($this->options['pattern']['regexp'])){
+            return trim($this->options['pattern']['regexp'],'/');
+        }
+        return FALSE;
+    }
+
+    /**
+     * Return title 
+     * @return mixed title or false
+     */
+    function title(){
+        if(isset($this->options['pattern']['error'])){
+            return $this->options['pattern']['error'];
+        }
+        return FALSE;
     }
 
     /**

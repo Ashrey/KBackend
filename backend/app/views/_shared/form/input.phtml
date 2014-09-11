@@ -3,5 +3,7 @@
 
 {%block attr%}
 {{block.super}}
-type="{%block type%}{% endblock %}" value="{{value}}"
+type="{%block type%}{% endblock %}" value="{{value}}" 
+{%if pattern %}pattern="{{pattern}}"{%endif%}
+{%if title %}title="{{title}}"{%endif%}
 {%endblock%}
