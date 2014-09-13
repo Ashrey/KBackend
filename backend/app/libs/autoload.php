@@ -16,6 +16,10 @@ function autoload_kbackend($name) {
             if (!include KBACKEND_PATH."/libs/$class.php"){
                 throw new KumbiaException("Clase $class no encontrada");
             }
+        }elseif($type == 'Controller') {
+            if (!include KBACKEND_PATH."/controllers/$class.php"){
+                throw new KumbiaException("Clase $class no encontrada");
+            }
         }
     }
 }

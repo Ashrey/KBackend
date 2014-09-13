@@ -34,7 +34,7 @@ class Template extends \KumbiaView {
      * 
      */
     public function notFound() {
-        throw new KumbiaException(NULL, 'no_controller');
+        throw new \KumbiaException(NULL, 'no_controller');
     }
 
     /**
