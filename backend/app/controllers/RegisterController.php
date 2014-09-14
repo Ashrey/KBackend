@@ -55,7 +55,7 @@ class RegisterController extends \AppController{
         try{
             if (($by = Input::post('forget'))) {
                 User::forget($by);
-                Redirect::to('register/success?message=Los pasos para recuperar su contraseña han sido enviados a su correo');
+                \Redirect::to('register/success?message=Los pasos para recuperar su contraseña han sido enviados a su correo');
             }
         }catch(Exception $e){
             Flash::error($e->getMessage());
