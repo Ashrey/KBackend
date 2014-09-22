@@ -2,6 +2,7 @@
 {% if total > 1 %}
 {% set next = pag.nextPage %}
 {% set prev = pag.prevPage %}
+{% set totalP = pag.totalPages %}
 
 <div class="text-center">
 	<ul class="pagination">
@@ -34,10 +35,10 @@
 			{% endif %}
 		{% endfor %}
 		
-		{%if pag.totalPages > i %}
+		{%if totalP > i %}
 			<li><a href="#">...</a></li>
-			{%buffer href%}{%exec str_replace '-_page_-', next, pag.totalPage%}{%endbuffer%}
-			<li>{%exec Html::link href, pag.totalPage %}</li>
+			{%buffer href%}{%exec str_replace '-_page_-', next, totalP%}{%endbuffer%}
+			<li>{%exec Html::link href, totalP %}</li>
 		{% endif %}
 		
 		{% if ! pag.nextPage | null %}

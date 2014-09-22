@@ -74,8 +74,8 @@ class Paginator extends \Kumbia\ActiveRecord\Paginator
     function start($half, $show){
         if ($this->page <= $half) {
             $start = 1;
-        }elseif (($this->total - $this->page) < $half) {
-            $start = $this->total - $show + 1;
+        }elseif (($this->count  - $this->page) < $half) {
+            $start = $this->count - $show + 1;
             if ($start < 1)
                 $start = 1;
         } else {
