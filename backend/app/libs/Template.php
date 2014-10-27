@@ -102,9 +102,14 @@ class Template extends \KumbiaView {
     /**
      * Add new path for template
      * @param string $dir
+     * @param string|null $key
      */ 
-    public static function addPath($dir){
-       array_unshift(self::$_dirs, $dir);
+    public static function addPath($dir, $key = NULL){
+        if(is_null($key)){
+            array_unshift(self::$_dirs, $dir);
+        }else{
+            self::$_dirs[$key] = $dir;
+        }
     }
 }
-Template::addPath(KBACKEND_PATH.'/views/');
+Template::addPath(KBACKEND_PATH.'/views/', 'Backend');
