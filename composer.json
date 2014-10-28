@@ -1,6 +1,8 @@
 {
     "require": {
         "ashrey/php-gettext": "dev-master",
+        "ashrey/pantaconf": "dev-master",
+        "mustangostang/spyc":"dev-master",
         "phpmailer/phpmailer": "dev-master"
     }
 }

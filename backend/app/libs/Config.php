@@ -7,7 +7,11 @@ namespace KBackend\Libs;
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team
  */
-class Config extends \Config {
+class Config extends \Config{
+
+    static $reader = NULL;
+     
+
      /**
      * Read a config file
      *
@@ -15,13 +19,13 @@ class Config extends \Config {
      * @param boolean $force force read of  .ini file
      * @return array
      */
-    public static function & read($file, $force = FALSE)
+    public static function &read($file, $force = FALSE)
     {
-        if (isset(self::$_vars[$file]) && !$force) {
-            return self::$_vars[$file];
+        if(!self::$reader){
+            self::$reader = new \Ashrey\Config\Config(KBACKEND_PATH . "/temp/cache/config");
         }
-
-        self::$_vars[$file] = parse_ini_file(KBACKEND_PATH . "/config/$file.ini", TRUE);
+        $parse = self::$reader;
+        self::$_vars[$file] =  $parse->read(KBACKEND_PATH . "/config/$file.yml");
         return self::$_vars[$file];
     }
 }
