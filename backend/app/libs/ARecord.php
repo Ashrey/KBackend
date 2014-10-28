@@ -11,7 +11,10 @@ namespace KBackend\Libs;
  * @subpackage ActiveRecord
  */
 use \Validate;
-class ARecord extends \Kumbia\ActiveRecord\ActiveRecord implements \ArrayAccess {
+use Kumbia\ActiveRecord\ActiveRecord;
+use Kumbia\ActiveRecord\Db;
+Db::setConfig(Config::get('backend.database'));
+class ARecord extends ActiveRecord implements \ArrayAccess {
 
     const _SELF_       = 0;
     const ONE_TO_ONE   = 1;
