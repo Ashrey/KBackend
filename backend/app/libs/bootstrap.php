@@ -10,7 +10,7 @@ $vars = array(
     '%:display_error%'   => !$prod ? 'On': 'Off',
     '%:app_path%'        => dirname(__DIR__).'/',
     '%:core_path%'       => dirname(dirname(dirname(__DIR__))) . '/core/',
-    '%:public%'          => substr($_SERVER['REQUEST_URI'], 0, -strlen($exc)).'/'
+    '%:public%'          => substr(urldecode($_SERVER['REQUEST_URI']), 0, -strlen($exc)).'/'
 );
 $file = file_get_contents(__DIR__.'/template.tpl');
 $str = str_replace(array_keys($vars), array_values($vars), $file);
