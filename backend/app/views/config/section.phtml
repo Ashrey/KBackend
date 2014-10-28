@@ -1,0 +1,35 @@
+{% extends 'default.phtml'%}
+{%block title%}Configurando{%endblock%}
+{%block content%}
+    <div class="offset-3 col-6" >
+        {%exec Flash::content%}
+        {%exec Form::open '', 'post', 'class="horizontal"'%}
+        {%for key, val in values%}
+            {%if val|isArray%}
+            <fieldset>
+                <legend>{{key|Title}}</legend>
+                {%for  name, value in val %}
+                <div class="form-group">
+                    <label class="col-4 control" for="config_name">{{name|Title}}: </label>
+                     {%buffer name%}config.{{key}}.{{name}}{%endbuffer%}
+                    <div class="col-6">
+                        {%exec Form::text name, 'class="control"', value %}
+                    </div>
+                </div>
+                {%endfor%}
+            </fieldset>
+            {%else%}
+                <div class="form-group">
+                    <label class="col-4 control" for="config_name">{{key|Title}}: </label>
+                    {%buffer name%}config.{{key}}{%endbuffer%}
+                    <div class="col-6">
+                        {%exec Form::text name, 'class="control"', val %}
+                    </div>
+                </div>
+            {%endif%}
+        {%endfor%}
+        {%inline '_shared/form/submit.phtml'%}
+        </form>
+    </div>
+</div>
+{%endblock%}

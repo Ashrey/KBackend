@@ -1,30 +1,14 @@
 {% extends 'default.phtml'%}
-{%block title%}Configurando <em>{{config}}</em>{%endblock%}
+{%block title%}Configurando{%endblock%}
 {%block content%}
     <div class="offset-3 col-6" >
         {%exec Flash::content%}
-        {%exec Form::open '', 'post', 'class="horizontal"'%}
+        <ul>
         {%for key, val in values%}
-            <fieldset>
-                <legend>{{key|Title}}</legend>
-                {%for  name, value in val %}
-                <div class="form-group">
-                    <label class="col-4 control" for="config_name">{{name|Title}}: </label>
-                     {%buffer name%}config.{{key}}.{{name}}{%endbuffer%}
-                    <div class="col-6">
-                    {% if value == "On" OR value == 'Off'%}
-                        {%set check = (value == 'On')%}
-                        {%exec Form::check name, 1, '', check %}
-                    {%else%}
-                        {%exec Form::text name, 'class="control"', value %}
-                    {%endif%}
-                    </div>
-                </div>
-                {%endfor%}
-            </fieldset>
+        {%buffer url%}config/section/{{key}}{%endbuffer%}
+        <li>{%link url, key %}</li>
         {%endfor%}
-        {%inline '_shared/form/submit.phtml'%}
-        </form>
+    </ul>
     </div>
 </div>
 {%endblock%}
