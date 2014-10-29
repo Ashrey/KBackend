@@ -1,6 +1,6 @@
 {%for i in menu %}
-	{%set submenu = i.sub | default:'' %}
-	{%set class = i.class | default:'' %}
+	{%set submenu = i['sub'] | default:'' %}
+	{%set class = i['class'] | default:'' %}
     {%if submenu %}
         <li class="{{class}} dropdown">
         {%buffer n%}{{i.name}}<b class="caret"></b>{%endbuffer%}

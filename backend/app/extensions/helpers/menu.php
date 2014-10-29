@@ -6,13 +6,14 @@
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team
  */
+use \KBackend\Libs\Config;
 class Menu {
     /**
      * Crea los menus para la app. 
      * @return string          
      */
     public static function render() {
-        $menus =  require APP_PATH . 'config/menu.php';
+        $menus =  Config::read('menu');
         return self::generate($menus);
     }
 
