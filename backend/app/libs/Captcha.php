@@ -63,7 +63,7 @@ class Captcha{
 	
 	/**
 	 * To string magic method
-	 * @return string;
+	 * @return string
 	 */
 	function __toString(){
 		return $this->captcha;
