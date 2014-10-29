@@ -7,6 +7,7 @@
  * @author KumbiaPHP Development Team
  */
 use \KBackend\Libs\Paginator;
+use \KBackend\Libs\Helper\FormBuilder;
 class UserController extends \KBackend\Libs\ScaffoldController{
 	
 	protected $_model = '\KBackend\Model\User';
@@ -17,4 +18,13 @@ class UserController extends \KBackend\Libs\ScaffoldController{
             'fields' => 'User.id, User.login, User.email, r.role rol',
         ));
     }
+
+    protected function getFormEdit($obj){
+        return new FormBuilder($obj, 'user_edit.php');
+    }
+
+    protected function getForm($obj){
+        return new FormBuilder($obj, 'user.php');
+    }
+
 }
