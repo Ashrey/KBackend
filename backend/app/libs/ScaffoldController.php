@@ -181,12 +181,9 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
         $this->form = $edit ? $this->getFormEdit($obj):$this->getForm($obj);
         $this->{$this->model} = $obj; 
         if(Input::is('POST') && $this->form->isValid()){
-            if($obj->save()) {
-                Flash::valid('Operación exitosa');
-                return TRUE; 
-            } else {
-               \Flash::error('Falló la operación');
-            }
+            $return = $obj->save();
+            $this->flash($return, 'Operación exitosa', 'Falló la operación');
+            return $return;
         }
         return FALSE;
     }
@@ -201,7 +198,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
         if ($cond) {
             Flash::valid($success);
         } else {
-            Flash::warning($fail);
+            Flash::error($fail);
         }
     }
 }
