@@ -96,7 +96,7 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
         if (!is_object($obj)) {
             throw new \Exception('Objecto dont exist', 1);
         }
-        $this->handleForm($obj);
+        $this->handleForm($obj, TRUE);
     }
 
     /**
@@ -146,6 +146,15 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
     }
 
     /**
+     * return a form for edit action
+     * @param object $obj 
+     * @return FormBuilder
+     */
+    protected function getFormEdit($obj){
+        return $this->getForm($obj);
+    }
+
+    /**
      * Create a Grid
      * @return Grid
      */
@@ -165,10 +174,11 @@ abstract class ScaffoldController extends \KBackend\Libs\AuthController {
     /**
      * Handle post request
      * @param object $obj 
+     * @param bool $edit use edit form?
      * @return bool
      */
-    protected function handleForm($obj){
-        $this->form = $this->getForm($obj);
+    protected function handleForm($obj, $edit=FALSE){
+        $this->form = $edit ? $this->getFormEdit($obj):$this->getForm($obj);
         $this->{$this->model} = $obj; 
         if(Input::is('POST') && $this->form->isValid()){
             if($obj->save()) {

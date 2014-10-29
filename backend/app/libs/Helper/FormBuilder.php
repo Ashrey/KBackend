@@ -103,7 +103,7 @@ class FormBuilder implements Iterator {
 		$rules = method_exists($model, '_rules') ?
 			$model::_rules():
 			array();
-		return array_merge_recursive($op,$rules, $option);
+		return array_merge_recursive($op, $rules, $option);
 	}
 
 	/**
@@ -168,7 +168,7 @@ class FormBuilder implements Iterator {
 	 */
 	function load($rules, Array $merge = array()){
         if(is_string($rules)){
-            $rules = include APP_PATH . "/extensions/form/$rules.php";
+            $rules = require APP_PATH . "/extensions/form/$rules";
         }
         if(!is_array($rules)){
             throw new \RuntimeException('Se esperaba un array');
