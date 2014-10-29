@@ -1,2 +1,9 @@
 {% extends '_shared/form/input.phtml' %}
 {% block type %}checkbox{% endblock %}
+{%block attr%}
+{{block.super}}
+{%if value %}
+checked="checked" 
+{% endif %}
+
+{%endblock%}
