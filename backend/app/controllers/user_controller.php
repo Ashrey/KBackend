@@ -27,4 +27,9 @@ class UserController extends \KBackend\Libs\ScaffoldController{
         return new FormBuilder($obj, 'user.php');
     }
 
+    protected function getRecord($id){
+        $_model = $this->_model;
+        return  $_model::view((int) $id);
+    }
+
 }
