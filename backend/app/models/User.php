@@ -29,12 +29,7 @@ class User extends \KBackend\Libs\ARecord {
                 'required',
                 'email',
                 '@unique' => array('error' => 'email ya registrado'),
-            ),   
-        );
-    }
-
-    public static function _formOption(){
-        return array(
+            ),
             'enable' => array(
                 'type'    => 'check',
                 
