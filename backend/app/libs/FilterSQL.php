@@ -14,7 +14,18 @@ class FilterSQL {
 	 */
 	protected $_arg = array();
 	
-	protected $_valid = array('page', 'order', 'per_page', 'desc');
+    /**
+     * Valid param on URL
+     * @var array
+     */
+	protected $_valid = array('page', 'order', 'per_page',
+        'desc', 'col', 'val', 'op');
+
+    /**
+     * Value of filter
+     * @var mixed
+     */
+    protected $value = 1;
 
 	/**
 	 * param for filter
@@ -22,14 +33,6 @@ class FilterSQL {
 	 */
 	protected $_condition = array();
 
-	/**
-	 * Singleton
-	 */
-	static public function get(){
-		static $obj;
-		return is_object($obj) ? $obj:new self();
-	}
-	
 	private function __construct() {
         foreach($_GET as $key => $val){
 			if(in_array($key, $this->_valid)){
@@ -38,20 +41,28 @@ class FilterSQL {
 		}
 		if(!isset($this->_arg['page']))$this->_arg['page']=1;
     }
+
+    /**
+     * Singleton
+     */
+    static public function get(){
+        static $obj;
+        return is_object($obj) ? $obj:new self();
+    }
 	
-
     function getArray() {
-        return $this->_arg;
+        $param = $this->_arg;
+        $col = isset($param['col'])?$param['col']:1;
+        $op  = isset($param['op'])?$param['op']:'=';
+        $this->value = isset($param['val'])?$param['val']:1;
+        $param['where'] = "$col $op :filter";
+        return $param;
     }
 
-
-    function getSQLParam(){
-    	$param = $this->_arg;
-    	unset($param['per_page']);
-    	unset($param['page']);
-    	return $param;
+    function getValues(){
+        return array('filter' => $this->value);
     }
-    
+
     /**
      * Return URL for filter
      * @param  Array $arg array of options
@@ -67,33 +78,6 @@ class FilterSQL {
 		$action=implode('/', \Router::get('parameters'));
 		return "$action?".http_build_query($arg);
 	}
-
-    /**
-     * Procesa los pedidos del usuario
-     */
-    function request() {
-        if (Input::hasPost('filter')) {
-            $this->filter();
-        }
-    }
-
-    /**
-     * Procesa los filtros
-     */
-    protected function filter() {
-        if (Input::post('clear')) {/* Elimina todos los filtros */
-            $this->_condition = array();
-            Flash::info('Filtros Borrados');
-        } elseif (Input::post('add')) {/* Agrega un filtro */
-            $nuevo = Input::post('filter');
-            $nuevo['val'] = empty($nuevo['val']) && $nuevo['val'] !== '0' ?
-                    'NULL' : '"' . addslashes($nuevo['val']) . '"';
-            $this->_condition[uniqid()] = $nuevo;
-        } elseif (Input::post('remove')) {/* Remueve un filtro */
-            $key = Input::post('remove');
-            unset($this->_condition[$key]);
-        }
-    }
 
     
 	public function __get($name) {
