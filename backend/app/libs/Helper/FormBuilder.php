@@ -53,6 +53,11 @@ class FormBuilder implements Iterator {
         return current($this->fields);
     }
 
+    /**
+     * Construct
+     * @param object|string $model model
+     * @param array|string  $rules rules of render and validation
+     */
 	function __construct($model, $rules=array()){
 		$rules = static::load($rules);
 		$this->model    = $model;
