@@ -21,7 +21,23 @@ class File{
      */
     protected $type;
 
+    /**
+     * name on the server
+     * @var string
+     */
     protected $name;
+
+    /**
+     * do it have error?
+     * @var integer
+     */
+    protected $error;
+
+    /**
+     * size of file
+     * @var integer
+     */
+    protected $size;
 
     function __construct($data, $name){
         $this->file  = $data['name'][$name];
