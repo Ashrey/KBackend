@@ -40,12 +40,13 @@ class Paginator extends \Kumbia\ActiveRecord\Paginator
     public function __construct($model, Array $param = array(), Array $values = array())
     {
         $filter = FilterSQL::get();
+        /*always clean this param*/
+        unset($param['limit'], $param['offset']);
         $filter->per_page =  Config::get('backend.app.per_page');
-        $param  = array_merge($param, $filter->getArray());
+        $param  = array_merge($param, $filter->getSQLArray());
         $values = array_merge($values, $filter->getValues());
         $page = $param['page'];
         $per_page = $param['per_page'];
-        unset($param['limit'], $param['offset']);
         $sql = QueryGenerator::select($model::getSource(), $model::getDriver(), $param);
         parent::__construct($model, $sql, $page, $per_page, $values);   
 	}

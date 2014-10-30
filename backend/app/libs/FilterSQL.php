@@ -18,8 +18,7 @@ class FilterSQL {
      * Valid param on URL
      * @var array
      */
-	protected $_valid = array('page', 'order', 'per_page',
-        'desc', 'col', 'val', 'op');
+	protected $_valid = array('page', 'order', 'per_page', 'desc', 'col', 'val');
 
     /**
      * Value of filter
@@ -27,19 +26,14 @@ class FilterSQL {
      */
     protected $value = 1;
 
-	/**
-	 * param for filter
-	 * @var array
-	 */
-	protected $_condition = array();
-
 	private function __construct() {
-        foreach($_GET as $key => $val){
-			if(in_array($key, $this->_valid)){
-				$this->_arg[$key] =  filter_input(INPUT_GET, $key, FILTER_SANITIZE_STRING);
+        foreach($this->_valid as $key){
+            $val = filter_input(INPUT_GET, $key, FILTER_VALIDATE_REGEXP,
+                array("options"=>array("regexp"=>"/^\w{1,}$/")));
+			if($val){
+				$this->_arg[$key] = $val;
 			}
 		}
-		if(!isset($this->_arg['page']))$this->_arg['page']=1;
     }
 
     /**
@@ -50,17 +44,42 @@ class FilterSQL {
         return is_object($obj) ? $obj:new self();
     }
 	
-    function getArray() {
+    /**
+     * Return the SQL array
+     * @return array
+     */
+    function getSQLArray() {
         $param = $this->_arg;
         $col = isset($param['col'])?$param['col']:1;
-        $op  = isset($param['op'])?$param['op']:'=';
         $this->value = isset($param['val'])?$param['val']:1;
+        $op = '=';
+        if(!is_numeric($this->value)){
+            $this->value = "%{$this->value}%";
+            $op  = 'LIKE';
+        }
+        $param['page']  = isset($param['page'])? $param['page']:1;
         $param['where'] = "$col $op :filter";
+        if(isset($param['order']) && isset($param['desc'])){
+            $desc = $param['desc']?' DESC':'';
+            $param['order'] = "{$param['order']} $desc";
+        }
         return $param;
     }
 
+    /**
+     * Get array of SQL Values
+     * @return array
+     */
     function getValues(){
         return array('filter' => $this->value);
+    }
+
+    /**
+     * Get the arguments
+     * @return array
+     */
+    function getArgs() {
+        return $this->_arg;
     }
 
     /**
@@ -71,15 +90,13 @@ class FilterSQL {
     function getURL(Array $arg){
         if(isset($arg['order']) && isset($this->_arg['order'])
             && $arg['order'] == $this->_arg['order']){
-            $arg['order'] .= ' desc';
+            $arg['desc'] = !isset($this->_arg['desc']) || !$this->_arg['desc'];
         }
 		$arg = array_merge($this->_arg, $arg);
-		asort($arg);
 		$action=implode('/', \Router::get('parameters'));
 		return "$action?".http_build_query($arg);
 	}
 
-    
 	public function __get($name) {
 		return $this->_arg[$name];
 	}

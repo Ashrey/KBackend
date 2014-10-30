@@ -1,4 +1,22 @@
 {% if result.count %}
+	<form>
+	{% set all =  f.getArgs %}
+	{% for i,j in all %}
+		<input name="{{i}}" value="{{j}}" type="hidden"/>
+	{% endfor %}
+	<label class="col-2 control">Filtrar por:</label>
+	<div class="col-4">
+	<select name="col" class="control">
+	{%for value in header %}
+		<option value="{{value}}">{{value | capfirst}}</option>
+	{%endfor%}
+	</select>
+	</div>
+	<div class="col-4">
+		<input name="val" class="control" type="text" />
+	</div>
+	<button type="submit" class="btn btn-success">Aceptar</button>
+	</form>
 	<table class="{%block cssclass%}t bordered condensed hover{% endblock %}">
 		<thead>
 			{%for value in header %}
