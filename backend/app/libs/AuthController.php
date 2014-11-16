@@ -9,24 +9,19 @@ namespace KBackend\Libs;
  */
 use \KumbiaAuth, \Redirect;
 require_once CORE_PATH . 'kumbia/controller.php';
-/*carga las configuraciones del backend*/
+/*load config*/
 \KBackend\Libs\Config::read('backend');
 class AuthController extends \Controller
 {
 
     /**
-     * variable que indica si las acciones del controller son protegidas
-     * 
-     * Por defecto todas las acciones son protegidas
-     * para indicar que solo algunas acciones van a ser protegidas debe
-     * crearse un array con los nombres de dichas acciones, ejemplo:
+     * By default all action are protected
+     * If this array is not empty, only action in array will be protected
      * 
      * <code>
-     * protected $_protected_actions = array(
-     *                          'ultimos_envios',
-     *                          'editar',
-     *                          'eliminar',
-     *                          'activar',
+     * protected $_protectedActions = array(
+     *                          'edit',
+     *                          'delete'
      *                      );
      * </code>
      * 
@@ -35,7 +30,7 @@ class AuthController extends \Controller
     protected $_protectedActions = array();
 
     /**
-     * @var Object Objeto encargado de hacer el auth
+     * @var Object auth object
      */
     protected $_authACL = null;
 
@@ -45,7 +40,7 @@ class AuthController extends \Controller
     protected $_checkPermission = true;
 
     /**
-     * Función que hace las veces de contructor de la clase.
+     * Initialization class
      * 
      */ 
     protected function initialize()
