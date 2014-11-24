@@ -48,7 +48,7 @@ class Event implements \SplSubject {
         if(!self::exist($name, $scope)){
             self::$_events[$hash][$name] = new self();
         }
-        $observer = new Listener($cb);
+        $observer = new Listener($cb, $scope);
         self::$_events[$hash][$name]->attach($observer);
     }
 

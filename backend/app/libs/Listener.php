@@ -16,12 +16,19 @@ class Listener implements SplObserver{
      * Callback to call when event fired
      */
     private $_callback;
+
+    /**
+     * Object generator of event
+     * @var object
+     */
+    protected $object = NULL;
     
     /**
      * @param Closure $cb Callback
      */
-    public function __construct(Closure $cb) {
+    public function __construct(Closure $cb, $obj) {
         $this->_callback = $cb;
+        $this->object    = $obj;
     }
     
     /**
@@ -30,6 +37,6 @@ class Listener implements SplObserver{
     */
     public function update(\SplSubject $subject) {
         $cb = $this->_callback;
-        return $cb($subject);
+        return $cb($subject, $this->object);
     }
 }
