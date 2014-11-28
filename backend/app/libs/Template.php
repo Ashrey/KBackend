@@ -92,7 +92,7 @@ class Template extends \KumbiaView {
             'template_dir' => self::$_dirs,
             'cache_dir' => KBACKEND_PATH.'/temp/cache/haanga',
             'compiler' => array( /* opts for the tpl compiler */
-                'strip_whitespace' => TRUE,
+                'strip_whitespace' => FALSE,
                 'allow_exec'  => TRUE
             ),
         ));
