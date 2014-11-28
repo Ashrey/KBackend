@@ -186,7 +186,7 @@ class User extends \KBackend\Libs\ARecord {
      */
     public static function auth($arg) {
         $where = array('where' =>
-            'password = :password AND login = :user AND enable=1'
+            'password = :password AND (login = :user OR email = :user) AND enable=1'
         );
         return self::first($where, $arg);
     }
