@@ -20,7 +20,7 @@ class Template extends \KumbiaView {
      */
     public static function excepcion(\Exception $e) {
         Flash::warning('Ha Ocurrido un error');
-        if (Config::get('config.application.log_exception') || !PRODUCTION) {
+        if (Config::get('config.application.log_exception')) {
             Flash::error($e->getMessage());
         }else{
             Flash::error($e->getTraceAsString());
@@ -57,7 +57,7 @@ class Template extends \KumbiaView {
         $vars = get_object_vars($controller);
         
          // carga la vista si no esta en produccion o se usa scaffold o no hay contenido cargado
-        if (!PRODUCTION || $controller->scaffold || !self::$_content) {
+        if ($controller->scaffold || !self::$_content) {
             $file = static::getFile();
             self::$_content = static::getTpl($file, $vars);
         } else {

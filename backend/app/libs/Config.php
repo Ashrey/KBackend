@@ -7,6 +7,9 @@ namespace KBackend\Libs;
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team
  */
+
+// @see Config
+require CORE_PATH . 'kumbia/config.php';
 class Config extends \Config{
 
     static $reader = NULL;
