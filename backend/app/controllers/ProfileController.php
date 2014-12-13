@@ -1,4 +1,6 @@
 <?php
+namespace KBackend\Controller;
+use \KBackend\Libs\Controller;
 /**
  * KBackend
  * PHP version 5

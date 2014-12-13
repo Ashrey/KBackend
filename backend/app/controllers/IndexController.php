@@ -1,4 +1,6 @@
 <?php
+namespace KBackend\Controller;
+use \KBackend\Libs\Controller;
 /**
  * KBackend
  * PHP version 5
@@ -6,8 +8,7 @@
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team
  */
-
-class IndexController extends AppController {
+class IndexController extends Controller {
 
     public function index() {
 
