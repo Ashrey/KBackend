@@ -8,8 +8,7 @@ namespace KBackend\Libs;
  * @author KumbiaPHP Development Team
  */
 require_once CORE_PATH . 'kumbia/kumbia_view.php';
-use \Haanga;
-use \Flash;
+use \Haanga, \Flash;
 
 class Template extends \KumbiaView {
     protected static $_dirs = array();
