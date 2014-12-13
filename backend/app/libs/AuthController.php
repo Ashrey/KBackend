@@ -8,8 +8,7 @@ namespace KBackend\Libs;
  * @author KumbiaPHP Development Team
  */
 use \KumbiaAuth, \Redirect;
-require_once CORE_PATH . 'kumbia/controller.php';
-class AuthController extends \Controller {
+class AuthController extends Controller {
 
 	/**
 	 * By default all action are protected
