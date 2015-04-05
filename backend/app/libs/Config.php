@@ -9,12 +9,11 @@ namespace KBackend\Libs;
  */
 
 // @see Config
-require CORE_PATH . 'kumbia/config.php';
+require_once CORE_PATH . 'kumbia/config.php';
 class Config extends \Config{
 
-    static $reader = NULL;
-     
-
+    protected static $reader = NULL;
+    
      /**
      * Read a config file
      *
