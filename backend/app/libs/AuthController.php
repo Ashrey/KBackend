@@ -7,7 +7,8 @@ namespace KBackend\Libs;
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team
  */
-use \KumbiaAuth, \Redirect;
+use \KumbiaAuth;use \Redirect;
+
 class AuthController extends Controller {
 
 	/**
@@ -43,8 +44,8 @@ class AuthController extends Controller {
 
 	protected function initialize() {
 		$class = Config::get('backend.security.auth');
-		$obj = new $class();
-		KumbiaAuth::inject(new Auth($obj));
+		$obj   = new $class();
+		KumbiaAuth::init(new Auth($obj));
 		$this->_authACL = AuthACL::getInstance();
 		if (empty($this->_protectedActions) || in_array($this->action_name, $this->_protectedActions)) {
 
@@ -85,7 +86,7 @@ class AuthController extends Controller {
 	 */
 	protected function _isAllow() {
 		if (!$this->_authACL->check()) {
-			\Flash::error('No posees privilegios para acceder a ' . \Router::get('route'));
+			\Flash::error('No posees privilegios para acceder a '.\Router::get('route'));
 			\View::select(null, 'forbidden');
 			return FALSE;
 		} else {
