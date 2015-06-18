@@ -10,7 +10,7 @@ $vars  = array(
 	'%:error_reporting%' => !$prod?'E_ALL':'E_ALL & ~E_DEPRECATED & ~E_STRICT',
 	'%:display_error%'   => !$prod?'On':'Off',
 	'%:app_path%'        => dirname(__DIR__).'/',
-	'%:core_path%'       => dirname(dirname(dirname(__DIR__))).'/core/',
+	'%:core_path%'       => dirname(dirname(__DIR__)).'/vendor/core/',
 	'%:public%'          => substr(urldecode($_SERVER['REQUEST_URI']), 0, -strlen($exc)).'/',
 );
 $file = file_get_contents(__DIR__ .'/template.tpl');

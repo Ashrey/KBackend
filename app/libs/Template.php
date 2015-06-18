@@ -44,6 +44,7 @@ class Template extends \KumbiaView {
      */
     public static function render(\Controller $controller)
     {
+        spl_autoload_register('kumbia_autoload_helper', true, true);
         
         /*Si no hay nada termina el proceso y descarga el buffer*/
         if (!self::$_view && !self::$_template)
