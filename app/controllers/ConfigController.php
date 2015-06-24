@@ -8,6 +8,7 @@ namespace KBackend\Controller;
  * @author KumbiaPHP Development Team
  */
 use KBackend\Libs\Config;
+use \Input;
 class ConfigController extends \KBackend\Libs\AuthController {
 	public function index() {
 		$this->values = Config::get('backend');
