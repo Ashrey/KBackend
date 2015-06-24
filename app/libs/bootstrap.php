@@ -1,5 +1,6 @@
 <?php
 define('PRODUCTION', FALSE);
+define('APP_CHARSET', 'UTF-8');
 $prod  = false;
 $cache = dirname(__DIR__).'/temp/cache';
 $url   = empty($_SERVER['PATH_INFO'])?'/':$_SERVER['PATH_INFO'];
