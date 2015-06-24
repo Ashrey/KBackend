@@ -12,9 +12,9 @@ security:
 
 database:
     backend:
-        dsn: "mysql:host=localhost;dbname=alidel;charset=utf8"
+        dsn: "mysql:host=localhost;dbname=backend;charset=utf8"
         username: root
-        password: ashrey
+        password: 
 email:
     server: mail.server.com
     user: user@server.com
