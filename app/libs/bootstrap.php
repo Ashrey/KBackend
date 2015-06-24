@@ -21,7 +21,7 @@ include "$cache/vars.php";
 
 require APP_PATH.'libs/autoload.php';
 require APP_PATH.'libs/init.php';
-require CORE_PATH.'kumbia/autoload.php';
+//require CORE_PATH.'kumbia/autoload.php';
 // @see Router
 require CORE_PATH.'kumbia/router.php';
 // @see KumbiaView
