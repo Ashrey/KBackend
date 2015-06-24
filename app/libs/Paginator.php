@@ -1,6 +1,5 @@
 <?php
 namespace KBackend\Libs;
-use \Router;
 use \Haanga;
 use \ArrayIterator;
 use \Kumbia\ActiveRecord\QueryGenerator;
@@ -63,8 +62,8 @@ class Paginator extends \Kumbia\ActiveRecord\Paginator
     /*function for render paginator*/
     protected static function generateURL(){
         $filter = FilterSQL::get();
-        $controller = Router::get('controller');
-        $action     = Router::get('action');
+        $controller = \Router::get('controller');
+        $action     = \Router::get('action');
         return "$controller/$action". $filter->getURL(array('page' => '-_page_-'));
     }
 
