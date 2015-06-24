@@ -3,6 +3,7 @@
         "ashrey/php-gettext": "dev-master",
         "ashrey/pantaconf": "dev-master",
         "ashrey/khaanga": "dev-master",
+        "kumbia/activerecord": "dev-master",
         "mustangostang/spyc":"dev-master",
         "phpmailer/phpmailer": "dev-master"
     }
