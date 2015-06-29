@@ -18,7 +18,7 @@ return array (
   array (
     'backend' => 
     array (
-      'dsn' => 'mysql:host=localhost;dbname=alidel;charset=utf8',
+      'dsn' => 'mysql:host=localhost;dbname=backend;charset=utf8',
       'username' => 'root',
       'password' => 'ashrey',
     ),

@@ -1,4 +1,6 @@
 app/temp/cache/haanga/*
 app/temp/cache/*
+app/temp/config/*
+app/temp/*
 composer.lock
 vendor/*
