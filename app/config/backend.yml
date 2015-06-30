@@ -1,7 +1,7 @@
 app:
     name: Ashrey Backend
     logger: 1
-    footer: Backend Kumbia PHP (C) 2014
+    footer: Backend Kumbia PHP (C) 2015
     per_page: 10
     register: 1
     login: user
