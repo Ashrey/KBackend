@@ -1,36 +1,12 @@
 #Welcome to KBackend#
 KBackend is a managing and configure module for your application. You can to create users. 
 
-##Instalation
-1. Copiar el directorio **backend** a la carpeta principal de tu proyecto. Debe quedar algo así como esto:
-   
-   KumbiaPHPApps
-   
-   -core
-
-   -bakend
-
-   --app
-
-   --public
-
-   -kublog
-
-   --app
-
-   --public
-
-   -kudoc
-
-   --app
-
-   --public
-
-2. Incluir el archivo **backend/app/libs/autoload.php** en el bootstarp de tu app
-3. Copiar el repositorio de Haanga en la carpeta vendor (https://github.com/Ashrey/Haanga) 
-4. Ejecutar composer 
-5. Copiar el SQL ubicado en **backend/app/config** a tu base de datos
-5. Disfrutar
+##Installation
+1. Copy  **backend** into webserver path
+2. Include the file **backend/app/libs/autoload.php** into the app's bootstarp 
+3. Execute composer 
+5. Upload the SQL code in **backend/app/config** to  your database
+5. Enjoy!
 
 ##Login:
 **User:** root
