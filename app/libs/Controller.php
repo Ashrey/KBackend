@@ -8,11 +8,9 @@ namespace KBackend\Libs;
  * @category Kumbia
  * @package Controller
  * */
-// @see Controller nuevo controller
-require_once CORE_PATH . 'kumbia/controller.php';
 /*Carga el namespace*/
 \Haanga_Haanga::addUse('\KBackend\Libs\AuthACL');
-class_alias( 'Haanga_Haanga', 'Haanga'. FALSE);
+class_alias('Haanga_Haanga', 'Haanga', FALSE);
 class Controller extends \Controller {
 
 }
