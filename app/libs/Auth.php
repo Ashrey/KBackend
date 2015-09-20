@@ -9,12 +9,7 @@ use \Session;
  * @author KumbiaPHP Development Team
  */
 
-class Auth implements \KumbiaAuthInterface {
-
-	/**
-	 * Almacena el valor para el singlenton
-	 */
-	static $_auth = null;
+class Auth extends \KumbiaAuthBase {
 
 	/**
 	 * @var Array almacena valores del auth
@@ -45,7 +40,7 @@ class Auth implements \KumbiaAuthInterface {
 
 	public function login(Array $arg = array()) {
 		if (empty($arg['user'])) {
-			throw new \KumbiaException('user not get');
+			throw new \ErrorException('user not get');
 		}
 		$arg['password'] = AuthACL::hash($arg['password']);
 		/*instancia al objeto*/
@@ -53,12 +48,11 @@ class Auth implements \KumbiaAuthInterface {
 		if ($result) {
 			$this->_store = get_object_vars($result);
 			Session::set('store', $this->_store, $this->_key);
-			Session::set('login', FALSE, $this->_key);
 			$is_login = TRUE;
 		} else {
 			$is_login = FALSE;
 		}
-		Session::set('login', $is_login, $this->_key);
+		$this->setLogin('login', $is_login);
 		return $is_login;
 	}
 
