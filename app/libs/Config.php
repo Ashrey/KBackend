@@ -24,7 +24,11 @@ class Config extends \Config{
     public static function &read($file, $force = FALSE)
     {
         if(!self::$reader){
-            self::$reader = new \Ashrey\Config\Config(KBACKEND_PATH . "/temp/cache/config");
+            $dir = KBACKEND_PATH . "/temp/cache/config";
+            if(!is_dir($dir)){
+                mkdir($dir);
+            }
+            self::$reader = new \Ashrey\Config\Config($dir);
         }
         $parse = self::$reader;
         self::$_vars[$file] =  $parse->read(KBACKEND_PATH . "/config/$file.yml");
