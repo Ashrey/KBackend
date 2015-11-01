@@ -1,11 +1,17 @@
 {
     "require": {
     	"kumbia/core": "dev-composer",
-    	"kumbia/activerecord": "dev-master",
         "ashrey/php-gettext": "dev-master",
         "ashrey/pantaconf": "dev-master",
         "ashrey/khaanga": "dev-master",
         "mustangostang/spyc":"dev-master",
         "phpmailer/phpmailer": "dev-master"
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "../KumbiaPHP"
+        }
+    ]
+
 }
