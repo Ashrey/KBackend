@@ -43,12 +43,13 @@ class FilterSQL {
         static $obj;
         return is_object($obj) ? $obj:new self();
     }
-	
+
     /**
      * Return the SQL array
+     * @var 
      * @return array
      */
-    function getSQLArray() {
+    function getSQLArray($where='') {
         $param = $this->_arg;
         $col = isset($param['col'])?$param['col']:1;
         $this->value = isset($param['val'])?$param['val']:1;
@@ -58,7 +59,7 @@ class FilterSQL {
             $op  = 'LIKE';
         }
         $param['page']  = isset($param['page'])? $param['page']:1;
-        $param['where'] = "$col $op :filter";
+        $param['where'] = "$col $op :filter" . (empty($where)?'': " AND ($where)");
         if(isset($param['order']) && isset($param['desc'])){
             $desc = $param['desc']?' DESC':'';
             $param['order'] = "{$param['order']} $desc";

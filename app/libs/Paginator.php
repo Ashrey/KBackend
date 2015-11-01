@@ -42,7 +42,8 @@ class Paginator extends \Kumbia\ActiveRecord\Paginator
         /*always clean this param*/
         unset($param['limit'], $param['offset']);
         $filter->per_page =  Config::get('backend.app.per_page');
-        $param  = array_merge($param, $filter->getSQLArray());
+        $where  = isset($param['where']) ? $param['where'] :'';
+        $param  = array_merge($param, $filter->getSQLArray($where));
         $values = array_merge($values, $filter->getValues());
         $page = $param['page'];
         $per_page = $param['per_page'];
