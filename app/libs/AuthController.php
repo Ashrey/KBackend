@@ -64,7 +64,7 @@ class AuthController extends Controller {
 	 * si está logueado verifica que tenga los permisos necesarios para acceder
 	 * a la acción correspondiente.
 	 *
-	 * @return boolean|null devuelve TRUE si tiene acceso a la acción.
+	 * @return bool True if the credentials are valid
 	 *
 	 */
 
@@ -72,7 +72,7 @@ class AuthController extends Controller {
 		if (KumbiaAuth::isLogin()) {
 			return !$this->_checkPermission || $this->_isAllow();
 		} elseif (\Input::hasPost('login')) {
-			$this->_valid();
+			return $this->_valid();
 		} else {
 			\View::select(null, 'logueo');
 			return FALSE;
