@@ -1,6 +1,7 @@
 <?php
 namespace KBackend\Libs;
 use \Session;
+use \KumbiaAuth;
 /**
  * KBackend
  * PHP version 5
@@ -9,7 +10,7 @@ use \Session;
  * @author KumbiaPHP Development Team
  */
 
-class Auth extends \KumbiaAuthBase {
+class Auth implements \KumbiaAuthInterface {
 
 	/**
 	 * @var Array almacena valores del auth
@@ -39,12 +40,9 @@ class Auth extends \KumbiaAuthBase {
 	}
 
 	public function login(Array $arg = array()) {
-		if (empty($arg['user'])) {
-			throw new \ErrorException('user not get');
-		}
 		$arg['password'] = AuthACL::hash($arg['password']);
 		/*instancia al objeto*/
-		$result = $this->obj->auth($arg);
+		$result =  $this->obj->auth($arg);
 		if ($result) {
 			$this->_store = get_object_vars($result);
 			Session::set('store', $this->_store, $this->_key);
@@ -52,7 +50,6 @@ class Auth extends \KumbiaAuthBase {
 		} else {
 			$is_login = FALSE;
 		}
-		$this->setLogin('login', $is_login);
 		return $is_login;
 	}
 
