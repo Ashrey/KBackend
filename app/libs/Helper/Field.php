@@ -7,7 +7,10 @@ use \Form, \Haanga;
  * @package Helper
  * @license https://raw.github.com/Ashrey/KBackend/master/LICENSE.txt
  * @author KumbiaPHP Development Team   
- */ 
+ */
+
+include CORE_PATH."extensions/helpers/form.php";
+
 class Field{
 
     /**
@@ -111,8 +114,8 @@ class Field{
      */
     protected function type(){
         if($this->haveType()){
-            $this->type = $this->options['type'];
-            unset($this->options['type']);
+            $this->type = $this->options['#type'];
+            unset($this->options['#type']);
             return ;
         }
         $type = $this->modelType();
@@ -251,7 +254,7 @@ class Field{
      * @return bool
      */
     protected function haveType(){
-        return $this->has('type');
+        return $this->has('#type');
     }
 
     /**

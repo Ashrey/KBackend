@@ -30,11 +30,11 @@ class User extends \KBackend\Libs\ARecord {
 				'@unique' => array('error' => 'email ya registrado'),
 			),
 			'enable' => array(
-				'type'  => 'check',
+				'#type'  => 'check',
 
 			),
 			'role_id' => array(
-				'type'   => 'select',
+				'#type'   => 'select',
 				'select' => array(
 					'list'  => array('\KBackend\Model\Role', 'all')
 				)
