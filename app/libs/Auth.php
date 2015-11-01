@@ -46,11 +46,8 @@ class Auth implements \KumbiaAuthInterface {
 		if ($result) {
 			$this->_store = get_object_vars($result);
 			Session::set('store', $this->_store, $this->_key);
-			$is_login = TRUE;
-		} else {
-			$is_login = FALSE;
 		}
-		return $is_login;
+		return $result;
 	}
 
 	/**
