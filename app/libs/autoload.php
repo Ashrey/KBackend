@@ -16,7 +16,8 @@ function autoload_kbackend($name) {
 	}
 }
 spl_autoload_register('autoload_kbackend');
-include (CORE_PATH.'kumbia/kumbia_autoload.php');
-spl_autoload_register(array('KumbiaAutoload', 'autoload'));
+include (CORE_PATH.'kumbia/autoload.php');
+/*
+spl_autoload_register(array('KumbiaAutoload', 'autoload'));*/
 //add autoload
 require dirname(KBACKEND_PATH).'/vendor/autoload.php';
