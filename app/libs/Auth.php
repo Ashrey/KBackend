@@ -46,8 +46,10 @@ class Auth implements \KumbiaAuthInterface {
 		if ($result) {
 			$this->_store = get_object_vars($result);
 			Session::set('store', $this->_store, $this->_key);
+			$result->last_login = date('c');
+			$result->save();
 		}
-		return $result;
+		return is_object($result);
 	}
 
 	/**
