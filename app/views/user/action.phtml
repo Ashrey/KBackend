@@ -1,0 +1,10 @@
+{% extends 'default.phtml'%}
+{%block title%}Actions for <em>{{user.login}}</em>{%endblock%}
+{%block content%}
+    {%exec Flash::content%}
+    {% autoescape off %}
+        {%block result%}
+            {{result}}
+        {%endblock%}
+    {% endautoescape %}
+{%endblock%}

@@ -1,0 +1,5 @@
+{% extends '_shared/grid/default.phtml'%}
+{% block prebuttons%}
+    {%buffer  view%}action/{{item.id}}{%endbuffer%}
+    {%exec Html::linkAction view, '<i class="fa fa-folder"></i>',  'title="Last Action" class="btn btn-success"' %}
+{% endblock %}

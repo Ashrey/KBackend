@@ -25,15 +25,11 @@ class Action extends \KBackend\Libs\ARecord {
 	 * @param integer $id
 	 */
     public static function byUser($id) { 
-        $filter = \KBackend\Libs\FilterSQL::get();
-        $filter->per_page =  Config::get('backend.app.per_page');
-        $param = array_merge(
-            array(
+        $param = array(
                 'where' => 'user_id = :id',
                 'fields' => 'id, date_at, ip, action',
                 'order' =>  'date_at DESC'
-            ),
-            $filter->getArray());
+        );
         $paginator = new Paginator('\KBackend\Model\Action', $param , array(':id' => $id));
         return  new Grid($paginator);
     }

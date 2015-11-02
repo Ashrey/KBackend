@@ -9,6 +9,9 @@ namespace KBackend\Controller;
  */
 use \KBackend\Libs\Paginator;
 use \KBackend\Libs\Helper\FormBuilder;
+use \KBackend\Libs\Helper\Grid;
+use \KBackend\Model\User;
+use \KBackend\Model\Action;
 class UserController extends \KBackend\Libs\ScaffoldController {
 
 	protected $_model = '\KBackend\Model\User';
@@ -28,9 +31,19 @@ class UserController extends \KBackend\Libs\ScaffoldController {
 		return new FormBuilder($obj, 'user.php');
 	}
 
+	public function index() {
+		parent::index();
+		$this->result->setAction('user/buttons');
+	}
+
 	protected function getRecord($id) {
 		$_model = $this->_model;
 		return $_model::view((int) $id);
 	}
 
+	public function action($id) {
+		$id = (int) $id;
+		$this->user = User::get($id);
+		$this->result = Action::byUser($id);
+	}
 }
